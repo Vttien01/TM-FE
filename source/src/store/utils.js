@@ -1,11 +1,11 @@
 import produce from 'immer';
 import { call, cancelled } from 'redux-saga/effects';
 
-import { sendRequest } from '@services/api';
+import { sendRequest } from '../../src/services/api';
 import axios from 'axios';
-import { getData, setData } from '@utils/localStorage';
-import { destructCamelCaseString } from '@utils';
-import { appName } from '@constants';
+import { getData, setData } from '../../src/utils/localStorage';
+import { destructCamelCaseString } from '../../src/utils';
+import { appName } from '../../src/constants';
 
 function makeAction(actionType) {
     const newAction = (payload) => ({
