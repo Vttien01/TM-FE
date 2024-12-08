@@ -5,8 +5,7 @@
         "paths": {
 			"@*": [
 				"../source/src/*"
-			],
-            "@utils/*": ["utils/*"]          
+			],        
         }
     },
 	"include": [

@@ -4,7 +4,6 @@ import { render } from 'react-dom';
 
 import store from '../../source/src/store';
 import reportWebVitals from './reportWebVitals';
-import { ensureArray } from '@utils';
 
 import App from './App';
 import LanguageProvider from '@locales/LanguageProvider';
