@@ -18,7 +18,6 @@ import useFetch from '../../src/hooks/useFetch';
 import apiConfig from '../../src/constants/apiConfig';
 import useShoppingCart from '../../src/hooks/useShoppingCart';
 import InitRoute from './InitRoute';
-import { AppConstants, DEFAULT_PAGE_SIZE, STATUS_ACTIVE, categoryKinds, reviewKind } from '@constants';
 const routesArray = Object.values(routes);
 
 const AppRoutes = () => {

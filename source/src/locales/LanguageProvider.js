@@ -1,8 +1,8 @@
 import React from 'react';
 import { IntlProvider } from 'react-intl';
 
-import { defaultLocale } from '@constants';
-import useLocale from '@hooks/useLocale';
+import { defaultLocale } from '../../src/constants';
+import useLocale from '../../src/hooks/useLocale';
 
 import locale_EN from './en.json';
 import locale_VI from './vi.json';
@@ -16,12 +16,7 @@ const LanguageProvider = ({ children }) => {
     const { locale } = useLocale();
 
     return (
-        <IntlProvider
-            locale={locale}
-            messages={messages[locale]}
-            defaultLocale={defaultLocale}
-            onError={e => {}}
-        >
+        <IntlProvider locale={locale} messages={messages[locale]} defaultLocale={defaultLocale} onError={(e) => {}}>
             {children}
         </IntlProvider>
     );
