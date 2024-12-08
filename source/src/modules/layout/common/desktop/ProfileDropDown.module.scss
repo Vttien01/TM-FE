@@ -1,0 +1,30 @@
+
+.notiBox{
+    background: #bfbebe;
+    // border: solid 1px #545151;
+    position: absolute;
+    right: 0;
+    top: 32px;
+    border-radius: 4px;
+    z-index: 9999;
+    height: max-content;
+    width: max-content;
+    .right-menu {
+        flex: 1;
+        justify-content: flex-end;
+        align-items: center;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border-radius: 4px;
+        padding: 8px !important;
+
+        [role='menuitem'] {
+            outline: none !important;
+            padding: 0;
+            border-radius: 4px;
+        }
+        :global .ant-menu-item-only-child{
+            padding: 0;
+            margin-right: 40px;
+        }
+    }
+}

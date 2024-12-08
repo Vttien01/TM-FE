@@ -1,0 +1,23 @@
+REACT_APP_API = http://103.188.83.126:8787/
+REACT_APP_FRONTEND = https://project-tech-market.vercel.app/
+REACT_APP_API_MEDIA = https://org-media-template.developteam.net/
+REACT_APP_API_SEO = https://lf-api.developteam.net/
+REACT_APP_CLIENT_URL = https://lifeuni.developteam.net/
+
+REACT_APP_API_SSO = https://sso-api-vbook.itz.io.vn/
+REACT_APP_API_TENANT = https://elms-tenant-api.developteam.net/
+
+REACT_APP_ENV = dev
+GENERATE_SOURCEMAP = false
+CI = false
+IMAGE_INLINE_SIZE_LIMIT = 0
+REACT_APP_ENABLE_EXPOSURE = true
+REACT_APP_USERNAME = abc_client
+REACT_APP_PASSWORD = abc123
+
+
+REACT_APP_FACEBOOK_ID = 310027460208063
+REACT_APP_GOOGLE_CLIENT_ID = 208203453170-958ocj82latc576uk8013m6qqar61p58.apps.googleusercontent.com
+REACT_APP_GOOGLE_CLIENT_SECRET = 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
+REACT_APP_GOOGLE_REDIRECT_URI = https://lu-dev.developteam.net
+REACT_APP_WEB_SOCKET_URL = wss://lf-noti.developteam.net/ws

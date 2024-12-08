@@ -1,0 +1,28 @@
+
+.btn-register{
+    color:var(--title-color);
+    font-weight: var(--font-bold);
+    font-size: var(--small-font-size);
+    cursor: pointer;
+}
+.btn-login{
+    color:var(--text-color);
+    cursor: pointer;
+    font-weight: var(--font-bold);
+    font-size: var(--small-font-size);
+}
+.btn-continue{
+    height: 50px !important;
+    .label{
+        font-weight: var(--font-bold);
+        font-size: var(--sub-font-size);
+    }
+}
+
+.text-input-root{
+    .input{
+        font-weight: var(--font-normal);
+        font-size: var(--menu-font-size);
+        height: 50px;
+    }
+}

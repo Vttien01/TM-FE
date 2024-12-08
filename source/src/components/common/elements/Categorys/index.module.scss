@@ -1,0 +1,49 @@
+.categoryDesktop {
+    // padding-top: 100px;
+}
+.category-title {
+    // margin-top: 9.5rem;
+    // margin-bottom: 1.5rem;
+    margin-top: 50px;
+    margin-bottom: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    h1 {
+        color: var(--category-name);
+        // margin-bottom: 1rem;
+        font-size: var(--h3-font-size);
+        font-style: normal;
+        font-weight: var(--font-bold);
+        line-height: normal;
+    }
+    h2 {
+        // margin-top: 1rem;
+        color: var(--category-name);
+        font-size: 35px;
+        font-style: normal;
+        font-weight: var(--font-semi-bold);
+        line-height: 123.336%; /* 59.201px */
+    }
+}
+.category-children {
+    display: flex;
+    // margin-bottom: 55px;
+    border-bottom: 0.75px solid rgba(75, 75, 75, 0.61);
+}
+.category-list-card {
+    display: flex;
+    justify-content: space-between;
+}
+.seeMore {
+    color: var(--text-color);
+    margin-top: 0px;
+}
+
+.title {
+    color: var(--primary-color);
+    // margin-top: 40px;
+    // padding-top: 40px;
+
+    line-height: normal;
+}

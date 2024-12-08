@@ -1,0 +1,57 @@
+.other-login{
+    font-size: var(--small-font-size);
+    font-weight: var(--font-bold);
+    margin-top: 18px;
+    text-align: center;
+    position: relative;
+    span{
+        display: inline-block;
+        width:150px;
+    }
+    ::before,
+    ::after {
+        content: '';
+        position: absolute;
+        width: calc(50% - 75px); /* 50% width minus half of the desired total width */
+        height: 1px;
+        top: 10px;
+        background-color: #000;
+    }
+
+    ::before {
+        left: 0;
+    }
+
+    ::after {
+        right: 0;
+    }
+    
+}
+.btn-register{
+    width: 200px !important;
+    height: 50px !important;
+    margin-bottom: 1.4rem;
+    .label{
+        font-size: var(--sub-font-size);
+        font-weight: var(--font-bold);
+    }
+    }
+.group-brand{
+    button{
+        min-width: 120px !important;
+    }
+}
+.text-input-root{
+    .input{
+        height: 50px;
+        font-size: var(--menu-font-size);
+        font-weight: var(--font-normal);
+    }
+}
+.password-input-root{
+    .input{
+        height: 50px;
+        font-size: var(--menu-font-size);
+        font-weight: var(--font-normal);
+    }
+}

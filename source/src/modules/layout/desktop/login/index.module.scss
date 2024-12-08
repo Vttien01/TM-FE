@@ -1,0 +1,140 @@
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    position: relative;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    // background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(0, 0, 0, 0.05)), url('../../assets/images/bgLogin.svg') ;
+    background-image: url('../../../../assets/images/background.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    .login-form {
+        width: 517px;
+        height: 565px;
+        border-radius: 30px;
+        // background-color: transparent;
+        // border: 1px solid #ffffff;
+        box-shadow: 0px 8px 15px 5px #00000026;
+        h3 {
+            margin-block-start: 0px;
+        }
+
+        h3,
+        button {
+            text-align: center;
+        }
+
+        center {
+            margin: 1rem 0 0.5rem;
+        }
+
+        .inputContainer {
+            margin-bottom: -14px;
+        }
+
+        .customTitle {
+            color: var(--primary-color);
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 60px;
+            text-align: center;
+        }
+    }
+
+    .login-form-1 {
+        width: 517px;
+        height: 565px;
+        padding: 24px;
+        border-radius: 30px;
+        background-color: #389cfb;
+    }
+
+    .customTitle {
+        color: #389cfb;
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 60px;
+        text-align: center;
+    }
+    .forgotPassword {
+        letter-spacing: 0.01em;
+        padding: 6px 0px 16px 0px;
+        color: #fff;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 16px;
+        letter-spacing: 0.01em;
+        text-align: right;
+        margin-right: 0px;
+        margin-top: 32px;
+    }
+
+    .bottom {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .noAccount {
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 18.75px;
+            text-align: left;
+        }
+
+        .request {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 18.75px;
+            text-align: left;
+            color: #fff;
+            margin-left: 12px;
+        }
+    }
+
+    .customInput {
+        width: 100%;
+        height: 48px;
+        border-radius: 12px;
+        background-color: #f7fbff;
+        font-size: 16px;
+        margin-top: -7px;
+        margin-left: -2px;
+    }
+
+    .required {
+        color: #389cfb;
+    }
+
+    .confirmOTP {
+        width: 360px;
+        padding: 18px 0 30px;
+        border-radius: 50px;
+        background-color: #ffffff;
+        border: 1px solid #ffffff;
+        box-shadow: 0px 8px 15px 5px #00000026;
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 30px;
+            text-align: center;
+            color: #389cfb;
+        }
+        .note {
+            font-size: 15px;
+            font-weight: 300;
+            line-height: 25px;
+            text-align: center;
+            color: #000000;
+            width: 460px;
+        }
+        .confirmButton {
+            background: #389cfb;
+            padding: 10px !important;
+        }
+    }
+}
+
+

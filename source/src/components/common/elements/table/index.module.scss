@@ -1,0 +1,52 @@
+.rank {
+    border-radius: var(--borderRadius) 0 0 var(--borderRadius);
+}
+
+.department {
+    border-radius: 0 var(--borderRadius) var(--borderRadius) 0;
+}
+
+.nodata {
+    font-size: 29px;
+    min-width: 1280px;
+    padding: 2rem 1rem;
+}
+
+.sortable:hover {
+    opacity: 0.7;
+    cursor: pointer;
+}
+
+.sortIcon {
+    img {
+        width: 20px;
+    }
+}
+
+.titleWrapper {
+    display: grid;
+    align-items: center;
+}
+
+.labelWrapper {
+    // display: flex;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  thead{
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+  }
+  
+  td, th {
+    // border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: var(--background-color-light);
+  }

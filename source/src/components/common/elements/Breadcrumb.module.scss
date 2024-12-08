@@ -1,0 +1,46 @@
+.breadcrumb {
+    ol {
+        display: flex;
+        column-gap: 5px;
+        // remove the default style of ol
+        list-style: none;
+        padding-inline: 0px;
+        margin-block: 0px;
+    }
+
+    .separator {
+        margin-left: 8px;
+        margin-right: 3px;
+        font-size: 26px;
+        font-weight: 500;
+    }
+
+    .link {
+        font-size: var(--primary-font-size);
+        font-weight: var(--font-semi-bold);
+
+        span {
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            outline: none;
+            cursor: pointer;
+            border-radius: 4px;
+            color: var(--text-color);
+
+            &:hover {
+                color: var(--primary-color);
+            }
+        }
+    }
+}
+
+.active {
+    color: var(--background-color) !important;
+}

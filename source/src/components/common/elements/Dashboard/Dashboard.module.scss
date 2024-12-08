@@ -1,0 +1,32 @@
+.Dashboard {
+    min-height: 60vh;
+    // margin-top: -4.4rem;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 300;
+    background-color: white;
+}
+
+.titleProfile {
+    padding: 20px 0 32px 0;
+    position: fixed;
+    top: 0;
+    z-index: 300;
+    text-align: center;
+    background-color: white;
+    width: 100%;
+    .icon-close {
+        position: absolute;
+        top: 30px;
+        right: 25px;
+        // padding-right: 2px;
+
+
+        svg {
+            width: var(--primary-font-size);
+            height: var(--primary-font-size);
+            stroke: #000;
+            stroke-width: 0.5px;
+        }
+    }
+}

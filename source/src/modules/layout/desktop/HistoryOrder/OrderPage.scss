@@ -1,0 +1,26 @@
+// @import "../../../App.scss";
+
+.product-single{
+    .product-single-content{
+        row-gap: 2rem;
+        padding: 12px;
+
+        @media screen and (min-width: 768px){
+            grid-template-columns: repeat(2, 1fr);
+            column-gap: 4rem;
+        }
+
+
+
+        @media screen and (min-width: 992px){
+
+        }
+    }
+}
+
+.leftTitle{
+    font-size: 4;
+    font-weight: 600;
+    padding-bottom: 0;
+}
+

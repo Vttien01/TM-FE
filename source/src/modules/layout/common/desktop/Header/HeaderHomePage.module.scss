@@ -1,0 +1,10 @@
+.menu-item { 
+    color: black; 
+    padding: 2px; 
+    width: 200px;
+    border-radius: 4px;
+    &:hover {
+        background-color: var(--primary-light-color);
+        cursor: pointer;
+    }
+}

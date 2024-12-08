@@ -1,0 +1,101 @@
+.header-login {
+    position: relative;
+    .icon-close {
+        position: absolute;
+        top: -15px;
+        right: 0;
+        svg {
+            width: var(--primary-font-size);
+            height: var(--primary-font-size);
+            stroke: #000;
+            stroke-width: 0.5px;
+        }
+    }
+}
+.icon-close {
+    margin-top: 20px;
+}
+.title-login {
+    text-align: center;
+    margin-top: 30px;
+    line-height: 1;
+}
+.other-login {
+    font-weight: var(--font-normal);
+    font-size: var(--primary-font-size);
+    margin: 12px auto;
+    text-align: center;
+    position: relative;
+    span {
+        display: inline-block;
+        width: 150px;
+    }
+    ::before,
+    ::after {
+        content: '';
+        position: absolute;
+        width: calc(50% - 75px); /* 50% width minus half of the desired total width */
+        height: 1px;
+        top: 10px;
+        background-color: #000;
+    }
+
+    ::before {
+        left: 0;
+    }
+
+    ::after {
+        right: 0;
+    }
+}
+.forget-password {
+    font-size: var(--primary-font-size);
+    cursor: pointer;
+    color: var(--text-color);
+    font-weight: 600;
+}
+.btn-login {
+    height: 50px !important;
+    margin-bottom: 1.4rem;
+    .label {
+        font-size: var(--primary-font-size);
+        font-weight: var(--font-semi-bold);
+    }
+}
+
+.btn-register {
+    color: var(--title-color);
+    font-weight: var(--font-semi-bold);
+    font-size: var(--primary-font-size);
+    cursor: pointer;
+}
+
+.groupBrand {
+    button {
+        min-width: 120px;
+    }
+}
+.input {
+    font-size: var(--primary-font-size);
+    font-weight: var(--font-semi-bold);
+    height: 50px;
+}
+.text-input-root {
+    .label {
+        font-size: var(--primary-font-size);
+        font-weight: var(--font-semi-bold);
+        margin-bottom: 12px;
+    }
+}
+.password-input-root {
+    .input {
+        font-size: var(--primary-font-size);
+        font-weight: var(--font-semi-bold);
+        height: 50px;
+    }
+    .label {
+        font-size: var(--primary-font-size);
+        font-weight: var(--font-semi-bold);
+        margin-bottom: 12px;
+    }
+}

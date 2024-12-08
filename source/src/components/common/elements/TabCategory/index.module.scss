@@ -1,0 +1,66 @@
+.categoryDesktop {
+    padding-top: 50px;
+}
+.category-title {
+    padding-top: 39px;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+.category-children {
+    display: flex;
+    margin-bottom: 55px;
+    border-bottom: 0.75px solid rgba(75, 75, 75, 0.61);
+    .title {
+        color: #919191;
+        font-size: 25px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        margin-right: 58px;
+        padding-bottom: 22px;
+    }
+    .title-active {
+        color: var(--title-color);
+        font-size: 25px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        margin-right: 58px;
+        padding-bottom: 22px;
+        border-bottom: 2px solid var(--title-color);
+    }
+}
+.category-list-card {
+    display: flex;
+    justify-content: space-between;
+}
+.seeMore {
+    color: var(--text-color) !important;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+// tabs category
+.tabs-category {
+    .list-category {
+        margin-top: 50px;
+        margin-bottom: 2.25rem;
+        color: var(--title-color-2);
+        .tab-label-category {
+            font-size: var(--primary-font-size);
+            font-weight: var(--font-semi-bold);
+            text-align: left;
+        }
+    }
+    .list-category button[data-active] {
+        color: var(--title-color);
+        border-bottom: 2px solid var(--title-color);
+        // padding-left: 0;
+    }
+    .list-category button {
+        padding-left: 0;
+        margin-right: 1rem;
+    }
+}

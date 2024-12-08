@@ -1,0 +1,101 @@
+.app-footer {
+    padding: 0;
+    display: flex;
+    width: 100%;
+    z-index: 10;
+    position: sticky;
+    background-color: var(--primary-color);
+    padding-bottom: 34px;
+    a {
+        color: var(--text-color-light);
+    }
+    li {
+        list-style-type: none !important;
+        display: inline-block !important;
+        cursor: pointer;
+    }
+    .footer-mobile {
+        display: flex;
+        flex-direction: column;
+        padding-top: 1.6rem;
+
+        .info {
+            width: 100%;
+            .cooperation {
+                .title {
+                    margin-bottom: 6px;
+                }
+                .list-about {
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
+
+            .about {
+                .title {
+                    margin-bottom: 6px;
+                }
+                .list-about {
+                    display: flex;
+                    flex-direction: column;
+                    // gap: 7px;
+                }
+                .item-about {
+                    padding-top: 4px;
+                    font-size: var(--sub-font-size);
+                }
+                .address {
+                    display: flex;
+                    gap: 8px;
+                    align-items: center;
+                    margin-bottom: 8px;
+                    img {
+                        width: 12px;
+                        height: 12px;
+                    }
+                }
+                .contact {
+                    display: flex;
+                    // margin-top: 0.5rem;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    .phone {
+                        display: flex;
+                        gap: 8px;
+                        margin-right: 0.5rem;
+                        align-items: center;
+                        img {
+                            width: 12px;
+                            height: 12px;
+                        }
+                    }
+                    .mail {
+                        display: flex;
+                        align-items: center;
+                        gap: 8px;
+                        img {
+                            width: 12px;
+                            height: 12px;
+                        }
+                    }
+                }
+            }
+
+            .copyright {
+                // height: 100%;
+                text-align: center;
+                .text {
+                    display: block;
+                    position: absolute;
+                    bottom: 5px;
+                    left: 0;
+                    right: 0;
+                    margin: auto;
+                    word-wrap: break-word;
+                    color: var(--text-color-light);
+                    line-height: 1;
+                }
+            }
+        }
+    }
+}

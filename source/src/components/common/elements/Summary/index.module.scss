@@ -1,0 +1,75 @@
+.Summary {
+    margin-left: 56px;
+    margin-top: 98px;
+
+    box-shadow: 0px -2px 15px 0px rgba(0, 172, 193, 0.3);
+    padding: 20px;
+    .apply {
+        color: var(--text-color-light);
+        font-size: var(--sub-font-size);
+        font-weight: var(--font-semi-bold);
+    }
+    .payment {
+        margin-top: 25px;
+        font-size: var(--primary-font-size);
+        font-weight: var(--font-bold);
+    }
+}
+
+.title {
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.priceCheckout {
+    margin-top: 20px;
+    font-style: normal;
+    line-height: normal;
+}
+
+.totalPriceCheckout {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-style: normal;
+    line-height: normal;
+}
+
+.priceCart {
+    margin-top: 20px;
+    font-style: normal;
+    line-height: normal;
+}
+
+.totalPriceCart {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-decoration-line: line-through;
+    text-align: center;
+}
+.discount {
+    background: var(--orange-color);
+    padding: 5px;
+    margin-left: 25px;
+    border-radius: 3px;
+}
+.coupon {
+    margin: 15px 0;
+    font-style: normal;
+    line-height: normal;
+}
+
+.oldprice {
+    text-decoration-line: line-through;
+    color: #5f5b5b;
+}
+
+@media (max-width: 1024px) {
+    .Summary {
+        margin-left: 0;
+        margin-top: 30px;
+        border-radius: 20px;
+    }
+}

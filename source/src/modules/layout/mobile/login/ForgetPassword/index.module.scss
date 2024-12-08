@@ -1,0 +1,58 @@
+
+.header-login{
+    margin-top: 33px;
+    position: relative;
+    .icon-close{
+        position: absolute;
+        top: -15px;
+        margin-top: 20px;
+        right: 0;
+        svg{
+            width: var(--primary-font-size);
+            height: var(--primary-font-size);
+            stroke: #000;
+            stroke-width:0.5px;
+           
+        }
+    }
+}
+.title{
+    text-align: center;
+  
+    line-height: 1;
+}
+.btn-register{
+    color:var(--title-color);
+    font-weight: var(--font-semi-bold);
+    font-size: var(--primary-font-size);
+    cursor: pointer;
+}
+.btn-login{
+    color:var(--text-color);
+    cursor: pointer;
+    font-weight: var(--font-semi-bold);
+    font-size: var(--primary-font-size);
+}
+.btn-continue{
+    height: 50px !important;
+    .label{
+        font-weight: var(--font-semi-bold);
+        font-size: var(--primary-font-size);
+        font-weight: var(--font-semi-bold);
+
+    }
+}
+
+.text-input-root{
+    .input{
+        font-weight: var(--font-semi-bold);
+        font-size: var(--primary-font-size);
+        height: 50px;
+    }
+    .label{
+        margin-bottom: 12px;
+        font-size: var(--primary-font-size);
+        font-weight: var(--font-semi-bold);
+
+    }
+}

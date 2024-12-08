@@ -1,0 +1,22 @@
+.tabs-category {
+    .list-category {
+        margin: 10px 0;
+        color: var(--title-color-2);
+        text-align: left;
+        gap: 10px;
+        .tab-label-category {
+            font-size: var(--primary-font-size);
+            font-weight: var(--font-semi-bold);
+            text-align: left;
+        }
+    }
+    .list-category button[data-active] {
+        color: var(--title-color);
+        border-bottom: 2px solid var(--title-color);
+        // padding-left: 0;
+        text-align: left;
+    }
+    .list-category button {
+        padding-left: 0;
+    }
+}

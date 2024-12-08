@@ -1,0 +1,118 @@
+/* ============== VARIALE CSS ============== */
+:root {
+    --header-height: 5.5rem;
+    --banner-cart-height: 13.125rem;
+
+    /* ======== Colors ======== */
+    /* Color mode HSL (hue, saturation, lightness) */
+    --primary-color: #f57e20;
+    --primary-light-color: #fbebe6;
+    --sub-color: #00858f;
+    --title-color: #f57e20;
+    --title-color-2: #919191;
+    --title-color-sub: #137755;
+    --background-color: rgb(255, 255, 255);
+    --background-color-gray: #d9d9d9;
+    --background-color-light: #e0f2f1;
+    --text-color: #404040;
+    --text-color-light: #ffffff;
+    --second-color: #54b5ae;
+    --body-color: white;
+    --content-color: #000000;
+    --container-color: white;
+    --input-color: #8d8d8d;
+    --star-color: #ead14c;
+    --border-radius: 10px;
+    --red-color: #ff0000;
+    --orange-color: #f37d3b;
+    --gray-9: #999999;
+
+    /* ======== Font weight ======== */
+    --font-normal: 400;
+    --font-semi-bold: 500;
+    --font-bold: 600;
+
+    /* ======== Font and typography ======== */
+    --body-font: sans-serif;
+
+    $clr-black: #000;
+    $clr-white: #fff;
+    $clr-orange: #F94E30;
+    $clr-light-orange: #FF6433;
+    $clr-light-gray: #F2F2F2;
+    $clr-light: #F4F4F4;
+    $clr-whitesmoke: #F5F5F5;
+    $clr-dark: #212529;
+    $clr-danger: #DC3545;
+    $clr-gray: #929292;
+    $font-family-manrope: 'Manrope', sans-serif;
+    $font-family-poppins: 'Poppins', sans-serif;
+    $transition-ease: all 300ms ease-in-out;
+
+    /* ======== .5rem = 8px | 1rem = 16px ======== */
+    --big-font-size: 64px;
+    --h1-font-size: 64px;
+    --h2-font-size: 48px;
+    --h3-font-size: 34px;
+    --primary-font-size: 22px;
+    --sub-font-size: 18px;
+    --small-font-size: 15px;
+    --title-menu-font-size: 22px;
+    --menu-font-size: 15px;
+    --h3-form-font-size: 34px;
+    /* ======= color for category ======== */
+    --gray-bg: #fdfdfd;
+    --category-name: #f57e20;
+    --product-container-bg: #f3f4f9;
+    --black-cate-name: #828282;
+    --product-name: #404040;
+    --product-price: #0097a7;
+
+    /* ======= font size mobile ======== */
+    --primary-font-size-mb: 10px;
+    --sub-font-size-mb: 8px;
+    --small-font-size-mb: 7px;
+
+    --box-shadow: 0px -2px 15px 0px rgba(0, 172, 193, 0.2);
+
+    --font-payment:15px
+}
+
+@media (max-width: 578px) {
+    :root {
+        --header-height: 2.4rem;
+        --big-font-size: 20px;
+        --h1-font-size: 28px; // 25px
+        --h2-font-size: 26px;
+        --h3-font-size: 24px;
+        --primary-font-size: 16px;
+        --sub-font-size: 14px;
+        --small-font-size: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --header-height: 3.4rem;
+        --big-font-size: 20px;
+        --h1-font-size: 28px; // 25px
+        --h2-font-size: 26px;
+        --h3-font-size: 24px;
+        --primary-font-size: 16px;
+        --sub-font-size: 14px;
+        --small-font-size: 10px;
+    }
+}
+
+@media (max-width: 960px) {
+    :root {
+        --header-height: 4.4rem;
+        --big-font-size: 20px;
+        --h1-font-size: 28px; // 25px
+        --h2-font-size: 26px;
+        --h3-font-size: 24px;
+        --primary-font-size: 16px;
+        --sub-font-size: 14px;
+        --small-font-size: 10px;
+    }
+}

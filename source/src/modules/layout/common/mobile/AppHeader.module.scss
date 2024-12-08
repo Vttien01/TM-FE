@@ -1,0 +1,145 @@
+.app-header {
+    position: fixed;
+    z-index: 300;
+    width: 100%;
+    // padding-top: 5px;
+    height: var(--header-height);
+    top: 0;
+    // height: var(--header-height);
+    background-color: var(--background-color);
+    // a {
+    //     color: #959595 !important;
+    // }
+    .header-container {
+        margin-left: 0px;
+        margin-right: 10px;
+
+        display: flex;
+        // justify-content: space-between;
+        align-items: center;
+        height: 100%;
+        position: relative;
+        .header-logo {
+            img {
+                width: 3.5rem;
+                height: 3.5rem;
+            }
+            span {
+                color: white;
+                font-size: 20px;
+                font-weight: bold;
+                margin-left: 0.5rem;
+            }
+        }
+
+        .header-navigation {
+            height: 100%;
+            align-items: center;
+        }
+        .header-contact {
+            .contact-btn {
+                // font-size: 1rem;
+                // padding: 0.75rem 1.5rem;
+                // border-radius: 0.5rem;
+                // letter-spacing: normal;
+            }
+        }
+    }
+    li {
+        list-style-type: none;
+        display: inline-block;
+        cursor: pointer;
+    }
+}
+.action {
+    display: flex;
+    justify-content: center;
+    .button {
+        background: var(--primary-color);
+        border-radius: 8px;
+        color: white;
+        padding: 1rem 7rem;
+        font-size: 18px;
+    }
+}
+
+.inputBox {
+    background: #ffffff;
+    border: 1px solid #e3e3e3;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    input {
+        font-size: 16px;
+        // color: rgba(18, 18, 54, 0.3);
+    }
+}
+
+.nav {
+    height: 100%;
+    background-color: var(--body-color);
+    .icon-menu {
+        line-height: 1;
+        padding-top: 3px;
+        svg {
+            width: 15px !important;
+            color: var(--content-color);
+        }
+    }
+}
+
+.header-icon {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+    gap: 1rem;
+    img {
+        width: 24px;
+    }
+    .IconCar {
+        position: relative;
+        .numberProducts {
+            width: var(--sub-font-size);
+            height: var(--sub-font-size);
+            border-radius: 50%;
+            background-color: #d9d9d9;
+            color: var(--title-color);
+            position: absolute;
+            top: -5px;
+            right: -7px;
+            text-align: center;
+            font-size: var(--small-font-size);
+        }
+    }
+}
+.title {
+    margin-left: 170%;
+    text-align: center;
+    margin-top: 25px;
+    width: 100%;
+    line-height: 1;
+}
+
+.wrapperSearch {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    z-index: -1;
+}
+
+.container {
+    background-color: white;
+    // display: none;
+    padding-top: 0.6rem !important;
+    position: absolute;
+    top: 0;
+    transition: top 0.5s ease;
+    z-index: -1;
+    box-shadow: var(--box-shadow);
+    width: 100%;
+}
+.clicked {
+    // display: block;
+    top: 70px;
+
+    // z-index: 9;
+}

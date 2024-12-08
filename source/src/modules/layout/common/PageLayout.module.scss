@@ -1,0 +1,26 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: 0.66fr 0.33fr;
+    margin-top: 2rem !important;
+    @media (max-width: 1024px) {
+        grid-template-columns: 2fr 0, 5 fr;
+    }
+}
+.breadcrumb {
+    margin-bottom: 1rem;
+}
+
+.banner {
+    // color: var(--text-color-light);
+    // background-color: var(--primary-color);
+    // height: var(--banner-cart-height);
+    padding-top: 20px;
+    font-size: var(--h2-font-size);
+    font-weight: var(--font-semi-bold);
+}
+
+.bannerContainer {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
