@@ -16,7 +16,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import '../src/assets/scss/index.scss';
 import { setData } from '@utils/localStorage';
-import { AppConstants, storageKeys } from '@constants';
+import { AppConstants, storageKeys } from '../src/constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryParameters = new URLSearchParams(window.location.search);

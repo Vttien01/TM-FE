@@ -4,9 +4,8 @@
         "jsx": "react",
         "paths": {
 			"@*": [
-				"../source/src/*"
+				"./src/*"
 			],
-            "@constants/*": ["constants/*"]
         }
     },
 	"include": [
