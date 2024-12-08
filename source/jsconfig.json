@@ -6,7 +6,7 @@
 			"@*": [
 				"../source/src/*"
 			],
-            "@constants/*": ["constants/*"],
+            "@constants/*": ["constants/*"]
         }
     },
 	"include": [
