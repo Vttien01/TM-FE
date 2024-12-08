@@ -6,7 +6,7 @@ const app = express();
 var compression = require('compression');
 require('dotenv').config();
 
-const PORT = {PORT};
+const PORT = { PORT };
 const indexPath = path.resolve(__dirname, 'index.html');
 app.use(compression());
 // Static resources should just be served as they are
@@ -51,24 +51,27 @@ function Ngrok(res, name, description, banner) {
     const metaOgTitleRegex = /<meta\s+name="og:title"\s+content="([^"]+)"\s*\/?>/g;
     const metaDescriptionRegex = /<meta\s+name="description"\s+content="([^"]+)"\s*\/?>/g;
 
-    if(res) {
-    fs.readFile(indexPath, 'utf8', (err, htmlData) => {
-        if (err) {
-            console.error('Error during file reading', err);
-            return res.status(404).end();
-        }
+    if (res) {
+        fs.readFile(indexPath, 'utf8', (err, htmlData) => {
+            if (err) {
+                console.error('Error during file reading', err);
+                return res.status(404).end();
+            }
 
-        // Thay thế các thẻ meta với dữ liệu được cung cấp
-        htmlData = htmlData
-            .replace('<title>Tech Market</title>', `<title>TechMarket | ${name}</title>`)
-            .replace(metaOgTitleRegex, `<meta name="og:title" content="${name}" />`)
-            .replace(metaOgDescriptionRegex, `<meta name="og:description" content="${description}" />`)
-            .replace(metaDescriptionRegex, `<meta name="description" content="${description}" />`)
-            .replace(metaOgImageRegex, `<meta name="og:image" content="${process.env.REACT_APP_API_MEDIA}v1/file/download${banner}" />`);
+            // Thay thế các thẻ meta với dữ liệu được cung cấp
+            htmlData = htmlData
+                .replace('<title>Tech Market</title>', `<title>TechMarket | ${name}</title>`)
+                .replace(metaOgTitleRegex, `<meta name="og:title" content="${name}" />`)
+                .replace(metaOgDescriptionRegex, `<meta name="og:description" content="${description}" />`)
+                .replace(metaDescriptionRegex, `<meta name="description" content="${description}" />`)
+                .replace(
+                    metaOgImageRegex,
+                    `<meta name="og:image" content="${process.env.REACT_APP_API_MEDIA}v1/file/download${banner}" />`,
+                );
 
-        // Gửi dữ liệu HTML đã sửa đổi
-        return res.send(htmlData);
-    });
+            // Gửi dữ liệu HTML đã sửa đổi
+            return res.send(htmlData);
+        });
     } else return;
 }
 
@@ -82,7 +85,7 @@ app.get('*', async function (req, res) {
             dataToSend = {
                 name: course.name,
                 description: course.shortDescription,
-                banner: course.banner
+                banner: course.banner,
             };
         }
     } else if (req._parsedUrl.pathname.includes('news')) {
@@ -93,7 +96,7 @@ app.get('*', async function (req, res) {
             dataToSend = {
                 name: news.title,
                 description: news.description,
-                banner: news.banner
+                banner: news.banner,
             };
         }
     } else if (req._parsedUrl.pathname.includes('expert')) {
@@ -105,7 +108,7 @@ app.get('*', async function (req, res) {
             dataToSend = {
                 name: expert.fullName,
                 description: plainText,
-                banner: expert.avatar
+                banner: expert.avatar,
             };
         }
     } else {
