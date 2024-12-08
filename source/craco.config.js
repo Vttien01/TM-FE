@@ -38,6 +38,9 @@ module.exports = {
         },
     ],
     webpack: {
-        alias: resolvedAliases,
+        // alias: resolvedAliases,
+        alias: {
+            '@': path.resolve(__dirname, './src'),
+        },
     },
 };
