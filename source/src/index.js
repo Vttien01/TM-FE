@@ -15,10 +15,10 @@ import 'video.js/dist/video-js.css'; // Import CSS for Video.js
 import '@videojs/themes/dist/sea/index.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-import '@assets/scss/index.scss';
+import '../src/assets/scss/index.scss';
 import { setData } from '@utils/localStorage';
 import { AppConstants, storageKeys } from '@constants';
-import { QueryClient, QueryClientProvider  } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryParameters = new URLSearchParams(window.location.search);
 const refcode = queryParameters.get('refCode');
