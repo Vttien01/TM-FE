@@ -74,23 +74,23 @@ const CartModal = ({ open, onCancel, check, product }) => {
         let updatedCart = [];
         console.log('cart', cart, newArray);
         newArray.forEach((product) => {
-            let existingItem = [];
+            let existingItem = {};
             if (cart?.length > 0) {
                 existingItem = cart.find((item) => item.id === product.id);
             }
-            if (existingItem) {
-                updatedCart = cart.map((item) =>
-                    item.id === product.id
-                        ? {
-                            ...item,
-                            quantity: item?.quantity + product.quantity,
-                            totalPriceSell: item?.totalPriceSell + product.totalPriceSell,
-                        }
-                        : item,
-                );
-                setCart(updatedCart);
+            if (existingItem != {}) {
+                // updatedCart = cart.map((item) =>
+                //     item.id === product.id
+                //         ? {
+                //             ...item,
+                //             quantity: item?.quantity + product.quantity,
+                //             totalPriceSell: item?.totalPriceSell + product.totalPriceSell,
+                //         }
+                //         : item,
+                // );
+                // setCart(updatedCart);
 
-                console.log('cart 1', cart);
+                console.log('cart 1', existingItem);
             } else {
                 updatedCart = [ ...cart, { ...product } ];
                 setCart([ ...cart, { ...product } ]);
