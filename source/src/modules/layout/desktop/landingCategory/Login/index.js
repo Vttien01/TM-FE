@@ -35,7 +35,7 @@ const message = defineMessages({
     loginSuccess: 'Đăng nhập thành công',
     loginFail: 'Số điện thoại hoặc mật khẩu không chính xác',
 });
-const ModalLoginForm = ({ isOpenRegister, isCloseLogin, isOpenForgetPassword, login, loginFaceBook }) => {
+const ModalLoginForm = ({ isOpenRegister, isCloseLogin, isOpenForgetPassword, login }) => {
     const translate = useTranslate();
     const dispatch = useDispatch();
     const [ openedError, { open: openError, close: closeError } ] = useDisclosure(false);
@@ -60,7 +60,7 @@ const ModalLoginForm = ({ isOpenRegister, isCloseLogin, isOpenForgetPassword, lo
         closeLogin();
         openForgetPassword();
     };
-   
+
     const onFinish = (values) => {
         dispatch(actions.showAppLoading());
         execute({
@@ -73,7 +73,6 @@ const ModalLoginForm = ({ isOpenRegister, isCloseLogin, isOpenForgetPassword, lo
             },
             onError: (res) => {
                 if (res.access_token) {
-                  
                     removeItem(storageKeys.REF_CODE);
                     if (res.user_kind === GROUP_KIND_STUDENT && res.is_seller) {
                         setCacheAccessToken(res.access_token);
@@ -82,11 +81,6 @@ const ModalLoginForm = ({ isOpenRegister, isCloseLogin, isOpenForgetPassword, lo
                         // showSucsessMessage(translate.formatMessage(message.loginSuccess));
                         dispatch(hideAppLoginModal({}));
                         closeError();
-
-
-                       
-                       
-
                     } else if (res.user_kind === GROUP_KIND_STUDENT) {
                         setCacheAccessToken(res.access_token);
                         executeGetProfile();
@@ -94,7 +88,6 @@ const ModalLoginForm = ({ isOpenRegister, isCloseLogin, isOpenForgetPassword, lo
                         // showSucsessMessage(translate.formatMessage(message.loginSuccess));
                         dispatch(hideAppLoginModal({}));
                         closeError();
-                       
                     } else {
                         // showErrorMessage(translate.formatMessage(message.loginFail));
                     }
@@ -106,7 +99,6 @@ const ModalLoginForm = ({ isOpenRegister, isCloseLogin, isOpenForgetPassword, lo
             },
         });
     };
-
 
     return (
         <div>
@@ -121,10 +113,7 @@ const ModalLoginForm = ({ isOpenRegister, isCloseLogin, isOpenForgetPassword, lo
                 />
 
                 <div>
-                    <button
-                        type="submit"
-                        radius="md"
-                    >
+                    <button type="submit" radius="md">
                         {translate.formatMessage(message.login)}
                     </button>
                 </div>
@@ -144,11 +133,7 @@ const ModalLoginForm = ({ isOpenRegister, isCloseLogin, isOpenForgetPassword, lo
                 <span>{translate.formatMessage(message.otherLogin)}</span>
             </div>
             <div>
-                <button
-                    onClick={() => login()}
-                    color={'#DC2626'}
-                    radius="lg"
-                >
+                <button onClick={() => login()} color={'#DC2626'} radius="lg">
                     Google
                 </button>
             </div>

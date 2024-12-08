@@ -43,43 +43,13 @@ const message = defineMessages({
 const RegisterFbForm = ({ isOpenRegister, isCloseRegister, isOpenLogin, dataFacebook }) => {
     const translate = useTranslate();
     const dispatch = useDispatch();
-
-    const { execute: fbProfile, loading: fbProfileloading } = useFetch(apiConfig.student.ProfleFaceBook);
     const { execute: executeGetProfile } = useFetchAction(accountActions.getProfile, {
         loading: useFetchAction.LOADING_TYPE.APP,
     });
 
-    const loginFaceBookFunc = (values, dataFacebook) => {
-        const refcode = getData(storageKeys.REF_CODE);
-        fbProfile({
-            data: { ...values, ...dataFacebook, ...(refcode && { referralCode: refcode }) },
-            onCompleted: (res) => {
-                isCloseRegister();
-                removeItem(storageKeys.REF_CODE);
-                if (res?.data.access_token) {
-                    setCacheAccessToken(res.data.access_token);
-
-                    if (res.data.user_kind === GROUP_KIND_STUDENT) {
-                        executeGetProfile();
-                        setData(storageKeys.USER_KIND, GROUP_KIND_STUDENT);
-                        showSucsessMessage(translate.formatMessage(message.loginSuccess));
-                    }
-                }
-            },
-
-            onError: (res) => {
-                if (res.result == false) {
-                    showErrorMessage(res?.message);
-                }
-            },
-        });
-    };
-
     return (
         <div>
-            <form>
-                
-            </form>
+            <form></form>
         </div>
     );
 };

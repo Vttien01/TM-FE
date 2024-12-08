@@ -8,8 +8,6 @@ const baseHeader = {
 const multipartFormHeader = {
     'Content-Type': 'multipart/form-data',
 };
-
-const oauth2 = 'https://oauth2.googleapis.com/token';
 const apiConfig = {
     file: {
         upload: {
@@ -210,31 +208,6 @@ const apiConfig = {
         upgradeProfile: {
             baseURL: `${apiUrl}v1/student/upgrade-seller`,
             method: 'PUT',
-            headers: baseHeader,
-        },
-        LoginFaceBook: {
-            baseURL: `${apiUrl}v1/student/facebook/verify-token`,
-            method: 'POST',
-            headers: baseHeader,
-        },
-        ProfleFaceBook: {
-            baseURL: `${apiUrl}v1/student/facebook/register-profile`,
-            method: 'POST',
-            headers: baseHeader,
-        },
-        loginGoogle: {
-            baseURL: `${apiUrl}v1/student/google/verify-token`,
-            method: 'POST',
-            headers: baseHeader,
-        },
-        profleGoogle: {
-            baseURL: `${apiUrl}v1/student/google/register-profile`,
-            method: 'POST',
-            headers: baseHeader,
-        },
-        oauth2Google: {
-            baseURL: oauth2,
-            method: 'POST',
             headers: baseHeader,
         },
         myCourse: {

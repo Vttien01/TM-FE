@@ -43,8 +43,6 @@
         "@craco/craco": "^7.0.0",
         "@greatsumini/react-facebook-login": "^3.3.3",
         "@jackwilsdon/craco-use-babelrc": "^1.0.0",
-        "@leecheuk/react-google-login": "^5.4.1",
-        "@react-oauth/google": "^0.12.1",
         "@reduxjs/toolkit": "^1.9.3",
         "@tabler/icons-react": "^2.42.0",
         "@testing-library/jest-dom": "^5.17.0",

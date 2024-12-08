@@ -8,7 +8,7 @@ import useTranslate from '@hooks/useTranslate';
 const message = defineMessages({
     login: 'Đăng nhập',
 });
-const ModalLogin = ({ opened, close, openRegister, openForgetPassword, login, loginFaceBookFunc }) => {
+const ModalLogin = ({ opened, close, openRegister, openForgetPassword, login }) => {
     const translate = useTranslate();
     return (
         <BasicModal
@@ -32,7 +32,6 @@ const ModalLogin = ({ opened, close, openRegister, openForgetPassword, login, lo
                 isCloseLogin={close}
                 isOpenForgetPassword={openForgetPassword}
                 login={login}
-                loginFaceBook={loginFaceBookFunc}
             />
         </BasicModal>
     );

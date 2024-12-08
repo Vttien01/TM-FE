@@ -11,22 +11,16 @@ import 'video.js/dist/font/VideoJS.ttf';
 import 'videojs-font/css/videojs-icons.css';
 import 'video.js/dist/video-js.css'; // Import CSS for Video.js
 import '@videojs/themes/dist/sea/index.css';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
 import '../src/assets/scss/index.scss';
 import { setData } from '../../source/src/utils/localStorage';
 import { AppConstants, storageKeys } from '../src/constants';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import LanguageProvider from '../src/locales/LanguageProvider';
+import ReactDOM from 'react-dom/client';
 
-const queryParameters = new URLSearchParams(window.location.search);
-const refcode = queryParameters.get('refCode');
-if (refcode) {
-    setData(storageKeys.REF_CODE, refcode);
-}
-const queryClient = new QueryClient();
-
-render(
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
     <React.StrictMode>
         <Provider store={store}>
             <LanguageProvider>

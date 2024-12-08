@@ -41,10 +41,6 @@ export const AppConstants = {
     mediaRootUrl: `${process.env.REACT_APP_API_MEDIA}`,
     gameApiRootUrl: process.env.REACT_APP_GAME_API,
     langKey: 'vi',
-    AppFbId: process.env.REACT_APP_FACEBOOK_ID,
-    GGClientId: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-    GGClienSecret: process.env.REACT_APP_GOOGLE_CLIENT_SECRET,
-    GGRedirectURI: process.env.REACT_APP_GOOGLE_REDIRECT_URI,
     wsUri: process.env.REACT_APP_WEB_SOCKET_URL,
 };
 
