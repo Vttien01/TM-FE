@@ -13,9 +13,6 @@ import 'video.js/dist/video-js.css'; // Import CSS for Video.js
 import '@videojs/themes/dist/sea/index.css';
 
 import '../src/assets/scss/index.scss';
-import { setData } from '../../source/src/utils/localStorage';
-import { AppConstants, storageKeys } from '../src/constants';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import LanguageProvider from '../src/locales/LanguageProvider';
 import ReactDOM from 'react-dom/client';
 
