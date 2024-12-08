@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 
-import store from '@store';
+import store from '../../source/src/store';
 import reportWebVitals from './reportWebVitals';
 import { ensureArray } from '@utils';
 
