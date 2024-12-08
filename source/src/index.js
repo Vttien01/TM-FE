@@ -29,13 +29,9 @@ const queryClient = new QueryClient();
 render(
     <React.StrictMode>
         <Provider store={store}>
-            <GoogleOAuthProvider clientId={AppConstants.GGClientId}>
-                <LanguageProvider>
-                    <QueryClientProvider client={queryClient}>
-                        <App />
-                    </QueryClientProvider>
-                </LanguageProvider>
-            </GoogleOAuthProvider>
+            <LanguageProvider>
+                <App />
+            </LanguageProvider>
         </Provider>
     </React.StrictMode>,
     document.getElementById('root'),
