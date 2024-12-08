@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 
-import Loading from '@components/common/loading';
+import Loading from '../src/components/common/loading';
 import AppRoutes from '@routes/routes';
-import NotificationElement from '@components/common/form/NotificationElement';
-import AppLoading from '@modules/layout/common/AppLoading';
+import NotificationElement from '../src/components/common/form/NotificationElement';
+import AppLoading from '../src/modules/layout/common/AppLoading';
 const App = () => {
     return (
         <React.Suspense fallback={<Loading show />}>

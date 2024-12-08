@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 
 import { selectAppLoading } from '@selectors/app';
 
-import Loading from '@components/common/loading';
+import Loading from '../../../components/common/loading';
 
 const AppLoading = () => {
     const appLoading = useSelector(selectAppLoading);
