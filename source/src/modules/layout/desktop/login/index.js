@@ -78,7 +78,6 @@ const LoginDesktop = () => {
             },
             onCompleted: (res) => {
                 setCacheAccessToken(res.access_token);
-                // executeGetProfile();
                 navigate('/');
             },
             onError: (error) => {
