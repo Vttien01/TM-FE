@@ -56,23 +56,22 @@ const InitRoute = () => {
         immediate: false,
     });
     useEffect(() => {
+        executeGetCategorys({
+            onCompleted: (response) => {
+                if (response?.data?.content?.length > 0) {
+                    dispatch(actions.setCategory(response?.data?.content));
+                } else {
+                    dispatch(actions.setCategory([]));
+                }
+            },
+            onError: () => {
+                // showErrorMessage('Không lấy được giả hàng!');
+                // form.resetFields();
+            },
+        });
         if (isAuthenticated) {
             executeGetDataMyNotification();
             dispatch(actions.setNotification(dataMyNotification));
-            executeGetCategorys({
-                onCompleted: (response) => {
-                    if (response?.data?.content?.length > 0) {
-                        dispatch(actions.setCategory(response?.data?.content));
-                    } else {
-                        dispatch(actions.setCategory([]));
-                    }
-                },
-                onError: () => {
-                    // showErrorMessage('Không lấy được giả hàng!');
-                    // form.resetFields();
-                },
-            });
-            dispatch(actions.setCategory(dataCategory));
             executeGetListCart({
                 onCompleted: (response) => {
                     if (response?.data?.cartDetailDtos?.length > 0) {
