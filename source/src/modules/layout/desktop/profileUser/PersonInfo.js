@@ -167,6 +167,9 @@ const PersonInfo = () => {
                             <DashboardCard title={'Số điện thoại'} value={profile?.account?.phone} />
                             <DashboardCardStatus title={'Trạng thái hoạt động'} value={profile?.account?.status} />
                         </Space>
+                        <Space direction="horizontal">
+                            <DashboardCard title={'Điểm cá nhân'} value={`${profile?.point}đ`} />
+                        </Space>
                         <Divider orientation="left" style={{ fontSize: 25 }}>
                             Thông tin địa chỉ
                         </Divider>
@@ -178,7 +181,7 @@ const PersonInfo = () => {
                                     </Button>
                                 </Flex>
                             }
-                            style={{ backgroundColor: '#fcd8bc', borderRadius: '10px' }}
+                            style={{ backgroundColor: '#fcd8bc', borderRadius: '10px', marginBottom: 20 }}
                             baseTable={
                                 <BaseTable
                                     onChange={mixinFuncs.changePagination}

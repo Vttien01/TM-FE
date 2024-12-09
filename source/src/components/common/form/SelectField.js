@@ -33,7 +33,7 @@ function SelectField({
     value,
     onClear,
     onFocus,
-    onChangeOption,
+    labelCol,
     dropdownRender,
     ...props
 }) {
@@ -44,7 +44,15 @@ function SelectField({
         removeAccents(option.label.toLowerCase()).indexOf(removeAccents(input.toLowerCase())) >= 0;
 
     return (
-        <Form.Item initialValue={initialValue} key={key} {...formItemProps} label={label} name={name} rules={rules}>
+        <Form.Item
+            initialValue={initialValue}
+            key={key}
+            {...formItemProps}
+            label={label}
+            name={name}
+            rules={rules}
+            labelCol={labelCol}
+        >
             <Select
                 onFocus={onFocus}
                 {...fieldProps}

@@ -744,6 +744,12 @@ const apiConfig = {
             headers: baseHeader,
             isRequiredTenantId: true,
         },
+        vnpay: {
+            baseURL: `${apiUrl}v1/transaction/vn-pay`,
+            method: 'POST',
+            headers: baseHeader,
+            isRequiredTenantId: true,
+        },
     },
     orderDetail: {
         getByOrder: {

@@ -40,8 +40,8 @@ import ListDetailsForm from './ListDetailsForm';
 import { showErrorMessage } from '@services/notifyService';
 import { SmileOutlined } from '@ant-design/icons';
 import { paymentSelect } from '@constants';
-const { Text } = Typography;
-let index = 0;
+import Container from '@components/common/elements/Container';
+import styles from './index.module.scss';
 
 const decription = defineMessage({
     first: 'Kiểm tra số lượng sản phẩm',
@@ -61,7 +61,7 @@ const HistoryOrderGuest = () => {
     const [ search, setSearch ] = useState('');
     const [ checkSearch, setCheckSearch ] = useState(false);
     const [ dataReciver, setDataReciver ] = useState({});
-    const stateValues = translate.formatKeys(paymentSelect, [ 'label' ]);
+    // const stateValues = translate.formatKeys(paymentSelect, [ 'label' ]);
     const orderStatetateValues = translate.formatKeys(orderStateOption, [ 'label' ]);
 
     const { data: myOrder, execute: executeSearchOrder } = useFetch({
@@ -132,7 +132,7 @@ const HistoryOrderGuest = () => {
     const renderPaymentStatusTag = (value, check) => {
         let state;
         if (check) {
-            state = stateValues.find((item) => item.value == value);
+            state = paymentSelect.find((item) => item.value == value);
         } else {
             state = orderStatetateValues.find((item) => item.value == value);
         }
@@ -147,70 +147,63 @@ const HistoryOrderGuest = () => {
     };
 
     return (
-        <div
-            className="con1 py-4 bg-whitesmoke"
-            style={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                // height: '100vh',
-                marginLeft: 150,
-                marginRight: 150,
-            }}
-        >
-            <PageWrapper
-                routes={[
-                    {
-                        breadcrumbName: 'Trang chủ',
-                        path: generatePath(routes.homePage.path),
-                    },
-                    { breadcrumbName: 'Tìm kiếm đơn hàng' },
-                ]}
-                style={{ backgroundColor: '#282a36' }}
-                // title={title}
-            ></PageWrapper>
-            <div
-                style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    maxWidth: 500,
-                    marginBottom: 20,
-                    marginLeft: 300,
-                }}
-            >
-                <div style={{ flex: '1', justifyContent: 'center' }}>
-                    <Form onFinish={onSearch}>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 10 }}>
-                            <Form.Item name="orderCode" contentWrapperStyle={{ width: 800 }}>
-                                <Input
-                                    placeholder="Nhập mã đơn hàng ..."
-                                    // addonAfter={<IconSearch />}
-                                    style={{ minWidth: 500 }}
-                                />
-                            </Form.Item>
-                            <Button
-                                type="primary"
-                                htmlType="submit"
-                                style={{ marginTop: 10, marginLeft: 8, backgroundColor: '#f57e20' }}
-                            >
-                                Tìm kiếm
-                            </Button>
-                        </div>
-                    </Form>
+        <Container className={styles.container}>
+            <PageWrapper routes={[ { breadcrumbName: 'Tìm kiếm đơn hàng' } ]} style={{ backgroundColor: '#282a36' }}>
+                <div
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        maxWidth: '100%',
+                    }}
+                >
+                    <div style={{ flex: '1', justifyContent: 'center' }}>
+                        <Form onFinish={onSearch}>
+                            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                <Form.Item name="orderCode" contentWrapperStyle={{ width: 800 }}>
+                                    <Input placeholder="Nhập mã đơn hàng ..." style={{ minWidth: 500 }} />
+                                </Form.Item>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    style={{ marginLeft: 8, backgroundColor: '#f57e20' }}
+                                >
+                                    Tìm kiếm
+                                </Button>
+                            </div>
+                        </Form>
+                    </div>
                 </div>
-            </div>
-            <div style={{ flex: '1', justifyContent: 'center', minHeight: 300 }}>
-                <Card style={{ minHeight: 600, backgroundColor: '#d8dadd' }}>
+                <Card style={{ minHeight: 600, backgroundColor: '#d8dadd', margin: '0px 20px' }}>
                     {checkSearch ? (
                         <Space
                             direction="vertical"
-                            style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                            }}
                         >
                             <Space size={'large'} style={{ minHeight: 350 }} direction="vertical">
                                 <Divider orientation="left" style={{ fontSize: 20 }}>
                                     Thông tin khách hàng
                                 </Divider>
-                                <Row style={{ minWidth: 900 }}>
+                                {/* <Card
+                                    style={{
+                                        minWidth: 900,
+                                        backgroundColor: 'transparent',
+                                        border: '1px dotted gray',
+                                        padding: '30px',
+                                    }}
+                                > */}
+                                <Row
+                                    style={{
+                                        minWidth: 900,
+                                        backgroundColor: 'transparent',
+                                        border: '1px dotted gray',
+                                        padding: '40px 30px 0px',
+                                        borderRadius: 10,
+                                    }}
+                                >
                                     <Col span={12}>
                                         <Space direction="vertical">
                                             <Space>
@@ -219,12 +212,6 @@ const HistoryOrderGuest = () => {
                                                 </Typography.Title>
                                                 <Typography.Text>{dataReciver?.receiver}</Typography.Text>
                                             </Space>
-                                            {/* <Space>
-                                                <Typography.Title style={{ fontSize: 14, marginTop: 7 }}>
-                                                    Email:
-                                                </Typography.Title>
-                                                <Typography.Text>{dataReciver?.email}</Typography.Text>
-                                            </Space> */}
                                             <Space>
                                                 <Typography.Title style={{ fontSize: 14, marginTop: 7 }}>
                                                     Số điện thoại:
@@ -255,8 +242,15 @@ const HistoryOrderGuest = () => {
                                             </Space>
                                         </Space>
                                     </Col>
-                                    <Col span={12}>
+                                    <Col
+                                        span={12}
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
                                         <Timeline
+                                            className={styles.timeline}
                                             items={[
                                                 {
                                                     color: 'green',
@@ -278,16 +272,6 @@ const HistoryOrderGuest = () => {
                                                     color: 'gray',
                                                     children: 'Đơn hàng được duyệt',
                                                 },
-                                                // {
-                                                //     color: 'red',
-                                                //     children: (
-                                                //         <>
-                                                //             <p>Solve initial network problems 1</p>
-                                                //             <p>Solve initial network problems 2</p>
-                                                //             <p>Solve initial network problems 3 2015-09-01</p>
-                                                //         </>
-                                                //     ),
-                                                // },
                                                 {
                                                     color: '#00CCFF',
                                                     // dot: <SmileOutlined />,
@@ -297,6 +281,7 @@ const HistoryOrderGuest = () => {
                                         />
                                     </Col>
                                 </Row>
+                                {/* </Card> */}
                             </Space>
                             <Space size={'large'} style={{ minHeight: 300 }} direction="vertical">
                                 <Divider orientation="left" style={{ fontSize: 20 }}>
@@ -316,43 +301,16 @@ const HistoryOrderGuest = () => {
                             }
                         />
                     )}
-                    {/* <Tabs defaultActiveKey="1" centered size="large" items={items} style={{ marginBottom: 20 }} /> */}
                 </Card>
-            </div>
-        </div>
+            </PageWrapper>
+        </Container>
     );
 };
 
-function TableMyOrder({ stateValues, state, search }) {
+function TableMyOrder({ search }) {
     const [ form ] = Form.useForm();
     const [ openedDetailsModal, handlerDetailsModal ] = useDisclosure(false);
     const [ detail, setDetail ] = useState([]);
-    const [ check, setCheck ] = useState(false);
-
-    console.log(search);
-
-    // const {
-    //     data: myOrder,
-    //     loading: loadingMyOrder,
-    //     execute: executeMyOrder,
-    // } = useFetch(apiConfig.order.myOrder, {
-    //     immediate: true,
-    //     mappingData: ({ data }) => data.content,
-    //     params: { state: state },
-    // });
-
-    // const { execute: executeDetailOrder } = useFetch({
-    //     ...apiConfig.orderDetail.getByOrder,
-    // });
-
-    // if (search !== null) {
-    //     executeSearchOrder({
-    //         params: { orderCode: search },
-    //         onCompleted: (response) => {
-    //             setDetail(response.data);
-    //         },
-    //     });
-    // }
 
     return (
         <div>

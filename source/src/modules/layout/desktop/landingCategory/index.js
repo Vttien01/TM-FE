@@ -70,7 +70,8 @@ function LandingCategoryPageDesktop({
     const queryParameters = new URLSearchParams(window.location.search);
     const categoryName = queryParameters.get('category');
     const brandName = queryParameters.get('brandName');
-    const price = queryParameters.get('price');
+    const priceStart = queryParameters.get('priceStart');
+    const priceEnd = queryParameters.get('priceEnd');
     const [ activeCard, setActiveCard ] = useState(null);
     const categories = useSelector(selectCategory);
     const { deserializeParams, setQueryParams, params } = useQueryParams();
@@ -113,7 +114,8 @@ function LandingCategoryPageDesktop({
             params: {
                 categoryName,
                 brandName,
-                price,
+                ...(Number(priceStart) != null && { priceStart }),
+                ...(Number(priceEnd) > 0 && { priceEnd }),
             },
         });
         executgetBrandData({
@@ -121,7 +123,7 @@ function LandingCategoryPageDesktop({
                 categoryName,
             },
         });
-    }, [ categoryName, brandName, price ]);
+    }, [ categoryName, brandName, priceStart, priceEnd ]);
     useEffect(() => {
         if (!openedDetailsModal && productDetail) {
             handlerDetailsModal.open();
@@ -131,23 +133,24 @@ function LandingCategoryPageDesktop({
     }, [ productDetail ]);
     const marks = {
         0: '0M',
-        25: '5M',
-        50: '10M',
-        75: '15M',
+        25: '15M',
+        50: '30M',
+        75: '45M',
         100: {
             style: {
                 color: '#f50',
             },
-            label: <strong>20M</strong>,
+            label: <strong>60M</strong>,
         },
     };
-    const [ inputValue, setInputValue ] = useState(1);
+    const [ inputValue, setInputValue ] = useState([ 0, 0 ]);
     const onChange = (newValue) => {
         setInputValue(newValue);
-        if (newValue > 0) {
+        if (newValue != null) {
             setQueryParams({
                 ...queryFilter,
-                price: (newValue * 1000000) / 5,
+                priceStart: newValue[0] > 0 ? (newValue[0] * 1000000 * 3) / 5 : 0,
+                priceEnd: (newValue[1] * 1000000 * 3) / 5,
             });
         }
     };
@@ -172,11 +175,6 @@ function LandingCategoryPageDesktop({
                         <Space direction="vertical" size={24} style={{ width: '100%' }}>
                             <Row>
                                 <Title level={5}>Khoảng giá</Title>
-                                {/* <Slider
-                                    range
-                                    defaultValue={[ 0, 80000000 ]}
-                                    tipFormatter={(value) => `${value.toLocaleString()}đ`}
-                                /> */}
                                 <Col span={24}>
                                     <Input
                                         min={1}
@@ -186,14 +184,20 @@ function LandingCategoryPageDesktop({
                                             textAlign: 'center',
                                         }}
                                         value={
-                                            price
-                                                ? formatMoney((inputValue * 1000000) / 5, {
+                                            priceStart
+                                                ? `${formatMoney((inputValue[0] * 3 * 1000000) / 5, {
                                                     groupSeparator: ',',
                                                     decimalSeparator: '.',
                                                     currentcy: 'đ',
                                                     currentcyPosition: 'BACK',
                                                     currentDecimal: '0',
-                                                })
+                                                })} - ${formatMoney((inputValue[1] * 3 * 1000000) / 5, {
+                                                    groupSeparator: ',',
+                                                    decimalSeparator: '.',
+                                                    currentcy: 'đ',
+                                                    currentcyPosition: 'BACK',
+                                                    currentDecimal: '0',
+                                                })}`
                                                 : '0đ'
                                         }
                                         readOnly
@@ -201,11 +205,12 @@ function LandingCategoryPageDesktop({
                                 </Col>
                                 <Col span={24}>
                                     <Slider
+                                        range
                                         marks={marks}
                                         step={null}
-                                        defaultValue={0}
+                                        defaultValue={[ 0, 0 ]}
                                         onChange={onChange}
-                                        value={price ? inputValue : 0}
+                                        value={inputValue}
                                     />
                                 </Col>
                             </Row>
@@ -225,6 +230,7 @@ function LandingCategoryPageDesktop({
                                                     padding: 0,
                                                 }}
                                                 onClick={() => {
+                                                    setInputValue([ 0, 0 ]);
                                                     navigate(`/c?category=${name}`);
                                                 }}
                                             >

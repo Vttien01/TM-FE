@@ -94,20 +94,20 @@ const AppCart = () => {
                             showSucsessMessage('Đặt hàng thành công');
                         },
                         onError: () => {
-                            localStorage.removeItem('cart');
+                            // localStorage.removeItem('cart');
                             showErrorMessage('Thanh toán thất bại!');
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 1800);
+                            // setTimeout(() => {
+                            //     window.location.reload();
+                            // }, 1800);
                         },
                     });
                 } else {
                     localStorage.clear();
                     setCheckoutDrawerOpen(false);
                     showSucsessMessage('Đặt hàng thành công');
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1800);
+                    // setTimeout(() => {
+                    //     window.location.reload();
+                    // }, 1800);
                 }
             },
             onError: () => {
@@ -211,7 +211,9 @@ const AppCart = () => {
                 count={cartItem?.length}
                 className="ShopingCartIcon"
             >
-                <ShoppingCartOutlined style={{ fontSize: 24 }} />
+                <Tooltip title="Giỏ hàng">
+                    <ShoppingCartOutlined style={{ fontSize: 28, color: '#f57e20' }} />
+                </Tooltip>
             </Badge>
             <Drawer
                 open={CartDrawer}

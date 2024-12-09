@@ -2,7 +2,7 @@ import CropImageField from '@components/common/form/CropImageField';
 import DatePickerField from '@components/common/form/DatePickerField';
 import SelectField from '@components/common/form/SelectField';
 import TextField from '@components/common/form/TextField';
-import { DATE_FORMAT_DISPLAY, DATE_FORMAT_VALUE, genderValues } from '@constants';
+import { AppConstants, DATE_FORMAT_DISPLAY, DATE_FORMAT_VALUE, genderValues } from '@constants';
 import apiConfig from '@constants/apiConfig';
 import useAuth from '@hooks/useAuth';
 import useFetch from '@hooks/useFetch';
@@ -53,7 +53,7 @@ const ProfileModal = ({ open, onCancel, profile }) => {
     const handleProfileModal = () => {
         const data = form.getFieldsValue();
         execute({
-            data: { ...data, id: profile?.id, gender: 1 },
+            data: { ...data, id: profile?.id, gender: 1, avatarPath: imageUrl },
             onCompleted: (res) => {
                 onCancel();
                 showSucsessMessage(translate.formatMessage(message.updateSuccess));
@@ -105,14 +105,19 @@ const ProfileModal = ({ open, onCancel, profile }) => {
             <Form form={form}>
                 <CropImageField
                     label={translate.formatMessage(commonMessage.avatar)}
-                    name="avatarPath"
-                    imageUrl={imageUrl}
+                    // name="avatarPath"
+                    imageUrl={imageUrl && `${AppConstants.contentRootUrl}${imageUrl}`}
                     aspect={1 / 1}
                     uploadFile={uploadFile}
                 />
                 <Row gutter={16}>
                     <Col span={12}>
-                        <TextField label={translate.formatMessage(commonMessage.fullName)} name="fullName" required />
+                        <TextField
+                            label={translate.formatMessage(commonMessage.fullName)}
+                            name="fullName"
+                            required
+                            labelCol={{ span: 24 }}
+                        />
                     </Col>
                     <Col span={12}>
                         <TextField label={translate.formatMessage(commonMessage.username)} name="username" required />

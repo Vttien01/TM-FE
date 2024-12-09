@@ -1,7 +1,6 @@
 import BasicForm from '@components/common/form/BasicForm';
 import React, { useState } from 'react';
 import styles from './index.module.scss';
-import InputField from '@components/common/form/InputField';
 import * as yup from 'yup';
 import useFetch from '@hooks/useFetch';
 import apiConfig from '@constants/apiConfig';

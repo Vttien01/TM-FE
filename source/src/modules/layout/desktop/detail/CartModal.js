@@ -62,7 +62,9 @@ const CartModal = ({ open, onCancel, check, product }) => {
     useEffect(() => {
         if (listProductVariant?.length > 0) {
             setnewArray(listProductVariant);
-            setCart(storedCart);
+        }
+        if (!profile) {
+            setCart(storedCart?.length > 0 ? storedCart : []);
         }
     }, [ product ]);
     useEffect(() => {
@@ -72,29 +74,25 @@ const CartModal = ({ open, onCancel, check, product }) => {
 
     const handleFinish = async () => {
         let updatedCart = [];
-        console.log('cart', cart, newArray);
         newArray.forEach((product) => {
-            let existingItem = {};
+            let existingItem = null;
             if (cart?.length > 0) {
                 existingItem = cart.find((item) => item.id === product.id);
             }
-            if (existingItem != {}) {
-                // updatedCart = cart.map((item) =>
-                //     item.id === product.id
-                //         ? {
-                //             ...item,
-                //             quantity: item?.quantity + product.quantity,
-                //             totalPriceSell: item?.totalPriceSell + product.totalPriceSell,
-                //         }
-                //         : item,
-                // );
-                // setCart(updatedCart);
-
-                console.log('cart 1', existingItem);
+            if (existingItem != null) {
+                updatedCart = cart.map((item) =>
+                    item.id === product.id
+                        ? {
+                            ...item,
+                            quantity: item?.quantity + product.quantity,
+                            totalPriceSell: item?.totalPriceSell + product.totalPriceSell,
+                        }
+                        : item,
+                );
+                setCart(updatedCart);
             } else {
                 updatedCart = [ ...cart, { ...product } ];
                 setCart([ ...cart, { ...product } ]);
-                console.log('cart 2', updatedCart);
             }
         });
         localStorage.setItem('cart', JSON.stringify(updatedCart));
@@ -215,6 +213,7 @@ const CartModal = ({ open, onCancel, check, product }) => {
                             title: 'Giá',
                             dataIndex: 'price',
                             name: 'price',
+                            width: 'max-content',
                             render: (value) => {
                                 return (
                                     <span>

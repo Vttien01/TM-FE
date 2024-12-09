@@ -122,6 +122,7 @@ export const STATE_PAIDED = true;
 
 export const PAYPAL_METHOD = 1;
 export const COD_METHOD = 0;
+export const VNPAY_METHOD = 2;
 
 export const GENDER_MAN = 0;
 export const GENDER_WOWAN = 1;
@@ -275,16 +276,19 @@ export const SettingTypes = {
 const paymentMessage = defineMessages({
     PAYPAL_METHOD: 'PayPal',
     COD_METHOD: 'Tiền mặt',
+    VNPAY_METHOD: 'VNPAY',
 });
 
 export const paymentSelect = [
     { value: 0, label: 'Thanh toán tiền mặt', color: '#00A648' },
     { value: 1, label: 'Thanh toán PAYPAL', color: '#00adf9' },
+    { value: 2, label: 'Thanh toán VNPAY', color: 'blue' },
 ];
 
 export const paymentOptions = [
     { value: COD_METHOD, label: paymentMessage.COD_METHOD, color: '#00A648' },
     { value: PAYPAL_METHOD, label: paymentMessage.PAYPAL_METHOD, color: '#00adf9' },
+    { value: VNPAY_METHOD, label: paymentMessage.VNPAY_METHOD, color: 'blue' },
 ];
 
 export const accountStatusOptions = [

@@ -15,6 +15,7 @@ import React, { useEffect, useState } from 'react';
 import { defineMessages } from 'react-intl';
 import { useNavigate } from 'react-router-dom';
 import styles from './DropDown.module.scss';
+import { Tooltip } from 'antd';
 const message = defineMessages({
     All: 'Tất cả',
     Unread: 'Chưa đọc',
@@ -191,18 +192,20 @@ const NotificationDropDown = ({
     return (
         <div>
             <div>
-                <div
-                    style={{ color: 'var(--primary-color)' }}
-                    onClick={() => {
-                        activeIcon ? setActiveIcon(false) : setActiveIcon(true);
-                    }}
-                >
-                    {(unReadTotal > 0 && !readAll && !deleteAll && !loading) || hasNotification ? (
-                        <Notification />
-                    ) : (
-                        <Notification />
-                    )}
-                </div>
+                <Tooltip title="Thông báo">
+                    <div
+                        style={{ color: 'var(--primary-color)' }}
+                        onClick={() => {
+                            activeIcon ? setActiveIcon(false) : setActiveIcon(true);
+                        }}
+                    >
+                        {(unReadTotal > 0 && !readAll && !deleteAll && !loading) || hasNotification ? (
+                            <Notification />
+                        ) : (
+                            <Notification />
+                        )}
+                    </div>
+                </Tooltip>
             </div>
             {activeIcon && (
                 // Đặt ref cho toàn bộ khung dropdown

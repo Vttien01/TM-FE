@@ -112,12 +112,15 @@ const AddressModal = ({ open, onCancel, address, form, getList }) => {
             }
         >
             <Form form={form} style={{ width: '100%' }}>
-                <Row gutter={8}>
+                <Row gutter={12}>
                     <Col span={12}>
                         <TextField label={translate.formatMessage(commonMessage.fullName)} name="name" />
                     </Col>
                     <Col span={12}>
                         <TextField label={translate.formatMessage(commonMessage.phone)} name="phone" />
+                    </Col>
+                    <Col span={12}>
+                        <TextField label={translate.formatMessage(commonMessage.address)} name="address" />
                     </Col>
                     <Col span={12}>
                         <AutoCompleteField
@@ -129,6 +132,7 @@ const AddressModal = ({ open, onCancel, address, form, getList }) => {
                             searchParams={(text) => ({ name: text, kind: 1 })}
                             onChange={handleProvinceChange}
                             required
+                            labelCol={{ span: 24 }}
                         />
                     </Col>
                     <Col span={12}>
@@ -141,6 +145,7 @@ const AddressModal = ({ open, onCancel, address, form, getList }) => {
                             searchParams={(text) => ({ name: text, kind: 2 })}
                             required
                             key={province}
+                            labelCol={{ span: 24 }}
                         />
                     </Col>
                     <Col span={12}>
@@ -153,11 +158,8 @@ const AddressModal = ({ open, onCancel, address, form, getList }) => {
                             searchParams={(text) => ({ name: text, kind: 3 })}
                             required
                             key={district}
+                            labelCol={{ span: 24 }}
                         />
-                    </Col>
-
-                    <Col span={12}>
-                        <TextField label={translate.formatMessage(commonMessage.address)} name="address" />
                     </Col>
                 </Row>
             </Form>

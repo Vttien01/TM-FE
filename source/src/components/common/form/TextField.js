@@ -59,6 +59,7 @@ const TextField = (props) => {
             initialValue={initialValue}
             help={help}
             rules={[ ...rules, getTextFieldRules() ]}
+            labelCol={{ span: 24 }}
         >
             {type === 'textarea' ? (
                 <TextArea

@@ -13,7 +13,7 @@ import useTranslate from '@hooks/useTranslate';
 import useAuth from '@hooks/useAuth';
 import { showErrorMessage, showSucsessMessage } from '@services/notifyService';
 import { scrollToID } from '@utils';
-import { IconBellFilled, IconSearch, IconUser } from '@tabler/icons-react';
+import { IconBellFilled, IconSearch, IconTruckDelivery, IconUser } from '@tabler/icons-react';
 import NotificationDropDown from '../NotificationDropDown';
 import useFetch from '@hooks/useFetch';
 import apiConfig from '@constants/apiConfig';
@@ -28,7 +28,7 @@ import { appActions } from '@store/actions';
 import { showAppLoginModal } from '@store/actions/app';
 import Typo from '@components/common/elements/Typo';
 import { getCacheAccessToken } from '@services/userService';
-import { Avatar, Flex, Form, Image, Input } from 'antd';
+import { Avatar, Flex, Form, Image, Input, Tooltip } from 'antd';
 import useFocusWithin from '@hooks/useFocusWithin';
 import AppCart from '../../AppCart/AppCart';
 import SearchBox from '@components/common/elements/SearchBox/SearchBox';
@@ -48,12 +48,11 @@ const message = defineMessages({
 const DefaultComponent = ({ openLogin, style, openProfile, openConfirm }) => {
     const params = useLocation();
     const dispatch = useDispatch();
-    const { ref, focused, onFocus, onBlur } = useFocusWithin();
+    const { isAuthenticated } = useAuth();
 
     const queryParameters = new URLSearchParams(window.location.search);
     const query = queryParameters.get('query');
     const translate = useTranslate();
-    const { isAuthenticated } = useAuth();
     const numberCart = useSelector((state) => state.cart.cart);
     const navigate = useNavigate();
     const appLogin = useSelector((state) => state.app.loginModal);
@@ -145,6 +144,14 @@ const DefaultComponent = ({ openLogin, style, openProfile, openConfirm }) => {
                 <SearchBox />
                 <li style={{ paddingTop: '5px' }}>
                     <AppCart />
+                </li>
+                <li
+                    style={{ paddingTop: '5px' }}
+                    onClick={() => navigate(isAuthenticated ? '/history-order' : '/history-order-guest')}
+                >
+                    <Tooltip title="Lịch sử đặt hàng">
+                        <IconTruckDelivery size={30} style={{ color: '#f57e20' }} />
+                    </Tooltip>
                 </li>
                 {accessToken ? (
                     <>

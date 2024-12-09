@@ -23,6 +23,7 @@ import { Button, Divider, Flex, Form, Input, Result, Space, Steps, Table, Tag, T
 import { defineMessage } from 'react-intl';
 import ListDetailsForm from './ListDetailsForm';
 import Container from '@components/common/elements/Container';
+import { getCartItemList } from '@store/actions/cart';
 const { Text } = Typography;
 let index = 0;
 
@@ -98,8 +99,11 @@ const OrderPage = () => {
         ...apiConfig.order.createForUser,
     });
 
-    const { execute: createTransaction } = useFetch({
+    const { execute: createTransactionPaypal } = useFetch({
         ...apiConfig.transaction.create,
+    });
+    const { execute: createTransactionVnpal } = useFetch({
+        ...apiConfig.transaction.vnpay,
     });
 
     const { execute: executeSuccessPay } = useFetch({
@@ -140,32 +144,56 @@ const OrderPage = () => {
             data: { ...updatedValues },
             onCompleted: (respone) => {
                 if (values.paymentMethod === 1) {
-                    createTransaction({
+                    createTransactionPaypal({
                         data: {
                             orderId: respone.data.orderId,
                             urlCancel: `${apiFrontend}my-order-fail`,
                             urlSuccess: `${apiFrontend}my-order-success`,
                         },
                         onCompleted: (res) => {
-                            window.location.href = res.data;
+                            dispatch(getCartItemList([]));
+                            // window.location.href = res.data;
+                            window.open(res.data, '_blank');
+                            setCurrent(2);
                             showSucsessMessage('Đơn hàng đang được xử lý!');
                         },
                         onError: () => {
                             showErrorMessage('Thanh toán PAYPAL thất bại');
                             setCurrent(2);
                             form.resetFields();
-                            setTimeout(() => {
-                                window.location.reload();
-                            }, 2000);
+                            // setTimeout(() => {
+                            //     window.location.reload();
+                            // }, 2000);
+                        },
+                    });
+                } else if (values.paymentMethod === 2) {
+                    createTransactionVnpal({
+                        data: {
+                            orderId: respone.data.orderId,
+                            urlCancel: `${apiFrontend}my-order-fail`,
+                            urlSuccess: `${apiFrontend}my-order-success`,
+                        },
+                        onCompleted: (res) => {
+                            dispatch(getCartItemList([]));
+                            setCurrent(2);
+                            showSucsessMessage('Đơn hàng đang được xử lý!');
+                        },
+                        onError: () => {
+                            showErrorMessage('Thanh toán PAYPAL thất bại');
+                            setCurrent(2);
+                            form.resetFields();
+                            // setTimeout(() => {
+                            //     window.location.reload();
+                            // }, 2000);
                         },
                     });
                 } else {
-                    showSucsessMessage('Đặt hàng thành công');
+                    dispatch(getCartItemList([]));
                     setCurrent(2);
+                    showSucsessMessage('Đặt hàng thành công');
                     setTimeout(() => {
                         navigate(routes.HistoryOrder.path);
-                        window.location.reload();
-                    }, 1500);
+                    }, 3000);
                 }
             },
             onError: (error) => {

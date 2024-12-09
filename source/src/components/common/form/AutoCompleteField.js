@@ -26,6 +26,7 @@ function AutoCompleteField({
     disabled,
     renderCustomOption,
     dropdownRender,
+    labelCol,
 }) {
     const { placeholder: _placeholder, rules: _rules } = useFormField({
         placeholder,
@@ -122,6 +123,7 @@ function AutoCompleteField({
             onFocus={handleFocus}
             dropdownRender={dropdownRender}
             onClear={() => handleOnSearch('')}
+            labelCol={labelCol}
         />
     );
 }
