@@ -858,8 +858,13 @@ const apiConfig = {
             headers: baseHeader,
         },
 
-        forgetPassword: {
+        confirmOtp: {
             baseURL: `${apiUrl}v1/user/confirm_otp`,
+            method: `POST`,
+            headers: baseHeader,
+        },
+        requestSendMail: {
+            baseURL: `${apiUrl}v1/user/request-send-mail`,
             method: `POST`,
             headers: baseHeader,
         },

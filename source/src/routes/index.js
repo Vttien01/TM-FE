@@ -19,6 +19,7 @@ import HistoryOrderPage from '@modules/layout/desktop/HistoryOrder';
 import HistoryOrderGuest from '@modules/layout/desktop/HistoryOrder/HistoryOrderGuest';
 import ProfileUser from '@modules/layout/desktop/profileUser/routes';
 import ReviewPage from '@modules/layout/desktop/Review';
+import SignupPage from '@modules/layout/desktop/signup';
 
 /*
 	auth
@@ -141,6 +142,13 @@ const routes = {
         component: ReviewPage,
         auth: null,
         title: 'Evaluate Page',
+        // permissions: [apiConfig.order.create.baseURL, apiConfig.order.update.baseURL],
+    },
+    SignUp: {
+        path: '/sign-up',
+        component: SignupPage,
+        auth: false,
+        title: 'Sign Up',
         // permissions: [apiConfig.order.create.baseURL, apiConfig.order.update.baseURL],
     },
     ...ProfileUser,

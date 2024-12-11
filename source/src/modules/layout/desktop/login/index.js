@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { defineMessages, useIntl } from 'react-intl';
-import { Button, ConfigProvider, Flex, Form, Image, Input } from 'antd';
+import { Button, ConfigProvider, Flex, Form, Image, Input, Typography } from 'antd';
 
 import apiConfig from '@constants/apiConfig';
 import { setCacheAccessToken } from '@services/userService';
@@ -11,7 +11,6 @@ import { accountActions } from '@store/actions';
 import useAuth from '@hooks/useAuth';
 import useFetch from '@hooks/useFetch';
 import useFetchAction from '@hooks/useFetchAction';
-import Title from 'antd/es/typography/Title';
 import { showErrorMessage } from '@services/notifyService';
 import { appAccount, appName, storageKeys } from '@constants';
 import { commonMessage } from '@locales/intl';
@@ -26,9 +25,9 @@ import imgContact from '@assets/images/imgContact.png';
 import logo from '@assets/images/logoTech.png';
 import './style.css';
 import useDisclosure from '@hooks/useDisclosure';
-import ListDetailsForm from './ListDetailsForm';
+import ForgetPassModal from './ForgetPassModal';
 
-// const { Title } = Typography;
+const { Title } = Typography;
 
 window.Buffer = window.Buffer || Buffer;
 const message = defineMessages({
@@ -107,7 +106,7 @@ const LoginDesktop = () => {
     var reWhiteSpace = new RegExp('/^s+$/');
     return (
         <div className={styles.loginPage}>
-            <ListDetailsForm open={openedDetailsModal} onCancel={() => handlerDetailsModal.close()} form={form} />
+            <ForgetPassModal open={openedDetailsModal} onCancel={() => handlerDetailsModal.close()} form={form} />
 
             <Flex justify="space-between" align="center" style={{ width: '90vw', margin: '40px 0px 80px' }}>
                 <div className="nav-left">
@@ -124,7 +123,7 @@ const LoginDesktop = () => {
                             <Link to="/introduction">Giới thiệu</Link>
                         </li>
                         <li>
-                            <Link to="/all-product">Sản phẩm</Link>
+                            <Link to="/">Sản phẩm</Link>
                         </li>
                         <li>
                             <Link to="#">Liên hệ</Link>
@@ -135,7 +134,7 @@ const LoginDesktop = () => {
                 </nav> */}
             </Flex>
             <Flex gap={16}>
-                <div className={styles.loginForm}>
+                <div className={styles.loginFormLeft}>
                     <Title level={3} className={styles.customTitle}>
                         {intl.formatMessage(commonMessage.login)}
                     </Title>
@@ -225,16 +224,20 @@ const LoginDesktop = () => {
 
                         <div className={styles.bottom}>
                             <div className={styles.noAccount}>Bạn chưa có tài khoản?</div>
-                            <div className={styles.request}>Yêu cầu ngay</div>
+                            <Link to="/sign-up" className={styles.request}>
+                                Đăng ký
+                            </Link>
                         </div>
                     </Form>
                 </div>
-                <Image
-                    src={imgContact}
-                    style={{ objectFit: 'cover', borderRadius: 20 }}
-                    preview={false}
-                    className={styles.loginForm}
-                />
+                <div className={styles.loginFormRight}>
+                    <Image
+                        src={imgContact}
+                        style={{ objectFit: 'cover', borderRadius: 20 }}
+                        preview={false}
+                        className={styles.image}
+                    />
+                </div>
             </Flex>
         </div>
     );

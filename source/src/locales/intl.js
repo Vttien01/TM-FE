@@ -177,4 +177,5 @@ export const commonMessage = defineMessages({
     myWallet: 'Ví của tôi',
     amountOfCourse: 'Số khoá học đăng ký',
     authentication: 'Xác thực 2 lớp',
+    signup: 'Đăng ký',
 });
