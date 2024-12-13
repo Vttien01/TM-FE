@@ -6,7 +6,7 @@
 }
 .rounded-square-left {
     width: 28%;
-    min-height: 400px;
+    height: 80vh;
     background-color: #f8c66f; /* Màu nền của hình vuông */
     border-radius: 15px 0px 0 15px; /* Bo góc ở cả hai góc trên */
     display: flex;
@@ -15,15 +15,15 @@
   }
   .rounded-square-right {
     width: 68%;
-    min-height: 400px;
+    height: 80vh;
     background-color: #fcd8bc; /* Màu nền của hình vuông */
     border-radius: 0 15px 15px 0; /* Bo góc ở cả hai góc trên */
     display: flex;
     align-items: center;
     // margin-left: 1px;
-    justify-content: center; /* Màu chữ */
+    justify-content: start; 
   }
   .box-with-border {
     border-bottom: 1px solid #ffffff; /* Độ dày và màu của đường kẻ */
-    padding-bottom: 10px;
+    padding: 20px 0px;
   }

@@ -15,13 +15,13 @@ import useAuth from '@hooks/useAuth';
 import useDisclosure from '@hooks/useDisclosure';
 import useFetch from '@hooks/useFetch';
 import useTranslate from '@hooks/useTranslate';
-import { IconEdit } from '@tabler/icons-react';
 import { convertUtcToLocalTime, formatMoney } from '@utils';
-import { Card, Form, Modal, Table, Tabs, Tag, Tooltip, theme } from 'antd';
+import { Button, Card, Form, Modal, Table, Tabs, Tag, Tooltip, theme } from 'antd';
 import { defineMessage } from 'react-intl';
-import ListDetailsForm from './ListDetailsForm';
+import ListOrderModal from './ListOrderModal';
 import Container from '@components/common/elements/Container';
 import styles from './index.module.scss';
+import useQueryParams from '@hooks/useQueryParams';
 
 const decription = defineMessage({
     first: 'Kiểm tra số lượng sản phẩm',
@@ -33,58 +33,33 @@ const HistoryOrderPage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const queryParameters = new URLSearchParams(window.location.search);
-    const [ openedDetailsModal, handlerDetailsModal ] = useDisclosure(false);
     const [ form ] = Form.useForm();
     const translate = useTranslate();
-    const [ item1, setItem1 ] = useState(null);
     const stateValues = translate.formatKeys(paymentOptions, [ 'label' ]);
-    const onSearch = (value, _e, info) => {
-        <TableMyOrder search={value} />;
-    };
-    const renderTitle = (title, item) => (
-        <span>
-            {title}
-            <a
-                style={{
-                    float: 'right',
-                }}
-                onClick={() => handleEdit(item)}
-            >
-                <IconEdit size={17} />
-            </a>
-        </span>
-    );
-
-    const handleEdit = (item) => {
-        setItem1(item);
-        handlerDetailsModal.open();
-    };
 
     const { token } = theme.useToken();
-    const [ current, setCurrent ] = useState(0);
-
-    const [ quantity, setQuantity ] = useState(1);
+    const { setQueryParams } = useQueryParams();
 
     const steps = [
         {
             label: `Đang Xử Lý`,
             key: 1,
-            children: <TableMyOrder stateValues={stateValues} state={1} />,
+            children: <TableMyOrder state={1} />,
         },
         {
             label: `Đã được duyệt`,
             key: 2,
-            children: <TableMyOrder stateValues={stateValues} state={2} />,
+            children: <TableMyOrder state={2} />,
         },
         {
             label: `Hoàn Thành`,
-            key: 3,
-            children: <TableMyOrder stateValues={stateValues} state={4} />,
+            key: 4,
+            children: <TableMyOrder state={4} />,
         },
         {
             label: `Đã Hủy`,
-            key: 4,
-            children: <TableMyOrder stateValues={stateValues} state={3} />,
+            key: 3,
+            children: <TableMyOrder state={3} />,
         },
     ];
     const items = steps.map((item) => ({
@@ -112,7 +87,16 @@ const HistoryOrderPage = () => {
             >
                 <div style={{ flex: '1', justifyContent: 'center', minHeight: 600 }}>
                     <Card style={{ minHeight: 600, backgroundColor: '#d8dadd' }}>
-                        <Tabs defaultActiveKey="1" centered size="large" items={items} style={{ marginBottom: 20 }} />
+                        <Tabs
+                            defaultActiveKey="1"
+                            centered
+                            size="large"
+                            items={items}
+                            style={{ marginBottom: 20 }}
+                            onChange={(value) => {
+                                setQueryParams({ state: value });
+                            }}
+                        />
                     </Card>
                 </div>
             </PageWrapper>
@@ -120,44 +104,38 @@ const HistoryOrderPage = () => {
     );
 };
 
-function TableMyOrder({ stateValues, state, search }) {
+function TableMyOrder() {
     const translate = useTranslate();
+    const stateValues = translate.formatKeys(paymentOptions, [ 'label' ]);
     const [ form ] = Form.useForm();
     const [ openedDetailsModal, handlerDetailsModal ] = useDisclosure(false);
-    const [ detail, setDetail ] = useState([]);
-    const [ check, setCheck ] = useState(false);
+    const [ orderDetailProdcut, setOrderDetailProdcut ] = useState([]);
     const [ dataOrder, setDataOrder ] = useState({});
-    // const [state, setState] = useState(null);
     const isPaidValues = translate.formatKeys(paidValues, [ 'label' ]);
     const [ orderId, setOrderId ] = useState(null);
+    const queryParameters = new URLSearchParams(window.location.search);
+    const state = queryParameters.get('state');
 
-    const {
-        data: myOrder,
-        loading: loadingMyOrder,
-        execute: executeMyOrder,
-    } = useFetch(apiConfig.order.myOrder, {
-        immediate: true,
+    const { data: myOrder, execute: executeMyOrder } = useFetch(apiConfig.order.myOrder, {
+        immediate: false,
         mappingData: ({ data }) => data.content,
-        params: { state: state },
     });
-
-    // const {
-    //     execute: executeDetailOrder,
-    // } = useFetch(apiConfig.orderDetail.getByOrder, {
-    //     immediate: true,
-    // });
     const { execute: executeDetailOrder } = useFetch({
         ...apiConfig.orderDetail.getByOrder,
     });
+    useEffect(() => {
+        executeMyOrder({
+            params: { state: state || 1 },
+        });
+    }, [ state ]);
 
     const handleFetchDetail = (record) => {
         executeDetailOrder({
             pathParams: { id: record.id },
             onCompleted: (response) => {
-                setDetail(response.data);
+                setOrderDetailProdcut(response.data);
                 setDataOrder(record);
             },
-            // onError: mixinFuncs.handleGetDetailError,
         });
     };
 
@@ -166,8 +144,6 @@ function TableMyOrder({ stateValues, state, search }) {
     });
 
     const showDeleteItemConfirm = (id) => {
-        // if (!apiConfig.delete) throw new Error('apiConfig.delete is not defined');
-        console.log(id);
         Modal.confirm({
             title: 'Hủy đơn hàng',
             content: 'Bạn có chắc muốn hủy đơn hàng?',
@@ -184,14 +160,13 @@ function TableMyOrder({ stateValues, state, search }) {
         excuteCancelOrder({
             data: { id: id, state: 3 },
             onCompleted: (response) => {
-                setCheck(!check);
+                executeMyOrder({
+                    params: { state },
+                });
             },
             // onError: mixinFuncs.handleGetDetailError,
         });
     };
-    useEffect(() => {
-        executeMyOrder();
-    }, [ check ]);
 
     const itemHeader = () => {
         const items = [
@@ -263,26 +238,25 @@ function TableMyOrder({ stateValues, state, search }) {
                 },
             },
         ];
-        if (state === 1) {
+        if (state == 1) {
             items.push({
-                title: 'Hành động',
+                title: 'Hủy đơn hàng',
                 key: 'action',
                 align: 'center',
                 render: (_, record) => (
-                    <Tooltip title="Hủy đơn hàng">
-                        <DeleteOutlined
-                            style={{ color: 'red', fontSize: 20 }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                showDeleteItemConfirm(record.id);
-                            }}
-                            // disabled={true}
-                        />
-                    </Tooltip>
+                    <Button
+                        style={{ color: 'red', fontSize: 16 }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            showDeleteItemConfirm(record.id);
+                        }}
+                    >
+                        Hủy
+                    </Button>
                 ),
             });
         }
-        if (state === 2) {
+        if (state == 2) {
             items.push({
                 title: 'Ngày dự kiến giao hàng',
                 dataIndex: 'expectedDeliveryDate',
@@ -299,14 +273,15 @@ function TableMyOrder({ stateValues, state, search }) {
 
     return (
         <div>
-            <ListDetailsForm
+            <ListOrderModal
                 open={openedDetailsModal}
+                handlerDetailsModal={handlerDetailsModal}
                 onCancel={() => handlerDetailsModal.close()}
                 form={form}
-                detail={detail}
-                isEditing={!!detail}
+                detail={orderDetailProdcut}
+                isEditing={!!orderDetailProdcut}
                 state={state}
-                dataOrder={dataOrder}
+                orderDetailCommon={dataOrder}
                 orderId={orderId}
             />
             <Table

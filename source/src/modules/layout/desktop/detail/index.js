@@ -35,29 +35,12 @@ const DetailPageDesktop = () => {
     const [ quantity, setQuantity ] = useState(1);
     const [ isLoadingMore, setIsLoadingMore ] = useState(false);
     const [ check, setCheck ] = useState();
-    const {
-        data: product,
-        loading: allproductsLoading,
-        execute: executgeallproducts,
-    } = useFetch(apiConfig.product.getProductAutocomplete, {
-        immediate: true,
-        pathParams: { id },
+    const [ averageRating, setAverageRating ] = useState(0);
+    const [ ratingPercentages, setRatingPercentages ] = useState([ 0, 0, 0, 0, 0 ]);
+    const { data: product, execute: executGetAllproducts } = useFetch(apiConfig.product.getProductAutocomplete, {
+        immediate: false,
         mappingData: ({ data }) => data,
     });
-    useEffect(() => {
-        if (product?.length > 0) setDetail(product);
-        else setDetail([]);
-    }, [ product ]);
-
-    useEffect(() => {
-        executgeallproducts({
-            pathParams: { id },
-            onCompleted: (res) => {
-                setDetail(res.data);
-            },
-            onError: (error) => {},
-        });
-    }, [ id ]);
 
     let discountedPrice;
     if (product?.saleOff) {
@@ -82,66 +65,74 @@ const DetailPageDesktop = () => {
         });
     };
 
-    const {
-        data: dataListReview,
-        loading: dataListLoading,
-        execute: listReview,
-    } = useFetch(apiConfig.review.getByProduct, {
-        immediate: true,
-        pathParams: {
-            id: id,
-        },
+    const { data: dataListReview, execute: executeListReview } = useFetch(apiConfig.review.getByProduct, {
+        immediate: false,
         mappingData: ({ data }) => data.content,
     });
 
-    const getListReview = (id) => {
-        listReview({
-            pathParams: {
-                id: id,
-            },
-        });
-    };
     const {
-        data: starData,
+        data: starReviewData,
         loading: starDataLoading,
-        execute: starReview,
-    } = useFetch(apiConfig.review.starListReview, {
-        immediate: true,
-        pathParams: {
-            productId: id,
-        },
-        mappingData: ({ data }) => data.content,
-    });
-
-    const getStarReview = (id) => {
-        starReview({
-            pathParams: {
+        execute: executeStarReviewData,
+    } = useFetch(apiConfig.review.starCountForEach, { immediate: false, mappingData: ({ data }) => data.content });
+    useEffect(() => {
+        executGetAllproducts({
+            pathParams: { id },
+            onCompleted: (res) => {
+                if (res?.data?.length > 0) setDetail(res.data);
+                else setDetail([]);
+            },
+            onError: (error) => {},
+        });
+        executeListReview({
+            params: {
                 productId: id,
             },
         });
-    };
+        executeStarReviewData({
+            pathParams: {
+                id,
+            },
+        });
+    }, [ id ]);
 
+    // let totalStars = 0;
+    // let totalRatings = 0;
+    // const ratingCount = Array(5).fill(0);
+
+    // dataStarReview?.forEach((item) => {
+    //     totalStars += item.star * item.amount;
+    //     totalRatings += item.amount;
+
+    //     if (item.star >= 1 && item.star <= 5) {
+    //         ratingCount[item.star - 1] += item.amount;
+    //     }
+    // });
+    // const averageRating = totalRatings > 0 ? (totalStars / totalRatings).toFixed(1) : 0;
+    // const ratingPercentages = ratingCount.map((count) =>
+    //     totalRatings > 0 ? Math.floor((count / totalRatings) * 100) : 0,
+    // );
     useEffect(() => {
-        listReview();
-        starReview();
-    }, []);
+        if (starReviewData) {
+            const ratingCount = Array(5).fill(0);
+            let totalStars = 0;
+            let totalRatings = 0;
+            starReviewData?.forEach((item) => {
+                totalStars += item.star * item.amount;
+                totalRatings += item.amount;
 
-    let totalStars = 0;
-    let totalRatings = 0;
-    const ratingCount = Array(5).fill(0);
-
-    starData?.forEach((item) => {
-        totalStars += item.star * item.amount;
-        totalRatings += item.amount;
-
-        if (item.star >= 1 && item.star <= 5) {
-            ratingCount[item.star - 1] += item.amount;
+                if (item.star >= 1 && item.star <= 5) {
+                    ratingCount[item.star - 1] += item.amount;
+                }
+            });
+            const value = totalRatings > 0 ? (totalStars / totalRatings).toFixed(1) : 0;
+            setAverageRating(totalRatings > 0 ? (totalStars / totalRatings).toFixed(1) : 0);
+            const ratingPercentages = ratingCount.map((count) =>
+                totalRatings > 0 ? Math.floor((count / totalRatings) * 100) : 0,
+            );
+            setRatingPercentages(ratingPercentages);
         }
-    });
-    const averageRating = totalRatings > 0 ? (totalStars / totalRatings).toFixed(1) : 0;
-    const ratingPercentages = ratingCount.map((count) =>
-        totalRatings > 0 ? Math.floor((count / totalRatings) * 100) : 0,
-    );
+    }, [ starReviewData ]);
 
     const dataToShow = dataListReview?.length > 0 ? dataListReview.slice(0, visibleItems) : dataListReview;
 
@@ -445,7 +436,7 @@ const DetailPageDesktop = () => {
                                             marginBottom: '10px',
                                         }}
                                     >
-                                        Danh sách đánh giá ({totalRatings} Review)
+                                        Danh sách đánh giá ({dataListReview?.length || 0} Review)
                                     </span>
 
                                     <div>

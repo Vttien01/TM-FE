@@ -9,7 +9,7 @@ import useFetch from '@hooks/useFetch';
 import useTranslate from '@hooks/useTranslate';
 import { commonMessage } from '@locales/intl';
 import { showErrorMessage, showSucsessMessage } from '@services/notifyService';
-import { Button, Col, Flex, Form, InputNumber, Modal, Row, Table } from 'antd';
+import { Button, Card, Col, Flex, Form, InputNumber, Modal, Row, Table } from 'antd';
 import dayjs from 'dayjs';
 import React, { useEffect, useMemo, useState } from 'react';
 import { FormattedMessage, defineMessage } from 'react-intl';
@@ -58,9 +58,9 @@ const ProfileModal = ({ open, onCancel, profile }) => {
                 onCancel();
                 showSucsessMessage(translate.formatMessage(message.updateSuccess));
             },
-            onErrorr: (err) => {
-                onCancel();
-                showErrorMessage(translate.formatMessage(message.updateFail));
+            onError: ({ response }) => {
+                if (response?.data?.message) showErrorMessage(response?.data?.message);
+                else showErrorMessage(translate.formatMessage(message.updateFail));
             },
         });
     };
@@ -84,45 +84,34 @@ const ProfileModal = ({ open, onCancel, profile }) => {
             onCancel={onCancel}
             // onOk={() => form.submit()}
             width={'50vw'}
-            footer={
-                <Flex width="100%" justify="flex-end" gap="middle">
-                    <Button key="cancel" onClick={onCancel}>
-                        Đóng
-                    </Button>
-                    <Button
-                        key="ok"
-                        type="primary"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            handleProfileModal();
-                        }}
-                    >
-                        Cập nhật
-                    </Button>
-                </Flex>
-            }
+            footer={null}
         >
-            <Form form={form}>
-                <CropImageField
-                    label={translate.formatMessage(commonMessage.avatar)}
-                    // name="avatarPath"
-                    imageUrl={imageUrl && `${AppConstants.contentRootUrl}${imageUrl}`}
-                    aspect={1 / 1}
-                    uploadFile={uploadFile}
-                />
-                <Row gutter={16}>
-                    <Col span={12}>
-                        <TextField
-                            label={translate.formatMessage(commonMessage.fullName)}
-                            name="fullName"
-                            required
-                            labelCol={{ span: 24 }}
-                        />
-                    </Col>
-                    <Col span={12}>
-                        <TextField label={translate.formatMessage(commonMessage.username)} name="username" required />
-                    </Col>
-                    {/* <Col span={12}>
+            <Card>
+                <Form form={form}>
+                    <CropImageField
+                        label={translate.formatMessage(commonMessage.avatar)}
+                        // name="avatarPath"
+                        imageUrl={imageUrl && `${AppConstants.contentRootUrl}${imageUrl}`}
+                        aspect={1 / 1}
+                        uploadFile={uploadFile}
+                    />
+                    <Row gutter={16}>
+                        <Col span={12}>
+                            <TextField
+                                label={translate.formatMessage(commonMessage.fullName)}
+                                name="fullName"
+                                required
+                                labelCol={{ span: 24 }}
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <TextField
+                                label={translate.formatMessage(commonMessage.username)}
+                                name="username"
+                                disabled
+                            />
+                        </Col>
+                        {/* <Col span={12}>
                         <DatePickerField
                             label="Ngày sinh"
                             showTime={false}
@@ -132,61 +121,82 @@ const ProfileModal = ({ open, onCancel, profile }) => {
                             size="small"
                         />
                     </Col> */}
-                    <Col span={12}>
-                        <TextField label={translate.formatMessage(commonMessage.email)} name="email" />
-                    </Col>
-                    <Col span={12}>
-                        <TextField label={translate.formatMessage(commonMessage.phone)} name="phone" required />
-                    </Col>
-                    <Col span={12}>
-                        <TextField
-                            type="password"
-                            label={<FormattedMessage defaultMessage="Mật khẩu cũ" />}
-                            required
-                            name="oldPassword"
-                        />
-                    </Col>
-                    <Col span={12}>
-                        <TextField
-                            type="password"
-                            label={<FormattedMessage defaultMessage="Mật khẩu mới" />}
-                            name="password"
-                            rules={[
-                                {
-                                    validator: async () => {
-                                        const isTouched = form.isFieldTouched('newPassword');
-                                        if (isTouched) {
-                                            const value = form.getFieldValue('newPassword');
-                                            if (value.length < 6) {
+                        <Col span={12}>
+                            <TextField label={translate.formatMessage(commonMessage.email)} name="email" />
+                        </Col>
+                        <Col span={12}>
+                            <TextField label={translate.formatMessage(commonMessage.phone)} name="phone" required />
+                        </Col>
+                        <Col span={12}>
+                            <TextField
+                                type="password"
+                                label={<FormattedMessage defaultMessage="Mật khẩu cũ" />}
+                                required
+                                name="oldPassword"
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <TextField
+                                type="password"
+                                label={<FormattedMessage defaultMessage="Mật khẩu mới" />}
+                                name="password"
+                                rules={[
+                                    {
+                                        validator: async () => {
+                                            const isTouched = form.isFieldTouched('newPassword');
+                                            if (isTouched) {
+                                                const value = form.getFieldValue('newPassword');
+                                                if (value.length < 6) {
+                                                    throw new Error(
+                                                        translate.formatMessage(commonMessage.validatePassword),
+                                                    );
+                                                }
+                                            }
+                                        },
+                                    },
+                                ]}
+                            />
+                        </Col>
+                        <Col span={12}>
+                            <TextField
+                                type="password"
+                                label={translate.formatMessage(commonMessage.confirmPassword)}
+                                rules={[
+                                    {
+                                        validator: async () => {
+                                            const password = form.getFieldValue('newPassword');
+                                            const confirmPassword = form.getFieldValue('confirmPassword');
+                                            if (password !== confirmPassword) {
                                                 throw new Error(
-                                                    translate.formatMessage(commonMessage.validatePassword),
+                                                    translate.formatMessage(commonMessage.passwordNotMatch),
                                                 );
                                             }
-                                        }
+                                        },
                                     },
-                                },
-                            ]}
-                        />
-                    </Col>
-                    <Col span={12}>
-                        <TextField
-                            type="password"
-                            label={translate.formatMessage(commonMessage.confirmPassword)}
-                            rules={[
-                                {
-                                    validator: async () => {
-                                        const password = form.getFieldValue('newPassword');
-                                        const confirmPassword = form.getFieldValue('confirmPassword');
-                                        if (password !== confirmPassword) {
-                                            throw new Error(translate.formatMessage(commonMessage.passwordNotMatch));
-                                        }
-                                    },
-                                },
-                            ]}
-                        />
-                    </Col>
-                </Row>
-            </Form>
+                                ]}
+                            />
+                        </Col>
+                        <Col span={24}>
+                            <Flex width="100%" justify="flex-end" gap="middle">
+                                <Button key="cancel" onClick={onCancel} size="large">
+                                    Đóng
+                                </Button>
+                                <Button
+                                    size="large"
+                                    key="ok"
+                                    type="primary"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleProfileModal();
+                                    }}
+                                >
+                                    Cập nhật
+                                </Button>
+                            </Flex>
+                        </Col>
+                    </Row>
+                </Form>
+            </Card>
         </Modal>
     );
 };

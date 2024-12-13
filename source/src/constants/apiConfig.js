@@ -527,31 +527,70 @@ const apiConfig = {
         },
     },
     review: {
+        getByProductPublic: {
+            baseURL: `${apiUrl}v1/review/get-by-product-public`,
+            method: 'GET',
+            headers: baseHeader,
+            isRequiredTenantId: true,
+        },
+
+        getByProduct: {
+            baseURL: `${apiUrl}v1/review/get-by-product`,
+            method: 'GET',
+            headers: baseHeader,
+            isRequiredTenantId: true,
+        },
         create: {
             baseURL: `${apiUrl}v1/review/create`,
             method: 'POST',
             headers: baseHeader,
+            isRequiredTenantId: true,
         },
-        getListCourse: {
-            baseURL: `${apiUrl}v1/review/list-reviews/:id`,
-            method: 'GET',
+        update: {
+            baseURL: `${apiUrl}v1/review/update`,
+            method: 'PUT',
             headers: baseHeader,
+            isRequiredTenantId: true,
+        },
+        delete: {
+            baseURL: `${apiUrl}v1/review/delete/:id`,
+            method: 'DELETE',
+            headers: baseHeader,
+            isRequiredTenantId: true,
         },
 
-        reviewCourseStar: {
-            baseURL: `${apiUrl}v1/review/star/:courseId`,
+        getMyReview: {
+            baseURL: `${apiUrl}v1/review/get-my-review`,
             method: 'GET',
             headers: baseHeader,
+            isRequiredTenantId: true,
         },
-        myReview: {
-            baseURL: `${apiUrl}v1/review/my-review`,
+
+        getUnratedProduct: {
+            baseURL: `${apiUrl}v1/review/get-unrated-product`,
             method: 'GET',
             headers: baseHeader,
+            isRequiredTenantId: true,
         },
-        clientReview: {
-            baseURL: `${apiUrl}v1/review/client-list`,
+
+        avgStarReviews: {
+            baseURL: `${apiUrl}v1/review/star/:productId`,
             method: 'GET',
             headers: baseHeader,
+            isRequiredTenantId: true,
+        },
+
+        starListReview: {
+            baseURL: `${apiUrl}v1/review/star/:id`,
+            method: 'GET',
+            headers: baseHeader,
+            isRequiredTenantId: true,
+        },
+        starCountForEach: {
+            baseURL: `${apiUrl}v1/review/star/count-for-each/:id`,
+            method: 'GET',
+            headers: baseHeader,
+            isRequiredTenantId: true,
         },
     },
     settings: {

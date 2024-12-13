@@ -2,11 +2,12 @@ import { UserOutlined } from '@ant-design/icons';
 import AvatarField from '@components/common/form/AvatarField';
 import { BaseForm } from '@components/common/form/BaseForm';
 import TextField from '@components/common/form/TextField';
+import { AppConstants } from '@constants';
 import apiConfig from '@constants/apiConfig';
 import useFetch from '@hooks/useFetch';
 import useNotification from '@hooks/useNotification';
 import useTranslate from '@hooks/useTranslate';
-import { showErrorMessage } from '@services/notifyService';
+import { showErrorMessage, showSucsessMessage } from '@services/notifyService';
 import { Button, Col, Form, Modal, Rate, Row } from 'antd';
 import React, { useState } from 'react';
 import { defineMessages } from 'react-intl';
@@ -22,9 +23,6 @@ const ReviewModal = ({ open, onCancel, profile, orderDetailId }) => {
     const [ form ] = Form.useForm();
     const [ star, setStar ] = useState();
     const notification = useNotification();
-    const handleOnCancel = () => {
-        onCancel();
-    };
     const { execute: executeCreateReview } = useFetch(apiConfig.review.create, {
         immediate: false,
     });
@@ -36,16 +34,15 @@ const ReviewModal = ({ open, onCancel, profile, orderDetailId }) => {
                 star: star,
             },
             onCompleted: () => {
-                notification({
-                    message: 'Tạo đánh giá thành công',
-                });
                 onCancel();
+                showSucsessMessage('Tạo đánh giá thành công');
+                form.setFieldValue();
             },
             onError: (err) => {
                 if (err.code === 'ERROR-REVIEW-0001') {
                     showErrorMessage('Bạn đã tạo đánh giá cho sản phẩm này!');
-                    onCancel();
                 }
+                onCancel();
             },
         });
     };
@@ -56,15 +53,23 @@ const ReviewModal = ({ open, onCancel, profile, orderDetailId }) => {
         <Modal
             centered
             open={open}
-            onCancel={handleOnCancel}
+            onCancel={onCancel}
             footer={null}
             title={translate.formatMessage(messages.objectName)}
         >
             <BaseForm form={form} onFinish={handleCreateReview} size="100%">
                 <Row style={{ textAlign: 'center' }}>
                     <Col span={24} style={{ margin: '0 auto', textAlign: 'center' }}>
-                        <AvatarField size={100} icon={<UserOutlined />} src={profile?.avatar} />
-                        <div style={{ fontWeight: '500', fontSize: '18px', margin: '10px 0' }}>{profile.fullName}</div>
+                        <AvatarField
+                            size={100}
+                            icon={<UserOutlined />}
+                            src={
+                                profile?.account?.avatar && `${AppConstants.contentRootUrl}${profile?.account?.avatar}`
+                            }
+                        />
+                        <div style={{ fontWeight: '500', fontSize: '18px', margin: '10px 0' }}>
+                            {profile?.account?.fullName}
+                        </div>
                         <Rate style={{ marginBottom: '30px' }} name="star" onChange={handleRateChange} />
                     </Col>
                 </Row>

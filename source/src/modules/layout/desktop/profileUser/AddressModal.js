@@ -55,7 +55,7 @@ const AddressModal = ({ open, onCancel, address, form, getList }) => {
                         : translate.formatMessage(message.createSuccess),
                 );
             },
-            onErrorr: (err) => {
+            onError: (err) => {
                 onCancel();
                 showErrorMessage(
                     address ? translate.formatMessage(message.updateFail) : translate.formatMessage(message.createFail),

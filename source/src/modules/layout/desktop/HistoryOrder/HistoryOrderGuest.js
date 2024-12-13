@@ -36,7 +36,7 @@ import {
 } from 'antd';
 import Avatar from 'antd/es/avatar/avatar';
 import { defineMessage } from 'react-intl';
-import ListDetailsForm from './ListDetailsForm';
+import ListDetailsForm from './ListOrderModal';
 import { showErrorMessage } from '@services/notifyService';
 import { SmileOutlined } from '@ant-design/icons';
 import { paymentSelect } from '@constants';
@@ -53,7 +53,6 @@ const HistoryOrderGuest = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const queryParameters = new URLSearchParams(window.location.search);
-    const [ openedDetailsModal, handlerDetailsModal ] = useDisclosure(false);
     const [ form ] = Form.useForm();
     const translate = useTranslate();
     const [ item1, setItem1 ] = useState(null);
@@ -165,7 +164,7 @@ const HistoryOrderGuest = () => {
                                 <Button
                                     type="primary"
                                     htmlType="submit"
-                                    style={{ marginLeft: 8, backgroundColor: '#f57e20' }}
+                                    style={{ marginLeft: 8, backgroundColor: '#f57e20', height: 42 }}
                                 >
                                     Tìm kiếm
                                 </Button>
@@ -333,7 +332,7 @@ function TableMyOrder({ search }) {
                                 <List.Item.Meta
                                     avatar={<Avatar src={item?.image} size={100} />}
                                     title={
-                                        <a style={{ fontSize: 25 }} href="https://ant.design">
+                                        <a style={{ fontSize: 25 }} href={`/detail/${item?.productId}`}>
                                             {item?.name}
                                         </a>
                                     }

@@ -2,16 +2,16 @@ import { EditOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
 import ListPage from '@components/common/layout/ListPage';
 import PageWrapper from '@components/common/layout/PageWrapper';
 import BaseTable from '@components/common/table/BaseTable';
-import { accountStatusOptions, DEFAULT_TABLE_ITEM_SIZE } from '@constants';
+import { accountStatusOptions, AppConstants, DEFAULT_FORMAT, DEFAULT_TABLE_ITEM_SIZE } from '@constants';
 import apiConfig from '@constants/apiConfig';
 import useAuth from '@hooks/useAuth';
 import useListBase from '@hooks/useListBase';
 import useTranslate from '@hooks/useTranslate';
 import { commonMessage } from '@locales/intl';
 import routes from '@routes';
-import { IconEdit, IconStar } from '@tabler/icons-react';
-import { Avatar, Button, Card, Divider, Flex, Form, Space, Tag, Tooltip, Typography } from 'antd';
-import React, { useState } from 'react';
+import { IconEdit, IconHome, IconStar } from '@tabler/icons-react';
+import { Avatar, Button, Card, Divider, Flex, Form, List, Rate, Space, Tag, Tooltip, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './PersonInfo.module.scss';
@@ -20,6 +20,13 @@ import { BaseTooltip } from '@components/common/form/BaseTooltip';
 import useDisclosure from '@hooks/useDisclosure';
 import AddressModal from './AddressModal';
 import ProfileModal from './ProfileModal';
+import useQueryParams from '@hooks/useQueryParams';
+import useFetch from '@hooks/useFetch';
+import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
+import { convertUtcToLocalTime } from '@utils';
+import useFetchAction from '@hooks/useFetchAction';
+import { accountActions } from '@store/actions';
+import { use } from 'react';
 
 const message = defineMessages({
     objectName: 'Địa chỉ người dùng',
@@ -35,6 +42,25 @@ const PersonInfo = () => {
     const [ address, setAddress ] = useState(null);
     const { pathname: pagePath } = useLocation();
     const [ form ] = Form.useForm();
+    const queryParameters = new URLSearchParams(window.location.search);
+    const content = queryParameters.get('content');
+    const { deserializeParams, setQueryParams, params } = useQueryParams();
+    const { execute: executeGetProfile } = useFetchAction(accountActions.getProfile, {
+        loading: useFetchAction.LOADING_TYPE.APP,
+    });
+    const {
+        data: dataMyReview,
+        loading: loadingMyReview,
+        execute: executeMyReview,
+    } = useFetch(apiConfig.review.getMyReview, {
+        immediate: false,
+        mappingData: (res) => res.data,
+    });
+    useEffect(() => {
+        if (content === 'review') {
+            executeMyReview();
+        }
+    }, [ content ]);
 
     const { data, mixinFuncs, queryFilter, loading, pagination } = useListBase({
         // apiConfig: apiConfig.address,
@@ -123,6 +149,13 @@ const PersonInfo = () => {
         navigate(routes.ReviewPage.path + `?userId=${profile.id}`);
     };
 
+    const IconText = ({ icon, text }) => (
+        <Space>
+            {React.createElement(icon)}
+            {text}
+        </Space>
+    );
+
     const breadRoutes = [ { breadcrumbName: translate.formatMessage(message.titlePage) } ];
 
     return (
@@ -131,7 +164,16 @@ const PersonInfo = () => {
             <PageWrapper routes={breadRoutes}>
                 <div style={{ display: 'flex', justifyContent: 'center', margin: '30px 0px' }}>
                     <Space className={styles.roundedSquareLeft} direction="vertical">
-                        <Avatar size={200} icon={<UserOutlined />} />
+                        <Avatar
+                            size={200}
+                            src={
+                                profile?.account?.avatar ? (
+                                    `${AppConstants.contentRootUrl}${profile?.account?.avatar}`
+                                ) : (
+                                    <UserOutlined />
+                                )
+                            }
+                        />
                         <Typography.Title style={{ fontSize: 35 }}>Người dùng</Typography.Title>
                         <Typography.Title level={3}>{profile?.account?.username}</Typography.Title>
                         <Space>
@@ -139,61 +181,175 @@ const PersonInfo = () => {
                                 <IconEdit
                                     size={40}
                                     color="#282a36"
-                                    onClick={() => handleProfileModal.open()}
+                                    onClick={() => setQueryParams({ content: 'profile' })}
                                     style={{ fontSize: 40, color: '#282a36', cursor: 'pointer' }}
+                                />
+                            </Tooltip>
+                            <Tooltip placement="bottom" title="Địa chỉ">
+                                <IconHome
+                                    size={40}
+                                    color="#282a36"
+                                    onClick={() => setQueryParams({ content: 'address' })}
+                                    style={{ marginLeft: 20, fontSize: 40, color: '#282a36', cursor: 'pointer' }}
                                 />
                             </Tooltip>
                             <Tooltip placement="bottom" title="Đánh giá sản phẩm">
                                 <IconStar
                                     size={40}
                                     color="#282a36"
-                                    onClick={handleReview}
+                                    onClick={() => setQueryParams({ content: 'review' })}
                                     style={{ marginLeft: 20, fontSize: 40, color: '#282a36', cursor: 'pointer' }}
                                 />
                             </Tooltip>
                         </Space>
                     </Space>
-                    <Space className={styles.roundedSquareRight} direction="vertical">
-                        <div className={styles.boxWithBorder}>
-                            <Divider orientation="left" style={{ fontSize: 25 }}>
-                                Thông tin cá nhân
-                            </Divider>
-                        </div>
-                        <Space direction="horizontal">
-                            <DashboardCard title={'Họ và tên'} value={profile?.account?.fullName} />
-                            <DashboardCard title={'Email'} value={profile?.account?.email} />
+                    {content == 'address' ? (
+                        <Space className={styles.roundedSquareRight} direction="vertical">
+                            <div className={styles.boxWithBorder}>
+                                <Divider orientation="left" style={{ fontSize: 25, marginBottom: '20px' }}>
+                                    Thông tin địa chỉ
+                                </Divider>
+                            </div>
+                            {/* <ListPage
+                                actionBar={
+                                    <Flex justify="end">
+                                        <Button type="primary" onClick={() => handleAddressModal.open()}>
+                                            <PlusOutlined /> Thêm mới
+                                        </Button>
+                                    </Flex>
+                                }
+                                style={{ backgroundColor: '#fcd8bc', borderRadius: '10px' }}
+                                baseTable={
+                                }
+                            /> */}
+                            <Flex justify="end" style={{ width: '800px', position: 'absolute', top: 160, right: 160 }}>
+                                <Button type="primary" onClick={() => handleAddressModal.open()}>
+                                    <PlusOutlined /> Thêm mới
+                                </Button>
+                            </Flex>
+                            <BaseTable
+                                onChange={mixinFuncs.changePagination}
+                                columns={columns}
+                                dataSource={data}
+                                loading={loading}
+                                pagination={pagination}
+                                style={{ minWidth: 800 }}
+                            />
                         </Space>
-                        <Space direction="horizontal">
-                            <DashboardCard title={'Số điện thoại'} value={profile?.account?.phone} />
-                            <DashboardCardStatus title={'Trạng thái hoạt động'} value={profile?.account?.status} />
+                    ) : content == 'review' ? (
+                        <Space className={styles.roundedSquareRight} direction="vertical">
+                            <div className={styles.boxWithBorder}>
+                                <Divider orientation="left" style={{ fontSize: 25, marginBottom: '20px' }}>
+                                    Danh sách các đánh giá của người dùng
+                                </Divider>
+                            </div>
+                            <List
+                                loading={loadingMyReview}
+                                pagination={dataMyReview?.length > 0 && true}
+                                // className="demo-loadmore-list"
+                                itemLayout="horizontal"
+                                dataSource={dataMyReview || []}
+                                style={{ marginBottom: 10, border: '1px solide white', minWidth: 800 }}
+                                renderItem={(item) => (
+                                    <Card style={{ backgroundColor: '#eff0f1', marginTop: 10 }}>
+                                        <List.Item
+                                            itemLayout="vertical"
+                                            key={item?.id}
+                                            actions={[
+                                                <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+                                                <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+                                                <IconText
+                                                    icon={MessageOutlined}
+                                                    text="2"
+                                                    key="list-vertical-message"
+                                                />,
+                                            ]}
+                                        >
+                                            <List.Item.Meta
+                                                avatar={<Avatar src={item?.image} size={100} alt="" />}
+                                                title={
+                                                    <a href={`/detail/${item.productId}`} style={{ fontSize: 25 }}>
+                                                        {item?.productName}
+                                                    </a>
+                                                }
+                                                description={
+                                                    <div
+                                                        style={{
+                                                            display: 'flex',
+                                                            justifyContent: 'center',
+                                                            flexDirection: 'column',
+                                                        }}
+                                                    >
+                                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                                            <Rate disabled allowHalf value={item?.star} />
+                                                        </div>
+                                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                                            Màu: {item.color}
+                                                        </div>
+                                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                                            Ngày tạo: {''}
+                                                            <span>
+                                                                {convertUtcToLocalTime(
+                                                                    item?.createdDate,
+                                                                    DEFAULT_FORMAT,
+                                                                    DEFAULT_FORMAT,
+                                                                )}
+                                                            </span>
+                                                        </div>
+                                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                                            <Typography.Paragraph
+                                                                ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
+                                                                style={{ fontSize: 18 }}
+                                                            >
+                                                                Nội dung: {item?.message}
+                                                            </Typography.Paragraph>
+                                                        </div>
+                                                    </div>
+                                                }
+                                            />
+                                        </List.Item>
+                                    </Card>
+                                )}
+                            />
                         </Space>
-                        <Space direction="horizontal">
-                            <DashboardCard title={'Điểm cá nhân'} value={`${profile?.point}đ`} />
-                        </Space>
-                        <Divider orientation="left" style={{ fontSize: 25 }}>
-                            Thông tin địa chỉ
-                        </Divider>
-                        <ListPage
-                            actionBar={
-                                <Flex justify="end">
-                                    <Button type="primary" onClick={() => handleAddressModal.open()}>
-                                        <PlusOutlined /> Thêm mới
-                                    </Button>
-                                </Flex>
-                            }
-                            style={{ backgroundColor: '#fcd8bc', borderRadius: '10px', marginBottom: 20 }}
-                            baseTable={
-                                <BaseTable
-                                    onChange={mixinFuncs.changePagination}
-                                    columns={columns}
-                                    dataSource={data}
-                                    loading={loading}
-                                    pagination={pagination}
-                                    style={{ minWidth: 800 }}
+                    ) : (
+                        <Space className={styles.roundedSquareRight} direction="vertical">
+                            <div className={styles.boxWithBorder}>
+                                <Divider orientation="left" style={{ fontSize: 25, marginBottom: '20px' }}>
+                                    Thông tin cá nhân
+                                </Divider>
+                            </div>
+                            <Space direction="horizontal">
+                                <DashboardCard title={'Họ và tên'} value={profile?.account?.fullName} />
+                                <DashboardCard title={'Username'} value={profile?.account?.username} />
+                            </Space>
+                            <Space direction="horizontal">
+                                <DashboardCard title={'Số điện thoại'} value={profile?.account?.phone} />
+                                <DashboardCard title={'Email'} value={`${profile?.email}`} />
+                            </Space>
+                            <Space direction="horizontal">
+                                <DashboardCardStatus title={'Trạng thái hoạt động'} value={profile?.account?.status} />
+                                <DashboardCard
+                                    title={'Điểm cá nhân'}
+                                    value={
+                                        <div
+                                            style={{ color: 'green', fontSize: 20, fontWeight: 600 }}
+                                        >{`${profile?.point}đ`}</div>
+                                    }
                                 />
-                            }
-                        />
-                    </Space>
+                            </Space>
+                            <Space direction="horizontal">
+                                <Button
+                                    size="large"
+                                    type="primary"
+                                    style={{ marginTop: 20 }}
+                                    onClick={() => handleProfileModal.open()}
+                                >
+                                    Cập nhật thông tin cá nhân
+                                </Button>
+                            </Space>
+                        </Space>
+                    )}
                 </div>
                 <AddressModal
                     open={openAddressModal}
@@ -209,6 +365,7 @@ const PersonInfo = () => {
                 <ProfileModal
                     open={openProfileModal}
                     onCancel={(e) => {
+                        executeGetProfile();
                         handleProfileModal.close();
                         form.resetFields();
                     }}
@@ -219,7 +376,7 @@ const PersonInfo = () => {
     );
 };
 
-function DashboardCard({ title, value, icon, icon1, number }) {
+function DashboardCard({ title, value, icon, icon1, number, children }) {
     return (
         <Card style={{ minWidth: 400, backgroundColor: '#e7e7e7' }}>
             <Space direction="vertical">

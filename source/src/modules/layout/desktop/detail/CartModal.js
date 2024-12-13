@@ -100,7 +100,6 @@ const CartModal = ({ open, onCancel, check, product }) => {
         let data;
         data = { variantId: newArray[0].id, quantity: newArray[0].quantity };
         if (profile) {
-            console.log(data);
             executeAddCart({
                 data: { ...data },
                 onCompleted: (res) => {
