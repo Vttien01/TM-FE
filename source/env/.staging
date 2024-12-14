@@ -5,3 +5,4 @@ GENERATE_SOURCEMAP = false
 CI = false
 IMAGE_INLINE_SIZE_LIMIT = 0
 REACT_APP_ENABLE_EXPOSURE = true
+REACT_APP_WEB_SOCKET_URL = wss://noti-elms.itz.io.vn/ws

@@ -8,13 +8,6 @@ import { commonMessage } from '@constants/intl';
 import { price } from '@utils';
 
 const notiMessMessage = {
-    [notificationKind.NOTIFICATION_KIND_APRROVE_SELLER]: commonMessage.notificationAprroveSeller,
-    [notificationKind.NOTIFICATION_KIND_REJECT_SELLER]: commonMessage.notificationRejectSeller,
-    [notificationKind.NOTIFICATION_KIND_EXPERT_REGISTRATION]: commonMessage.notificationExpertRegistration,
-    [notificationKind.NOTIFICATION_KIND_APPROVE_EXPERT]: commonMessage.notficationApproveExpert,
-    [notificationKind.NOTIFICATION_KIND_UPDATE_SELLER]: commonMessage.notficationUpdateSeller,
-    [notificationKind.NOTIFICATION_KIND_SING_UP_STUDENT]: commonMessage.notificationSingUpStudent,
-    [notificationKind.NOTIFICATION_KIND_RECEIVE_REVENUE]: commonMessage.notificationReviceRevenueMess,
     [notificationKind.NOTIFICATION_KIND_ORDER_SUCCESS]: commonMessage.notificationOrderSuccessMess,
 };
 export const webSocket = (tokenLogin, translate) => {
@@ -23,7 +16,7 @@ export const webSocket = (tokenLogin, translate) => {
     var isClosedIntentionally = false;
     document.addEventListener('visibilitychange', handleVisibilityChange);
     function handleVisibilityChange() {
-        if(tokenLogin) {
+        if (tokenLogin) {
             if (document.visibilityState === 'visible') {
                 // If the page becomes visible, reconnect WebSocket
                 webSocket();
@@ -55,8 +48,7 @@ export const webSocket = (tokenLogin, translate) => {
         websocket.onerror = onError;
     }
     function onOpen(evt) {
-        if(tokenLogin){
-            console.log('CONNECTED');
+        if (tokenLogin) {
             var client_info = {
                 cmd: 'CLIENT_INFO',
                 platform: 0,
@@ -73,7 +65,7 @@ export const webSocket = (tokenLogin, translate) => {
     }
 
     function onClose(evt) {
-        if(tokenLogin){
+        if (tokenLogin) {
             console.log('DISCONNECTED');
             if (!isClosedIntentionally) {
                 setTimeout(() => {
@@ -106,7 +98,7 @@ export const webSocket = (tokenLogin, translate) => {
     }
 
     function doSend(message) {
-        if(tokenLogin){
+        if (tokenLogin) {
             if (websocket.readyState === WebSocket.OPEN) {
                 websocket.send(message);
             } else {
@@ -119,7 +111,7 @@ export const webSocket = (tokenLogin, translate) => {
     }
 
     function doPing() {
-        if(tokenLogin){
+        if (tokenLogin) {
             var pingRequest = {
                 cmd: 'CLIENT_PING',
                 platform: 0,

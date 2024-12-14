@@ -114,38 +114,15 @@ const NotificationDropDown = ({
             return <IconCircleCheck color="green" style={style} size={30} />;
         }
     };
-    // const titleNotification = (item) => {
-    //     const kind = item?.kind;
+    const titleNotification = (item) => {
+        const kind = item?.kind;
 
-    //     if (kind == notificationKind.NOTIFICATION_KIND_EXPERT_REGISTRATION) {
-    //         return translate.formatMessage(commonMessage.notificationExpertRegistration);
-    //     }
-    //     if (kind == notificationKind.NOTIFICATION_KIND_APPROVE_EXPERT) {
-    //         return translate.formatMessage(commonMessage.notficationApproveExpert);
-    //     }
-    //     if (kind == notificationKind.NOTIFICATION_KIND_UPDATE_SELLER) {
-    //         return translate.formatMessage(commonMessage.notficationUpdateSeller);
-    //     }
-    //     if (kind == notificationKind.NOTIFICATION_KIND_SING_UP_STUDENT) {
-    //         return translate.formatMessage(commonMessage.notificationSingUpStudent);
-    //     }
-    //     if (kind == notificationKind.NOTIFICATION_KIND_RECEIVE_REVENUE) {
-    //         return translate.formatMessage(commonMessage.notificationReviceRevenueMess, {
-    //             revenueMoney: price(item?.revenueMoney),
-    //             courseName: item?.courseName,
-    //         });
-    //     }
-    //     if (kind == notificationKind.NOTIFICATION_KIND_ORDER_SUCCESS) {
-    //         return translate.formatMessage(commonMessage.notificationOrderSuccessMess, {
-    //             orderId: `#${item?.bookingCode ? item.bookingCode : '##'}`,
-    //         });
-    //     }
-    //     if (kind == notificationKind.NOTIFICATION_KIND_BOOKING_REJECT) {
-    //         return translate.formatMessage(commonMessage.notificationOrderRejectMess, {
-    //             orderId: `#${item?.bookingCode ? item.bookingCode : '##'}`,
-    //         });
-    //     }
-    // };
+        if (kind == notificationKind.NOTIFICATION_KIND_ORDER_SUCCESS) {
+            return translate.formatMessage(commonMessage.notificationOrderSuccessMess, {
+                orderCode: `#${item?.orderCode ? item.orderCode : '##'}`,
+            });
+        }
+    };
 
     const handleOnClickChecked = (id) => {
         // e.stopPropagation();

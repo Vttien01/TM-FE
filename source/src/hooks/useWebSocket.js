@@ -8,13 +8,6 @@ import { notificationKind, storageKeys } from '@constants';
 import { commonMessage } from '@constants/intl';
 
 const notiMessMessage = {
-    [notificationKind.NOTIFICATION_KIND_APRROVE_SELLER]: commonMessage.notificationAprroveSeller,
-    [notificationKind.NOTIFICATION_KIND_REJECT_SELLER]: commonMessage.notificationRejectSeller,
-    [notificationKind.NOTIFICATION_KIND_EXPERT_REGISTRATION]: commonMessage.notificationExpertRegistration,
-    [notificationKind.NOTIFICATION_KIND_APPROVE_EXPERT]: commonMessage.notficationApproveExpert,
-    [notificationKind.NOTIFICATION_KIND_UPDATE_SELLER]: commonMessage.notficationUpdateSeller,
-    [notificationKind.NOTIFICATION_KIND_SING_UP_STUDENT]: commonMessage.notificationSingUpStudent,
-    [notificationKind.NOTIFICATION_KIND_RECEIVE_REVENUE]: commonMessage.notificationReviceRevenueMess,
     [notificationKind.NOTIFICATION_KIND_ORDER_SUCCESS]: commonMessage.notificationOrderSuccessMess,
 };
 export const ReadyState = {
@@ -116,9 +109,8 @@ const useWebSocket = (socketUrl, options = {}) => {
                             courseName: dataNotification?.courseName,
                         }),
                     );
-                    setLatestMessage((prev => [ ...prev,data ]));
+                    setLatestMessage((prev) => [ ...prev, data ]);
                 }
-               
 
                 localStorage.setItem(storageKeys.HAS_NOTIFICATION, true);
             }
@@ -193,7 +185,7 @@ const useWebSocket = (socketUrl, options = {}) => {
         [],
     );
 
-    return { readyState, webSocketIns : websocketRef.current, latestMessage, connect, disconnect, sendMessage, doPing };
+    return { readyState, webSocketIns: websocketRef.current, latestMessage, connect, disconnect, sendMessage, doPing };
 };
 
 export default useWebSocket;

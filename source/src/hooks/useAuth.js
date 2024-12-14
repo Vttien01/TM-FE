@@ -20,8 +20,10 @@ const useAuth = () => {
 
     const permissions = profile?.group?.permissions?.map((permission) => permission.action);
     const kind = profile?.account?.kind;
+    const memberShip = profile?.account?.memberShip;
 
     return {
+        memberShip,
         isAuthenticated: !!profile,
         profile,
         kind,

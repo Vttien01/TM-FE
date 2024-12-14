@@ -1,24 +1,9 @@
 import { COMBO_KIND, COURSE_NO_LESSON, SINGLE_KIND, notificationKind } from '@constants';
 import { defineMessages } from 'react-intl';
+import { commonMessage } from '@constants/intl';
 
-const commonMessage = defineMessages({
-    single: 'Khoá học',
-    combo: 'Khoá học combo',
-    noLesson: 'Khóa học sự kiện',
-    statusActive: 'Active',
-    statusPending: 'Pending',
-    statusInactive: 'Inactive',
-});
+export const NOTIFICATION_KIND_ORDER_SUCCESS = 1;
 
-export const NOTIFICATION_KIND_APRROVE_SELLER = 1;
-export const NOTIFICATION_KIND_REJECT_SELLER = 2;
-export const NOTIFICATION_KIND_EXPERT_REGISTRATION = 3;
-export const NOTIFICATION_KIND_APPROVE_EXPERT = 4;
-export const NOTIFICATION_KIND_UPDATE_SELLER = 5;
-export const NOTIFICATION_KIND_SING_UP_STUDENT = 6;
-export const NOTIFICATION_KIND_RECEIVE_REVENUE = 7;
-export const NOTIFICATION_KIND_ORDER_SUCCESS = 10;
-export const NOTIFICATION_KIND_BOOKING_REJECT = 11;
 export const STATUS_PENDING = 0;
 export const STATUS_ACTIVE = 1;
 export const STATUS_LOCK = -1;
@@ -58,20 +43,8 @@ export const fitlerCourseOptions = [
     { value: '2', label: 'Có nhiều đánh giá nhất', color: 'green' },
 ];
 
-export const courseKindOptions = [
-    { value: 1, label: commonMessage.single, color: 'blue' },
-    { value: 3, label: commonMessage.noLesson, color: 'green' },
-    { value: 2, label: commonMessage.combo, color: 'orange' },
-];
-
 export const notiMessMessage = {
-    [NOTIFICATION_KIND_APRROVE_SELLER]: commonMessage.notificationAprroveSeller,
-    [NOTIFICATION_KIND_REJECT_SELLER]: commonMessage.notificationRejectSeller,
-    [NOTIFICATION_KIND_EXPERT_REGISTRATION]: commonMessage.notificationExpertRegistration,
-    [NOTIFICATION_KIND_APPROVE_EXPERT]: commonMessage.notficationApproveExpert,
-    [NOTIFICATION_KIND_UPDATE_SELLER]: commonMessage.notficationUpdateSeller,
-    [NOTIFICATION_KIND_SING_UP_STUDENT]: commonMessage.notificationSingUpStudent,
-    [NOTIFICATION_KIND_RECEIVE_REVENUE]: commonMessage.notificationReviceRevenueMess,
+    [NOTIFICATION_KIND_ORDER_SUCCESS]: commonMessage.notificationOrderSuccessMess,
 };
 
 export const formSize = {

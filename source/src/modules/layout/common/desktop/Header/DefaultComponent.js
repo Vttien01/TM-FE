@@ -32,6 +32,7 @@ import { Avatar, Flex, Form, Image, Input, Tooltip } from 'antd';
 import useFocusWithin from '@hooks/useFocusWithin';
 import AppCart from '../../AppCart/AppCart';
 import SearchBox from '@components/common/elements/SearchBox/SearchBox';
+import { NotificationForm } from '../NotificationForm';
 
 const navs = [
     { title: 'Giới thiệu', to: '/introduction' },
@@ -76,9 +77,12 @@ const DefaultComponent = ({ openLogin, style, openProfile, openConfirm }) => {
                     kind: item?.kind,
                     createdDate: item?.createdDate,
                     state: item?.state,
-                    revenueMoney: msg?.revenueMoney,
-                    courseName: msg?.courseName,
-                    bookingCode: msg?.code,
+                    orderCode: msg?.orderCode,
+                    stateOrder: msg?.stateOrder,
+                    title: msg?.title,
+                    expired: msg?.expired,
+                    amount: msg?.amount,
+                    percent: msg?.percent,
                 };
             });
             return {
@@ -88,10 +92,11 @@ const DefaultComponent = ({ openLogin, style, openProfile, openConfirm }) => {
             };
         },
     });
-    // const accessToken = getCacheAccessToken();
-    // useEffect(() => {
-    //     accessToken && executeGetDataMyNotification();
-    // }, []);
+    useEffect(() => {
+        if (accessToken) {
+            executeGetDataMyNotification();
+        }
+    }, []);
     const { execute: executeUpdateState } = useFetch(apiConfig.notification.changeState, {
         immediate: false,
     });
@@ -156,7 +161,7 @@ const DefaultComponent = ({ openLogin, style, openProfile, openConfirm }) => {
                 {accessToken ? (
                     <>
                         <li style={{ paddingTop: '5px' }}>
-                            <NotificationDropDown
+                            <NotificationForm
                                 data={
                                     dataMyNotification
                                         ? dataMyNotification?.listNotification
