@@ -785,7 +785,7 @@ const apiConfig = {
         },
         vnpay: {
             baseURL: `${apiUrl}v1/transaction/vn-pay`,
-            method: 'POST',
+            method: 'GET',
             headers: baseHeader,
             isRequiredTenantId: true,
         },
@@ -934,6 +934,11 @@ const apiConfig = {
         },
     },
     voucher: {
+        getList: {
+            baseURL: `${apiUrl}v1/voucher/list`,
+            method: `GET`,
+            headers: baseHeader,
+        },
         getMyVoucher: {
             baseURL: `${apiUrl}v1/voucher/get-my-voucher`,
             method: `GET`,

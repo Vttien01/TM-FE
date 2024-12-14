@@ -11,10 +11,10 @@ import useAuth from '@hooks/useAuth';
 import useFetch from '@hooks/useFetch';
 import useTranslate from '@hooks/useTranslate';
 import routes from '@routes';
-import { Button, Form, Result, Steps, Typography, theme } from 'antd';
+import { Button, Flex, Form, Result, Steps, Typography, theme } from 'antd';
 import { defineMessage } from 'react-intl';
-const { Text } = Typography;
-let index = 0;
+import Container from '@components/common/elements/Container';
+import styles from './index.module.scss';
 
 const decription = defineMessage({
     first: 'Kiểm tra số lượng sản phẩm',
@@ -25,9 +25,6 @@ const decription = defineMessage({
 const ResultSuccess = () => {
     const { profile } = useAuth();
     const navigate = useNavigate();
-    const [ form ] = Form.useForm();
-    const translate = useTranslate();
-    const [ item1, setItem1 ] = useState(null);
     const queryParameters = new URLSearchParams(window.location.search);
     const payerId = queryParameters.get('PayerID');
     const paymentId = queryParameters.get('paymentId');
@@ -35,33 +32,6 @@ const ResultSuccess = () => {
 
     const { token } = theme.useToken();
     const [ current, setCurrent ] = useState(2);
-    const next = () => {
-        setCurrent(current + 1);
-    };
-    const prev = () => {
-        setCurrent(current - 1);
-    };
-
-    const { execute: executeSuccessPay } = useFetch({
-        ...apiConfig.transaction.successPay,
-    });
-
-    useEffect(() => {
-        executeSuccessPay({
-            params: {
-                PayerID: payerId,
-                paymentId: paymentId,
-                orderId: orderId,
-            },
-            onCompleted: (respone) => {
-                if (profile) {
-                    navigate(routes.HistoryOrder.path);
-                } else {
-                    navigate(routes.homePage.path);
-                }
-            },
-        });
-    }, []);
 
     const steps = [
         {
@@ -88,9 +58,6 @@ const ResultSuccess = () => {
                     extra={[
                         <Button type="primary" key="console">
                             <a href="/">Quay về trang chủ</a>
-                        </Button>,
-                        <Button key="buy">
-                            <a href="/all-product">Xem sản phẩm khác</a>
                         </Button>,
                     ]}
                 />
@@ -129,7 +96,7 @@ const ResultSuccess = () => {
     // }, [cartMessageStatus]);
 
     return (
-        <div className="con1 py-4 bg-whitesmoke" style={{ display: 'flex', justifyContent: 'start', marginLeft: 200 }}>
+        <Container className={styles.container}>
             <PageWrapper
                 routes={[
                     {
@@ -140,36 +107,12 @@ const ResultSuccess = () => {
                 ]}
                 // title={title}
             >
-                <Steps current={current} items={items} size="large" />
-                <div style={contentStyle}>{steps[current].content}</div>
-                <div
-                    style={{
-                        marginTop: 24,
-                    }}
-                >
-                    {/* {current < steps.length - 1 && (
-                        <Button type="primary" onClick={() => next()}>
-                            Next
-                        </Button>
-                    )} */}
-                    {/* {current === steps.length - 1 && (
-                        <Button type="primary" onClick={() => message.success('Processing complete!')}>
-                            Done
-                        </Button>
-                    )} */}
-                    {current > 0 && current < steps.length - 1 && (
-                        <Button
-                            style={{
-                                margin: '0 8px',
-                            }}
-                            onClick={() => prev()}
-                        >
-                            Previous
-                        </Button>
-                    )}
-                </div>
+                <Flex justify="start" align="center" vertical style={{ margin: '20px', height: 'max-content' }}>
+                    <Steps current={current} items={items} size="large" />
+                    <div style={contentStyle}>{steps[2].content}</div>
+                </Flex>
             </PageWrapper>
-        </div>
+        </Container>
     );
 };
 

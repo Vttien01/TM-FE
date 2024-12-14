@@ -1,0 +1,182 @@
+/* src/components/Chatbot.module.scss */
+.messageWrapper{
+    font-family: Open Sans,sans-serif;
+    line-height: 2;
+    font-size: 15px;
+    margin: 0;
+    p,ol,ul,a{
+        margin: 0;
+    }
+    ol,ul{
+        padding-left: 1.625em;
+    }
+    li{
+        margin-bottom: .5em;
+        margin-top: .5em;
+    }
+    p{
+        margin-bottom: 8px;
+    }
+    p:not(:first-of-type) {
+        margin-top: 1.25em;
+    }
+    h3 {
+        font-weight: 600;
+        margin-bottom: .5rem;
+        margin-top: 1rem;
+    }
+}
+
+.chatBot{
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 0 auto;
+    width: 500px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.chatContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    height: 400px;
+    overflow: auto;
+}
+.headerChat{
+    background-color:#F08C01 ;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px 8px 0 0;
+    padding-right: 12px;
+    font-family: Open Sans,sans-serif;
+    .titleChat{
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        height: 100%;
+        padding: 0 12px;
+        
+    }
+    .titleText{
+        color: #fff;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+}
+  
+.messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    position: relative;
+    border-bottom: 1px solid #ccc;
+}
+  
+.humanMsgWrapper, .aiMsgWrapper {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 30px;
+}
+  
+.humanMsgWrapper {
+    background-color: #007bff;
+    color: #fff;
+    align-self: flex-end;
+}
+
+.aiMsgWrapper {
+    background-color: #f1f1f1;
+    align-self: flex-start;
+}
+  
+.inputContainer {
+    display: flex;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+}
+  
+.inputContainer input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    border-radius: 4px;
+    &:focus-visible {
+        outline: 1.5px solid #F08C01 ;
+    }
+}
+
+.inputContainer button {
+    padding: 10px;
+    margin-left: 10px;
+    width: 65px;
+    border: none;
+    font-size: 1rem;
+    background-color:#F08C01 ;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+  
+@media (max-width: 600px) {
+    .chatBot{
+        width: 100%;
+        border: none;
+        height: 100svh;
+        border-radius: 0 ;
+        overflow: hidden;
+        .headerChat{
+            border-radius: 0 ;
+        }
+    }
+    .chatContainer {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow-y: hidden;
+        .messages{
+            flex: 1;
+            overflow-y: scroll;
+        }
+    }
+    
+}
+.spinner {
+    animation-name: spin;
+    animation-duration: 500ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 30px;
+    aspect-ratio: 4;
+    --_g: no-repeat radial-gradient(circle closest-side,#F08C01 90%,#0000);
+    background: 
+      var(--_g) 0%   50%,
+      var(--_g) 50%  50%,
+      var(--_g) 100% 50%;
+    background-size: calc(100%/3) 100%;
+    animation: l7 1s infinite linear;
+  }
+  @keyframes l7 {
+      33%{background-size:calc(100%/3) 0%  ,calc(100%/3) 100%,calc(100%/3) 100%}
+      50%{background-size:calc(100%/3) 100%,calc(100%/3) 0%  ,calc(100%/3) 100%}
+      66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
+  }

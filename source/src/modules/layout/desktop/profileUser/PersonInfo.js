@@ -325,7 +325,7 @@ const PersonInfo = () => {
                             </Space>
                             <Space direction="horizontal">
                                 <DashboardCard title={'Số điện thoại'} value={profile?.account?.phone} />
-                                <DashboardCard title={'Email'} value={`${profile?.email}`} />
+                                <DashboardCard title={'Email'} value={`${profile?.account?.email}`} />
                             </Space>
                             <Space direction="horizontal">
                                 <DashboardCardStatus title={'Trạng thái hoạt động'} value={profile?.account?.status} />

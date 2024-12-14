@@ -3,11 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { generatePath, useLocation, useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
-// import { fetchAsyncProductSingle, getProductSingle, getSingleProductStatus } from '../../store/productSlice';
-// import { addToCart, getCartMessageStatus, setCartMessageOff, setCartMessageOn } from '../../store/cartSlice';
-// import CartMessage from '../../components/CartMessage/CartMessage';
-import AutoCompleteField from '@components/common/form/AutoCompleteField';
-import SelectField from '@components/common/form/SelectField';
 import PageWrapper from '@components/common/layout/PageWrapper';
 import { apiFrontend, paymentSelect } from '@constants';
 import apiConfig from '@constants/apiConfig';
@@ -24,6 +19,7 @@ import { defineMessage } from 'react-intl';
 import ListDetailsForm from './ListDetailsForm';
 import Container from '@components/common/elements/Container';
 import { getCartItemList } from '@store/actions/cart';
+import CartInfo from './CartInfo';
 const { Text } = Typography;
 let index = 0;
 
@@ -95,14 +91,18 @@ const OrderPage = () => {
         mappingData: ({ data }) => data.cartDetailDtos,
     });
 
-    const { data: order, execute: createOrderForUser } = useFetch({
+    const {
+        data: order,
+        execute: createOrderForUser,
+        loading: loadingCreateOrderForUser,
+    } = useFetch({
         ...apiConfig.order.createForUser,
     });
 
-    const { execute: createTransactionPaypal } = useFetch({
+    const { execute: createTransactionPaypal, loading: loadingCreateTransactionPaypal } = useFetch({
         ...apiConfig.transaction.create,
     });
-    const { execute: createTransactionVnpal } = useFetch({
+    const { execute: createTransactionVnpal, loading: loadingCreateTransactionVnpal } = useFetch({
         ...apiConfig.transaction.vnpay,
     });
 
@@ -139,10 +139,12 @@ const OrderPage = () => {
             ...values,
             listOrderProduct: array2, // Thay yourListOrderProductArray bằng mảng thực tế của bạn
         };
+        console.log('order confirm', values);
 
         createOrderForUser({
             data: { ...updatedValues },
             onCompleted: (respone) => {
+                dispatch(getCartItemList([]));
                 if (values.paymentMethod === 1) {
                     createTransactionPaypal({
                         data: {
@@ -151,19 +153,15 @@ const OrderPage = () => {
                             urlSuccess: `${apiFrontend}my-order-success`,
                         },
                         onCompleted: (res) => {
-                            dispatch(getCartItemList([]));
                             // window.location.href = res.data;
                             window.open(res.data, '_blank');
-                            setCurrent(2);
+                            setCurrent(1);
                             showSucsessMessage('Đơn hàng đang được xử lý!');
                         },
                         onError: () => {
                             showErrorMessage('Thanh toán PAYPAL thất bại');
-                            setCurrent(2);
+                            setCurrent(1);
                             form.resetFields();
-                            // setTimeout(() => {
-                            //     window.location.reload();
-                            // }, 2000);
                         },
                     });
                 } else if (values.paymentMethod === 2) {
@@ -174,13 +172,13 @@ const OrderPage = () => {
                             urlSuccess: `${apiFrontend}my-order-success`,
                         },
                         onCompleted: (res) => {
-                            dispatch(getCartItemList([]));
-                            setCurrent(2);
+                            window.open(res.data, '_blank');
+                            setCurrent(1);
                             showSucsessMessage('Đơn hàng đang được xử lý!');
                         },
                         onError: () => {
-                            showErrorMessage('Thanh toán PAYPAL thất bại');
-                            setCurrent(2);
+                            showErrorMessage('Thanh toán VNPAY thất bại');
+                            setCurrent(1);
                             form.resetFields();
                             // setTimeout(() => {
                             //     window.location.reload();
@@ -188,12 +186,11 @@ const OrderPage = () => {
                         },
                     });
                 } else {
-                    dispatch(getCartItemList([]));
-                    setCurrent(2);
+                    setCurrent(1);
                     showSucsessMessage('Đặt hàng thành công');
                     setTimeout(() => {
                         navigate(routes.HistoryOrder.path);
-                    }, 3000);
+                    }, 4000);
                 }
             },
             onError: (error) => {
@@ -220,238 +217,152 @@ const OrderPage = () => {
         {
             title: 'Đơn hàng',
             status: 'finish',
-            // icon: <SolutionOutlined />,
             content: (
-                <Table
-                    pagination={false}
-                    columns={[
-                        {
-                            title: 'Tên sản phẩm',
-                            dataIndex: [ 'productName' ],
-                            align: 'center',
-                        },
-                        {
-                            title: 'Màu sắc',
-                            dataIndex: 'color',
-                            align: 'center',
-                        },
-                        {
-                            title: 'Giá',
-                            dataIndex: [ 'price' ],
-                            name: 'price',
-                            align: 'center',
-                            render: (value) => {
-                                return (
-                                    <span>
-                                        {formatMoney(value, {
-                                            groupSeparator: ',',
-                                            decimalSeparator: '.',
-                                            currentcy: 'đ',
-                                            currentcyPosition: 'BACK',
-                                            currentDecimal: '0',
-                                        })}
-                                    </span>
-                                );
-                            },
-                        },
-                        {
-                            title: 'Số lượng',
-                            dataIndex: 'quantity',
-                            align: 'center',
-                        },
-                        {
-                            title: 'Tổng',
-                            dataIndex: 'totalPriceSell',
-                            render: (value) => {
-                                return (
-                                    <>
-                                        {formatMoney(value, {
-                                            groupSeparator: ',',
-                                            decimalSeparator: '.',
-                                            currentcy: 'đ',
-                                            currentcyPosition: 'BACK',
-                                            currentDecimal: '0',
-                                        })}
-                                    </>
-                                );
-                            },
-                        },
-                    ]}
-                    dataSource={arrayBuyNow?.length > 0 ? arrayBuyNow : cartItem}
-                    bordered
-                    summary={(data) => {
-                        const total = data.reduce((pre, current) => {
-                            return pre + current.totalPriceSell;
-                        }, 0);
-                        return (
-                            <Table.Summary.Row>
-                                <Table.Summary.Cell index={0} colSpan={4} align="end">
-                                    <Tag color={'green'} style={{ fontSize: 18, fontWeight: 700 }}>
-                                        Tổng trả
-                                    </Tag>
-                                </Table.Summary.Cell>
-                                <Table.Summary.Cell index={1}>
-                                    <Text type="danger" style={{ fontWeight: 700 }}>
-                                        {formatMoney(total, {
-                                            groupSeparator: ',',
-                                            decimalSeparator: '.',
-                                            currentcy: 'đ',
-                                            currentcyPosition: 'BACK',
-                                            currentDecimal: '0',
-                                        })}
-                                    </Text>
-                                </Table.Summary.Cell>
-                            </Table.Summary.Row>
-                        );
-                    }}
-                ></Table>
+                <CartInfo
+                    profile={profile}
+                    form={form}
+                    dataMyAddress={dataMyAddress}
+                    renderTitle={renderTitle}
+                    onConfirmOrder={onConfirmOrder}
+                    loadingCreateOrderForUser={loadingCreateOrderForUser}
+                    loadingCreateTransactionPaypal={loadingCreateTransactionPaypal}
+                    loadingCreateTransactionVnpal={loadingCreateTransactionVnpal}
+                />
             ),
             decription: decription.first,
         },
-        {
-            title: 'Thanh toán',
-            // status: 'process',
-            // icon: <LoadingOutlined />,
-            content: (
-                <Form
-                    onFinish={onConfirmOrder}
-                    labelCol={{
-                        span: 7,
-                    }}
-                    wrapperCol={{
-                        span: 18,
-                    }}
-                    layout="horizontal"
-                    style={{
-                        maxWidth: 900,
-                        marginTop: 20,
-                    }}
-                    initialValues={{
-                        receiver: profile?.account?.fullName,
-                        email: profile?.account?.email,
-                        address: profile?.account?.address,
-                        phone: profile?.account?.phone,
-                    }}
-                >
-                    <Form.Item
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Vui lòng điền tên',
-                            },
-                        ]}
-                        label="Họ và tên"
-                        name="receiver"
-                        contentWrapperStyle={{ width: 200 }}
-                    >
-                        <Input placeholder="Nhập tên ..." />
-                    </Form.Item>
-                    <Form.Item
-                        rules={[
-                            {
-                                required: true,
-                                type: 'email',
-                                message: 'Vui lòng điền email',
-                            },
-                        ]}
-                        label="Email"
-                        name="email"
-                    >
-                        <Input placeholder="Nhập email ..." />
-                    </Form.Item>
-                    <Form.Item
-                        rules={[
-                            {
-                                required: true,
-                                message: 'Vui lòng điền số điện thoại',
-                            },
-                        ]}
-                        label="Số điện thoại"
-                        name="phone"
-                    >
-                        <Input placeholder="Nhập số điện thoại ..." />
-                    </Form.Item>
+        // {
+        //     title: 'Thanh toán',
+        //     content: (
+        //         <Form
+        //             onFinish={onConfirmOrder}
+        //             labelCol={{
+        //                 span: 7,
+        //             }}
+        //             wrapperCol={{
+        //                 span: 18,
+        //             }}
+        //             layout="horizontal"
+        //             style={{
+        //                 maxWidth: 900,
+        //                 marginTop: 20,
+        //             }}
+        //             initialValues={{
+        //                 receiver: profile?.account?.fullName,
+        //                 email: profile?.account?.email,
+        //                 address: profile?.account?.address,
+        //                 phone: profile?.account?.phone,
+        //             }}
+        //         >
+        //             <Form.Item
+        //                 rules={[
+        //                     {
+        //                         required: true,
+        //                         message: 'Vui lòng điền tên',
+        //                     },
+        //                 ]}
+        //                 label="Họ và tên"
+        //                 name="receiver"
+        //                 contentWrapperStyle={{ width: 200 }}
+        //             >
+        //                 <Input placeholder="Nhập tên ..." />
+        //             </Form.Item>
+        //             <Form.Item
+        //                 rules={[
+        //                     {
+        //                         required: true,
+        //                         type: 'email',
+        //                         message: 'Vui lòng điền email',
+        //                     },
+        //                 ]}
+        //                 label="Email"
+        //                 name="email"
+        //             >
+        //                 <Input placeholder="Nhập email ..." />
+        //             </Form.Item>
+        //             <Form.Item
+        //                 rules={[
+        //                     {
+        //                         required: true,
+        //                         message: 'Vui lòng điền số điện thoại',
+        //                     },
+        //                 ]}
+        //                 label="Số điện thoại"
+        //                 name="phone"
+        //             >
+        //                 <Input placeholder="Nhập số điện thoại ..." />
+        //             </Form.Item>
 
-                    <Form.Item label="Ghi chú" name="note">
-                        <Input placeholder="Nhập ghi chú ..." />
-                    </Form.Item>
-                    <AutoCompleteField
-                        label="Mã giảm giá"
-                        name="voucherId"
-                        apiConfig={apiConfig.voucher.getMyVoucher}
-                        mappingOptions={(item) => ({ value: item.id, label: item.address })}
-                    />
-                    <SelectField
-                        label="Địa chỉ"
-                        name="addressId"
-                        required
-                        dropdownRender={(menu) => {
-                            return (
-                                <>
-                                    {menu}
-                                    <Divider
-                                        style={{
-                                            margin: '8px 0',
-                                        }}
-                                    />
-                                    <Space
-                                        style={{
-                                            padding: '0 8px 4px',
-                                            justifyContent: 'center',
-                                            justifyItems: 'center',
-                                        }}
-                                    >
-                                        {/* <Input
-                                        placeholder="Please enter item"
-                                        ref={inputRef}
-                                        value={name}
-                                        onChange={onNameChange}
-                                        onKeyDown={(e) => e.stopPropagation()}
-                                    /> */}
-                                        <Button
-                                            type="text"
-                                            icon={<IconPlus size={10} />}
-                                            onClick={() => {
-                                                setItem1(null);
-                                                handlerDetailsModal.open();
-                                            }}
-                                        >
-                                            Thêm địa chỉ giao hàng
-                                        </Button>
-                                    </Space>
-                                </>
-                            );
-                        }}
-                        allowClear={false}
-                        options={dataMyAddress}
-                        // apiConfig={apiConfig.address.getMyAddress}
-                        mappingOptions={(item) => ({ value: item.id, label: renderTitle(item.label, item) })}
-                    />
+        //             <Form.Item label="Ghi chú" name="note">
+        //                 <Input placeholder="Nhập ghi chú ..." />
+        //             </Form.Item>
+        //             <AutoCompleteField
+        //                 label="Mã giảm giá"
+        //                 name="voucherId"
+        //                 apiConfig={apiConfig.voucher.getMyVoucher}
+        //                 mappingOptions={(item) => ({ value: item.id, label: item.address })}
+        //             />
+        //             <SelectField
+        //                 label="Địa chỉ"
+        //                 name="addressId"
+        //                 required
+        //                 dropdownRender={(menu) => {
+        //                     return (
+        //                         <>
+        //                             {menu}
+        //                             <Divider
+        //                                 style={{
+        //                                     margin: '8px 0',
+        //                                 }}
+        //                             />
+        //                             <Space
+        //                                 style={{
+        //                                     padding: '0 8px 4px',
+        //                                     justifyContent: 'center',
+        //                                     justifyItems: 'center',
+        //                                 }}
+        //                             >
+        //                                 <Button
+        //                                     type="text"
+        //                                     icon={<IconPlus size={10} />}
+        //                                     onClick={() => {
+        //                                         setItem1(null);
+        //                                         handlerDetailsModal.open();
+        //                                     }}
+        //                                 >
+        //                                     Thêm địa chỉ giao hàng
+        //                                 </Button>
+        //                             </Space>
+        //                         </>
+        //                     );
+        //                 }}
+        //                 allowClear={false}
+        //                 options={dataMyAddress}
+        //                 mappingOptions={(item) => ({ value: item.id, label: renderTitle(item.label, item) })}
+        //             />
 
-                    <SelectField
-                        name="paymentMethod"
-                        label="Hình thức thanh toán"
-                        allowClear={false}
-                        options={paymentSelect}
-                        required
-                    />
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        loading={loadings[0]}
-                        onClick={() => enterLoading(0)}
-                        style={{ marginBottom: 20 }}
-                    >
-                        Xác nhận đặt hàng
-                    </Button>
-                </Form>
-            ),
-            decription: decription.second,
-        },
+        //             <SelectField
+        //                 name="paymentMethod"
+        //                 label="Hình thức thanh toán"
+        //                 allowClear={false}
+        //                 options={paymentSelect}
+        //                 required
+        //             />
+        //             <Button
+        //                 type="primary"
+        //                 htmlType="submit"
+        //                 loading={loadings[0]}
+        //                 onClick={() => enterLoading(0)}
+        //                 style={{ marginBottom: 20 }}
+        //             >
+        //                 Xác nhận đặt hàng
+        //             </Button>
+        //         </Form>
+        //     ),
+        //     decription: decription.second,
+        // },
         {
             title: 'Hoàn thành',
-            // status: 'wait',
-            // icon: <SmileOutlined />,
             content: (
                 <Result
                     status="success"
@@ -462,7 +373,7 @@ const OrderPage = () => {
                             <a href="/">Quay về trang chủ</a>
                         </Button>,
                         <Button key="buy">
-                            <a href="/all-product">Xem sản phẩm khác</a>
+                            <a href="/history-order">Lịch sử đơn hàng</a>
                         </Button>,
                     ]}
                 />
@@ -476,23 +387,10 @@ const OrderPage = () => {
         icon: item.icon,
         status: item.status,
     }));
-    const contentStyle = {
-        lineHeight: '260px',
-        textAlign: 'center',
-        color: token.colorTextTertiary,
-        backgroundColor: token.colorFillAlter,
-        borderRadius: token.borderRadiusLG,
-        border: `1px dashed ${token.colorBorder}`,
-        marginTop: 16,
-        width: 1100,
-    };
 
     return (
         <Container className={styles.container}>
-            <PageWrapper
-                routes={[ { breadcrumbName: 'Đặt hàng' } ]}
-                // title={title}
-            >
+            <PageWrapper routes={[ { breadcrumbName: 'Đặt hàng' } ]}>
                 <ListDetailsForm
                     open={openedDetailsModal}
                     onCancel={() => handlerDetailsModal.close()}
@@ -501,20 +399,14 @@ const OrderPage = () => {
                     isEditing={!!item1}
                     executeGetMyAddress={() => executeGetMyAddress()}
                 />
-                <Flex justify="start" align="center" vertical style={{ margin: '20px', height: '70vh' }}>
+                <Flex
+                    justify="start"
+                    align="center"
+                    vertical
+                    style={{ margin: '20px', height: 'max-content', minHeight: '70vh' }}
+                >
                     <Steps current={current} items={items} size="large" />
-                    <div style={contentStyle}>{steps[current].content}</div>
-                    <div
-                        style={{
-                            marginTop: 24,
-                        }}
-                    >
-                        {current < steps.length - 2 && (
-                            <Button type="primary" onClick={() => next()}>
-                                Next
-                            </Button>
-                        )}
-                    </div>
+                    <div style={{ width: '90%' }}>{steps[current].content}</div>
                 </Flex>
             </PageWrapper>
         </Container>

@@ -35,6 +35,7 @@ function SelectField({
     onFocus,
     labelCol,
     dropdownRender,
+    style,
     ...props
 }) {
     const { placeholder, rules } = useFormField(props);
@@ -54,6 +55,7 @@ function SelectField({
             labelCol={labelCol}
         >
             <Select
+                style={style}
                 onFocus={onFocus}
                 {...fieldProps}
                 ref={selectRef}

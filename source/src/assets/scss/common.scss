@@ -3,6 +3,16 @@
     --color-course: rgb(9, 12, 15);
     --color-item: rgb(32, 36, 40);
     --color-feedback: rgb(174, 174, 174);
+    --big-font-size: 64px;
+    --h1-font-size: 64px;
+    --h2-font-size: 48px;
+    --h3-font-size: 34px;
+    --primary-font-size: 22px;
+    --sub-font-size: 18px;
+    --small-font-size: 16px;
+    --title-menu-font-size: 22px;
+    --menu-font-size: 15px;
+    --h3-form-font-size: 34px;
     font-family: 'SFPro', sans-serif;
     margin: 0;
     padding: 0;
@@ -503,3 +513,61 @@ ul{
       font-family: inherit;
       font-size: 1.6rem;
   }
+  .chat-bot{
+    position: fixed;
+    z-index: 999;
+    right: 0;
+    bottom: 0;
+    min-height: 50px;
+    padding: 10px 0;
+    justify-content: center;
+    padding-inline: 20px;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    gap: 1rem;
+    .content{
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        justify-content: flex-end;
+        .frameChatBot{
+            position: relative;
+            .headerChat{
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 90px;
+                width: 100%;
+                border-radius: 1rem 1rem 0 0;
+                background-color:#F08C01 ;
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                .titleChat{
+                    display: flex;
+                    align-items: center;
+                    gap: 0.4rem;
+                    height: 100%;
+                    padding: 0 20px;
+                }
+                .titleText{
+                    color: #fff;
+                    font-size: 20px;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+    .chatFrame{
+        border-radius: 1rem;
+        background-color: white;
+        box-shadow: rgba(000, 71, 71, 0.2) 0px 2px 8px 0px;;
+    }
+    .button-chat{
+        cursor: pointer;
+        width: 70px;
+    }
+}

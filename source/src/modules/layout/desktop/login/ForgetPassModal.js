@@ -168,7 +168,7 @@ const ForgetPassModal = ({ handleAddList, open, onCancel, data, isEditing, handl
                         <Row gutter={24}>
                             <Col span={24}>
                                 <TextField
-                                    label={<FormattedMessage defaultMessage="Mật khẩu" />}
+                                    label={<FormattedMessage defaultMessage="Mật khẩu mới" />}
                                     name="newPassword"
                                     type="password"
                                     rules={[
@@ -191,7 +191,7 @@ const ForgetPassModal = ({ handleAddList, open, onCancel, data, isEditing, handl
                             </Col>
                             <Col span={24}>
                                 <TextField
-                                    label={<FormattedMessage defaultMessage="Xác nhận mật khẩu" />}
+                                    label={<FormattedMessage defaultMessage="Nhập lại mật khẩu mới" />}
                                     name="confirmPassword"
                                     type="password"
                                     rules={[

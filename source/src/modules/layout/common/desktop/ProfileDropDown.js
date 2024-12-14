@@ -38,6 +38,7 @@ const ProfileDropDown = ({ data, executeGetData, executeUpdateState, loading, un
     const onLogout = () => {
         removeCacheToken();
         dispatch(accountActions.logout());
+        navigate('/');
     };
 
     return (
