@@ -29,10 +29,15 @@ import { accountActions } from '@store/actions';
 import { use } from 'react';
 import configPages from '@constants/menuConfig';
 import TextField from '@components/common/form/TextField';
+import { showErrorMessage, showSucsessMessage } from '@services/notifyService';
+import { removeCacheToken } from '@services/userService';
+import { useDispatch } from 'react-redux';
 
 const message = defineMessages({
     objectName: 'Địa chỉ người dùng',
     titlePage: 'Trang cá nhân',
+    updateSuccess: 'Cập nhật mật khẩu thành công',
+    updateFail: 'Cập nhật mật khẩu thất bại',
 });
 
 const PersonInfo = () => {
@@ -48,6 +53,7 @@ const PersonInfo = () => {
     const queryParameters = new URLSearchParams(window.location.search);
     const content = queryParameters.get('content');
     const { deserializeParams, setQueryParams, params } = useQueryParams();
+    const dispatch = useDispatch();
     const { execute: executeGetProfile } = useFetchAction(accountActions.getProfile, {
         loading: useFetchAction.LOADING_TYPE.APP,
     });
@@ -163,7 +169,11 @@ const PersonInfo = () => {
     };
 
     const breadRoutes = [ { breadcrumbName: translate.formatMessage(message.titlePage) } ];
-    console.log(active);
+    const onLogout = () => {
+        removeCacheToken();
+        dispatch(accountActions.logout());
+        navigate('/');
+    };
 
     return (
         <Container className={styles.container}>
@@ -187,32 +197,6 @@ const PersonInfo = () => {
                                 {profile?.account?.username}
                             </Typography.Title>
                         </Flex>
-                        {/* <Space>
-                            <Tooltip placement="bottom" title="Sửa thông tin cá nhân">
-                                <IconEdit
-                                    size={40}
-                                    color="#282a36"
-                                    onClick={() => setQueryParams({ content: 'profile' })}
-                                    style={{ fontSize: 40, color: '#282a36', cursor: 'pointer' }}
-                                />
-                            </Tooltip>
-                            <Tooltip placement="bottom" title="Địa chỉ">
-                                <IconHome
-                                    size={40}
-                                    color="#282a36"
-                                    onClick={() => setQueryParams({ content: 'address' })}
-                                    style={{ marginLeft: 20, fontSize: 40, color: '#282a36', cursor: 'pointer' }}
-                                />
-                            </Tooltip>
-                            <Tooltip placement="bottom" title="Đánh giá sản phẩm">
-                                <IconStar
-                                    size={40}
-                                    color="#282a36"
-                                    onClick={() => setQueryParams({ content: 'review' })}
-                                    style={{ marginLeft: 20, fontSize: 40, color: '#282a36', cursor: 'pointer' }}
-                                />
-                            </Tooltip>
-                        </Space> */}
                         <div className={styles.navbarMain}>
                             {configPages.map((item, index) => {
                                 return (
@@ -246,7 +230,7 @@ const PersonInfo = () => {
                                 className={styles.navbarItem}
                                 key={'logout'}
                                 gap={10}
-                                // onClick={() => setActive('logout')}
+                                onClick={() => onLogout()}
                                 // className={`${styles.item} ${active === 'logout' ? styles.activeItem : ''}`}
                             >
                                 <LogoutOutlined style={{ fontSize: 30 }} color="#282a36" />
@@ -543,6 +527,23 @@ function MyReview({ loadingMyReview, dataMyReview }) {
 function ChangePassword() {
     const translate = useTranslate();
     const [ form ] = Form.useForm();
+    const { execute, loading } = useFetch(apiConfig.user.changePassword, {
+        immediate: false,
+    });
+    const handleChangePassword = () => {
+        const data = form.getFieldsValue();
+        execute({
+            data: { ...data },
+            onCompleted: (res) => {
+                showSucsessMessage(translate.formatMessage(message.updateSuccess));
+                form.resetFields();
+            },
+            onError: ({ response }) => {
+                if (response?.data?.message) showErrorMessage(response?.data?.message);
+                else showErrorMessage(translate.formatMessage(message.updateFail));
+            },
+        });
+    };
     return (
         <Space className={styles.roundedSquareRight} direction="vertical">
             <div className={styles.boxWithBorder}>
@@ -550,7 +551,7 @@ function ChangePassword() {
                     Đổi mật khẩu
                 </Divider>
             </div>
-            <Form form={form} layout="horizontal" style={{ marginBottom: 10 }}>
+            <Form form={form} layout="horizontal" style={{ margin: '10px 20px' }}>
                 <Row gutter={16} style={{ padding: '0 80px' }}>
                     <Col span={24}>
                         <TextField
@@ -562,9 +563,10 @@ function ChangePassword() {
                     </Col>
                     <Col span={24}>
                         <TextField
+                            required
                             type="password"
                             label={<FormattedMessage defaultMessage="Mật khẩu mới" />}
-                            name="password"
+                            name="newPassword"
                             rules={[
                                 {
                                     validator: async () => {
@@ -607,8 +609,9 @@ function ChangePassword() {
                                 type="primary"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    // handleProfileModal();
+                                    handleChangePassword();
                                 }}
+                                loading={loading}
                             >
                                 Đổi mật khẩu
                             </Button>

@@ -932,6 +932,11 @@ const apiConfig = {
             method: `GET`,
             headers: baseHeader,
         },
+        changePassword: {
+            baseURL: `${apiUrl}v1/user/update-my-pass-word`,
+            method: `PUT`,
+            headers: baseHeader,
+        },
     },
     voucher: {
         getList: {
