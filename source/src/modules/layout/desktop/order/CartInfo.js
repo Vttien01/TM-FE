@@ -31,16 +31,17 @@ const CartInfo = ({
     loadingCreateOrderForUser,
     loadingCreateTransactionPaypal,
     loadingCreateTransactionVnpal,
+    arrayBuyNow,
 }) => {
     const translate = useTranslate();
     const { memberShip } = useAuth();
-
     const course = getData(storageKeys.BUY_COURSE_DIRECT);
     const cart = useSelector((state) => state.cart.cart);
     const queryParameters = new URLSearchParams(window.location.search);
     const isBuyDirect = queryParameters.get('isBuyDirect');
     const [ coupon, setCoupon ] = useState(null);
-    const realTotalPay = isBuyDirect ? course?.price : cart ? realTotal(cart) : 0;
+    const data = arrayBuyNow?.length > 0 ? arrayBuyNow : cart;
+    const realTotalPay = isBuyDirect ? course?.price : data ? realTotal(data) : 0;
     const message = defineMessages({
         summaryCheckout: 'Tóm tắt đơn hàng',
         price: 'Giá gốc',
@@ -120,15 +121,19 @@ const CartInfo = ({
         return (
             <div>
                 <Divider />
-                <div>{isBuyDirect ? ` ${1} sản phẩm trong giỏ hàng` : ` ${cart?.length} sản phẩm trong giỏ hàng`}</div>
+                <div>
+                    {arrayBuyNow?.length > 0
+                        ? ` ${1} sản phẩm cần thanh toán`
+                        : ` ${data?.length} sản phẩm trong giỏ hàng`}
+                </div>
                 <div className={styles.cartList}>
-                    {cart ? cart?.map((item, index) => <ItemCart key={index} data={item} />) : <SkeLeton numRow={8} />}
+                    {data ? data?.map((item, index) => <ItemCart key={index} data={item} />) : <SkeLeton numRow={8} />}
                 </div>
                 <Divider style={{ marginTop: 15 }} />
                 <Flex style={{ marginTop: 10 }} vertical>
                     <Flex justify="space-between">
                         <span>{translate.formatMessage(message.price)}</span>
-                        <span>{cart && price(realTotalPay)}</span>
+                        <span>{data && price(realTotalPay)}</span>
                     </Flex>
                     {coupon != null && (
                         <Flex justify="space-between">
@@ -148,7 +153,7 @@ const CartInfo = ({
                 </Flex>
             </div>
         );
-    }, [ cart, coupon ]);
+    }, [ data, coupon ]);
 
     return (
         <div style={{ display: 'flex', gap: 20, marginTop: 20 }}>

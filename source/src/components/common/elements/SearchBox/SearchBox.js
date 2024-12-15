@@ -42,7 +42,6 @@ const SearchBox = () => {
                         value: item.id,
                         text: item,
                     }));
-                    console.log(data);
                     setData(data);
                 },
             });

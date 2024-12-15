@@ -17,7 +17,7 @@ const ItemCart = ({ data, checkSellCode, coupon }) => {
 
     const translate = useTranslate();
     return (
-        <div className={styles.item} onClick={() => navigation(`/detail/${data.id}`)}>
+        <div className={styles.item}>
             <Flex className={styles.content}>
                 <Image
                     src={data?.image ? AppConstants.contentRootUrl + data?.image : product}

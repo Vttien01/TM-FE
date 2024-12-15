@@ -9,7 +9,6 @@ const message = defineMessages({
 });
 const ModalGgRegister = ({ opened, close, openLogin, data }) => {
     const translate = useTranslate();
-    // console.log(data);
     return (
         <BasicModal
             size="calc(40vw)"
@@ -26,8 +25,7 @@ const ModalGgRegister = ({ opened, close, openLogin, data }) => {
                 content: styles.content,
                 body: styles.body,
             }}
-        >
-        </BasicModal>
+        ></BasicModal>
     );
 };
 

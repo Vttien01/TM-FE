@@ -54,7 +54,7 @@ const OrderPage = () => {
 
     useEffect(() => {
         if (receivedData) {
-            setArrayBuyNow((prevArray) => [ ...prevArray, receivedData ]);
+            setArrayBuyNow([ receivedData ]);
         }
         executeGetMyAddress();
     }, [ receivedData ]);
@@ -113,6 +113,7 @@ const OrderPage = () => {
     const { execute: executeCancelPay } = useFetch({
         ...apiConfig.transaction.cancelPay,
     });
+    const { execute: executeUpdateCart } = useFetch(apiConfig.cart.updateItemCart, { immediate: false });
 
     function onConfirmOrder(values) {
         let array2 = [];
@@ -139,12 +140,17 @@ const OrderPage = () => {
             ...values,
             listOrderProduct: array2, // Thay yourListOrderProductArray bằng mảng thực tế của bạn
         };
-        console.log('order confirm', values);
-
         createOrderForUser({
             data: { ...updatedValues },
             onCompleted: (respone) => {
-                dispatch(getCartItemList([]));
+                if (receivedData == null) {
+                    dispatch(getCartItemList([]));
+                    executeUpdateCart({
+                        data: {
+                            cartDetails: [],
+                        },
+                    });
+                }
                 if (values.paymentMethod === 1) {
                     createTransactionPaypal({
                         data: {
@@ -219,6 +225,7 @@ const OrderPage = () => {
             status: 'finish',
             content: (
                 <CartInfo
+                    arrayBuyNow={arrayBuyNow}
                     profile={profile}
                     form={form}
                     dataMyAddress={dataMyAddress}
@@ -231,136 +238,6 @@ const OrderPage = () => {
             ),
             decription: decription.first,
         },
-        // {
-        //     title: 'Thanh toán',
-        //     content: (
-        //         <Form
-        //             onFinish={onConfirmOrder}
-        //             labelCol={{
-        //                 span: 7,
-        //             }}
-        //             wrapperCol={{
-        //                 span: 18,
-        //             }}
-        //             layout="horizontal"
-        //             style={{
-        //                 maxWidth: 900,
-        //                 marginTop: 20,
-        //             }}
-        //             initialValues={{
-        //                 receiver: profile?.account?.fullName,
-        //                 email: profile?.account?.email,
-        //                 address: profile?.account?.address,
-        //                 phone: profile?.account?.phone,
-        //             }}
-        //         >
-        //             <Form.Item
-        //                 rules={[
-        //                     {
-        //                         required: true,
-        //                         message: 'Vui lòng điền tên',
-        //                     },
-        //                 ]}
-        //                 label="Họ và tên"
-        //                 name="receiver"
-        //                 contentWrapperStyle={{ width: 200 }}
-        //             >
-        //                 <Input placeholder="Nhập tên ..." />
-        //             </Form.Item>
-        //             <Form.Item
-        //                 rules={[
-        //                     {
-        //                         required: true,
-        //                         type: 'email',
-        //                         message: 'Vui lòng điền email',
-        //                     },
-        //                 ]}
-        //                 label="Email"
-        //                 name="email"
-        //             >
-        //                 <Input placeholder="Nhập email ..." />
-        //             </Form.Item>
-        //             <Form.Item
-        //                 rules={[
-        //                     {
-        //                         required: true,
-        //                         message: 'Vui lòng điền số điện thoại',
-        //                     },
-        //                 ]}
-        //                 label="Số điện thoại"
-        //                 name="phone"
-        //             >
-        //                 <Input placeholder="Nhập số điện thoại ..." />
-        //             </Form.Item>
-
-        //             <Form.Item label="Ghi chú" name="note">
-        //                 <Input placeholder="Nhập ghi chú ..." />
-        //             </Form.Item>
-        //             <AutoCompleteField
-        //                 label="Mã giảm giá"
-        //                 name="voucherId"
-        //                 apiConfig={apiConfig.voucher.getMyVoucher}
-        //                 mappingOptions={(item) => ({ value: item.id, label: item.address })}
-        //             />
-        //             <SelectField
-        //                 label="Địa chỉ"
-        //                 name="addressId"
-        //                 required
-        //                 dropdownRender={(menu) => {
-        //                     return (
-        //                         <>
-        //                             {menu}
-        //                             <Divider
-        //                                 style={{
-        //                                     margin: '8px 0',
-        //                                 }}
-        //                             />
-        //                             <Space
-        //                                 style={{
-        //                                     padding: '0 8px 4px',
-        //                                     justifyContent: 'center',
-        //                                     justifyItems: 'center',
-        //                                 }}
-        //                             >
-        //                                 <Button
-        //                                     type="text"
-        //                                     icon={<IconPlus size={10} />}
-        //                                     onClick={() => {
-        //                                         setItem1(null);
-        //                                         handlerDetailsModal.open();
-        //                                     }}
-        //                                 >
-        //                                     Thêm địa chỉ giao hàng
-        //                                 </Button>
-        //                             </Space>
-        //                         </>
-        //                     );
-        //                 }}
-        //                 allowClear={false}
-        //                 options={dataMyAddress}
-        //                 mappingOptions={(item) => ({ value: item.id, label: renderTitle(item.label, item) })}
-        //             />
-
-        //             <SelectField
-        //                 name="paymentMethod"
-        //                 label="Hình thức thanh toán"
-        //                 allowClear={false}
-        //                 options={paymentSelect}
-        //                 required
-        //             />
-        //             <Button
-        //                 type="primary"
-        //                 htmlType="submit"
-        //                 loading={loadings[0]}
-        //                 onClick={() => enterLoading(0)}
-        //                 style={{ marginBottom: 20 }}
-        //             >
-        //                 Xác nhận đặt hàng
-        //             </Button>
-        //         </Form>
-        //     ),
-        //     decription: decription.second,
-        // },
         {
             title: 'Hoàn thành',
             content: (
