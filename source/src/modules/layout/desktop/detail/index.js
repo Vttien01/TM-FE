@@ -9,13 +9,15 @@ import apiConfig from '@constants/apiConfig';
 import useDisclosure from '@hooks/useDisclosure';
 import useFetch from '@hooks/useFetch';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
-import { convertUtcToLocalTime, formatMoney } from '@utils';
-import { Button, Card, Col, Flex, Form, Progress, Rate, Row, Space, Spin, Typography } from 'antd';
+import { convertUtcToLocalTime, formatMoney, price } from '@utils';
+import { Button, Card, Col, Divider, Flex, Form, Image, Progress, Rate, Row, Space, Spin, Typography } from 'antd';
 import CartModal from './CartModal';
 import styles from './index.module.scss';
 import useAuth from '@hooks/useAuth';
 import { showWarningMessage } from '@services/notifyService';
 import Container from '@components/common/elements/Container';
+import InputTextField from '@components/common/form/InputTextField';
+import RichTextRender from '@components/common/elements/RichTextRender';
 
 const DetailPageDesktop = () => {
     const { id } = useParams();
@@ -157,6 +159,24 @@ const DetailPageDesktop = () => {
         }
     };
 
+    const detailCard = [
+        { title: 'Danh mục', content: product?.categoryDto?.name },
+        { title: 'Thương hiệu', content: product?.brandDto?.name },
+        {
+            title: 'Đánh giá',
+            content: (
+                <>
+                    {product?.avgStart}
+                    <StarFilled style={{ color: '#FFD700', marginLeft: '8px' }} />
+                </>
+            ),
+        },
+        { title: 'Số hàng còn trong kho', content: product?.totalInStock },
+        { title: 'Số sản phẩm đã bán', content: product?.soldAmount },
+        { title: 'Hạng bảo hàng', content: '12 tháng' },
+        { title: 'Xuất xứ', content: 'Việt Nam' },
+    ];
+
     return (
         <Container className={styles.container}>
             <PageWrapper routes={[ { breadcrumbName: 'Sản phẩm' } ]}>
@@ -237,34 +257,31 @@ const DetailPageDesktop = () => {
 
                         <div className="product-single-r">
                             <div className="product-details font-manrope">
-                                <div className="title fs-20 fw-5">{product?.name}</div>
-                                <div>
-                                    <p className="para fw-3 fs-15">{product?.description}</p>
-                                </div>
+                                <Typography.Title level={2}>{product?.name}</Typography.Title>
                                 <div className="info flex align-center flex-wrap fs-14">
-                                    <div className="rating">
-                                        <span className="text-orange fw-5">Đánh giá:</span>
-                                        {/* <span className="mx-1">{product?.rating}</span> */}
-                                    </div>
-                                    <div className="vert-line"></div>
                                     <div className="brand">
-                                        <span className="text-orange fw-5">Thương hiệu:</span>
+                                        <span className="text-orange fw-5">Thương hiệu: </span>
                                         <span className="mx-1">{product?.brandDto.name}</span>
                                     </div>
                                     <div className="vert-line"></div>
                                     <div className="brand">
-                                        <span className="text-orange fw-5">Loại:</span>
+                                        <span className="text-orange fw-5">Loại: </span>
                                         <span className="mx-1 text-capitalize">
                                             {product?.categoryDto.name
                                                 ? product?.categoryDto.name.replace('-', ' ')
                                                 : ''}
                                         </span>
                                     </div>
+                                    <div className="vert-line"></div>
+                                    <div className="brand">
+                                        <span className="text-orange fw-5">Đã bán: </span>
+                                        <span className="mx-1 text-capitalize">{product?.soldAmount || 0}</span>
+                                    </div>
                                 </div>
-                                {discountedPrice !== 0 ? (
-                                    <div className="price">
-                                        <div className="flex align-center">
-                                            <div className="old-price text-gray">
+                                {discountedPrice != 0 ? (
+                                    <Flex className={styles.price} gap={8} vertical>
+                                        <Flex align="center" justify="start">
+                                            <div className={styles.oldPrice}>
                                                 {formatMoney(product?.price, {
                                                     groupSeparator: ',',
                                                     decimalSeparator: '.',
@@ -273,11 +290,11 @@ const DetailPageDesktop = () => {
                                                     currentDecimal: '0',
                                                 })}
                                             </div>
-                                            <span className="fs-14 mx-2 text-dark">Bao gồm tất cả các loại thuế</span>
-                                        </div>
+                                            <div className={styles.saleOff}>-{product?.saleOff}% OFF</div>
+                                        </Flex>
 
-                                        <div className="flex align-center my-1">
-                                            <div className="new-price fw-5 font-poppins fs-24 text-orange">
+                                        <Flex align="center" justify="space-between">
+                                            <span className={styles.newPrice}>
                                                 {formatMoney(discountedPrice, {
                                                     groupSeparator: ',',
                                                     decimalSeparator: '.',
@@ -285,38 +302,54 @@ const DetailPageDesktop = () => {
                                                     currentcyPosition: 'BACK',
                                                     currentDecimal: '0',
                                                 })}
-                                            </div>
-                                            <div className="discount bg-orange fs-13 text-white fw-6 font-poppins">
-                                                {product?.saleOff}% OFF
-                                            </div>
-                                        </div>
-                                    </div>
+                                            </span>
+                                            <span>Bao gồm tất cả các loại thuế</span>
+                                        </Flex>
+                                    </Flex>
                                 ) : (
-                                    <div className="price">
-                                        <div className="flex align-center my-1">
-                                            <div className="new-price fw-5 font-poppins fs-24 text-orange">
-                                                {formatMoney(product?.price, {
-                                                    groupSeparator: ',',
-                                                    decimalSeparator: '.',
-                                                    currentcy: 'đ',
-                                                    currentcyPosition: 'BACK',
-                                                    currentDecimal: '0',
-                                                })}
-                                            </div>
-                                            <span className="fs-14 mx-2 text-dark">Bao gồm tất cả các loại thuế</span>
+                                    <Flex align="center" justify="space-between" className={styles.price}>
+                                        <div className={styles.newPrice}>
+                                            {formatMoney(product?.price, {
+                                                groupSeparator: ',',
+                                                decimalSeparator: '.',
+                                                currentcy: 'đ',
+                                                currentcyPosition: 'BACK',
+                                                currentDecimal: '0',
+                                            })}
                                         </div>
-                                    </div>
+                                        <span>Bao gồm tất cả các loại thuế</span>
+                                    </Flex>
                                 )}
 
                                 <div className="qty flex align-center my-4">
-                                    {product?.stock === 0 ? (
+                                    {product?.totalInStock === 0 ? (
                                         <div className="qty-error text-uppercase bg-danger text-white fs-12 ls-1 mx-2 fw-5">
-                                            out of stock
+                                            Hết hàng
                                         </div>
                                     ) : (
                                         ''
                                     )}
                                 </div>
+                                <Row align="center" justify="space-between" gutter={16} className={styles.price}>
+                                    <Col span={5}>
+                                        <span style={{ fontSize: 18 }}>An tâm mua sắm cùng Tech Market</span>
+                                    </Col>
+                                    <Col
+                                        span={19}
+                                        style={{
+                                            display: 'flex',
+                                            width: 'max-content',
+                                            border: '2px solid #ccc',
+                                            borderRadius: 10,
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            padding: '20px 15px',
+                                        }}
+                                    >
+                                        <Image src="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/productdetailspage/e3c4dc83fbfcab7b0654.svg" />
+                                        <span style={{ fontSize: 18 }}>Trả hàng miễn phí sau 15 ngày trải nghiệm</span>
+                                    </Col>
+                                </Row>
 
                                 <div className="btns">
                                     {/* {product && <AddToCardButton onClick={() => AddToCardButton(product?.listProductVariant[0], quantity)} />} */}
@@ -349,6 +382,37 @@ const DetailPageDesktop = () => {
                             </div>
                         </div>
                     </Space>
+                    <Card style={{ backgroundColor: '#ffffff', width: '95%', height: '95%', margin: '10px 0px' }}>
+                        <Spin spinning={isLoadingMore}>
+                            <div style={{ padding: '24px' }}>
+                                <Typography.Title level={2} style={{ color: 'black' }}>
+                                    Chi tiết sản phẩm
+                                </Typography.Title>
+                                {detailCard.map((item, index) => {
+                                    return (
+                                        <Row key={index} align="center" gap={8} style={{ margin: '16px 0px' }}>
+                                            <Col span={4} className={styles.modalReview_title}>
+                                                {item.title}
+                                            </Col>
+                                            <Col span={20} className={styles.modalReview_content}>
+                                                {item.content}
+                                            </Col>
+                                        </Row>
+                                    );
+                                })}
+                                <Divider />
+                                <Typography.Title level={2} style={{ color: 'black' }}>
+                                    Mô tả sản phẩm
+                                </Typography.Title>
+                                <RichTextRender
+                                    value={product?.description}
+                                    type={'textarea'}
+                                    disabled={true}
+                                    style={{ height: 'max-content' }}
+                                />
+                            </div>
+                        </Spin>
+                    </Card>
                     <Card style={{ backgroundColor: '#ffffff', width: '95%', height: '95%', margin: '10px 0px' }}>
                         <Spin spinning={isLoadingMore}>
                             <div className={styles.modalReview}>

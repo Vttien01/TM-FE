@@ -1,6 +1,6 @@
 import SkeLeton from '@components/common/elements/Skeleton';
 import Typo from '@components/common/elements/Typo';
-import { paymentMethods, paymentSelect, storageKeys } from '@constants';
+import { paymentMethods, paymentSelect, paymentSelectIcon, storageKeys } from '@constants';
 import useTranslate from '@hooks/useTranslate';
 import { grandTotal, grandTotalCoupon, price, realTotal } from '@utils';
 import { getData } from '@utils/localStorage';
@@ -11,14 +11,13 @@ import styles from './cartInfo.module.scss';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
 // import wallet from '@assets/images/wallet.jpg';
-// import credit from '@assets/images/credit.png';
 import { Button, Col, Divider, Flex, Form, Image, Input, Radio, Row, Space, Typography } from 'antd';
 import InputTextField from '@components/common/form/InputTextField';
 import ItemCart from '@components/common/elements/itemCard/ItemCart';
 import AutoCompleteField from '@components/common/form/AutoCompleteField';
 import apiConfig from '@constants/apiConfig';
 import SelectField from '@components/common/form/SelectField';
-import { IconEdit, IconPlus } from '@tabler/icons-react';
+import { IconEdit, IconMoneybag, IconPlus } from '@tabler/icons-react';
 const message = defineMessages({
     cartInfo: 'Thông tin đơn hàng',
 });
@@ -91,9 +90,17 @@ const CartInfo = ({
                                                 marginTop: 10,
                                             }}
                                         >
-                                            {paymentSelect.map((item, index) => (
+                                            {paymentSelectIcon.map((item, index) => (
                                                 <Radio value={item.value} key={index}>
-                                                    {item.label}
+                                                    <Flex
+                                                        align="ccenter"
+                                                        justify="center"
+                                                        gap={4}
+                                                        style={{ marginTop: 6 }}
+                                                    >
+                                                        <Image src={item.icon} width={24} height={24} />
+                                                        <span>{item.label}</span>
+                                                    </Flex>
                                                 </Radio>
                                             ))}
                                         </Radio.Group>

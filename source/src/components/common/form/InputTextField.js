@@ -12,6 +12,7 @@ const InputTextField = ({
     size,
     type,
     style,
+    value,
     ...props
 }) => {
     const { rules, placeholder } = useFormField(props);
@@ -23,8 +24,9 @@ const InputTextField = ({
                 className={className}
                 placeholder={placeholder}
                 size={size}
-                type={type}
+                type={'textarea'}
                 style={style}
+                defaultValue={value}
             />
         </Form.Item>
     );

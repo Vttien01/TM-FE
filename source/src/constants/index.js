@@ -1,5 +1,8 @@
 import { defineMessages } from 'react-intl';
 import { userStateMessage } from './masterData';
+import iconMoney from '@assets/icons/iconMoney.png';
+import iconPaypal from '@assets/icons/paypal.png';
+import iconVnpay from '@assets/icons/vnpay.png';
 
 export const apiUrl = process.env.REACT_APP_API;
 export const enableExposure = process.env.REACT_APP_ENABLE_EXPOSURE === 'true';
@@ -271,6 +274,12 @@ export const paymentSelect = [
     { value: 0, label: 'Thanh toán tiền mặt', color: '#00A648' },
     { value: 1, label: 'Thanh toán PAYPAL', color: '#00adf9' },
     { value: 2, label: 'Thanh toán VNPAY', color: 'blue' },
+];
+
+export const paymentSelectIcon = [
+    { value: 0, label: 'Thanh toán tiền mặt', icon: iconMoney },
+    { value: 1, label: 'Thanh toán PAYPAL', icon: iconPaypal },
+    { value: 2, label: 'Thanh toán VNPAY', icon: iconVnpay },
 ];
 
 export const paymentOptions = [
