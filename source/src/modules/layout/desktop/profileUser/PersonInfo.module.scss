@@ -9,10 +9,44 @@
     height: 80vh;
     background-color: #f8c66f; /* Màu nền của hình vuông */
     border-radius: 15px 0px 0 15px; /* Bo góc ở cả hai góc trên */
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Màu chữ */
-  }
+    .navbarMain {
+      width: 100%;
+      .navbarItem {
+        padding: 15px 0;
+        border-bottom: solid 3px #f0f2f5;
+        cursor: pointer;
+        &.active {
+          h3 {
+            color: #ffffff; // Màu trắng khi active
+          }
+          
+          svg {
+            color: #ffffff; // Màu icon trắng khi active
+          }
+        }
+        
+        // Hiệu ứng hover
+        &:hover {
+          h3 {
+            color: #ffffff; // Màu trắng khi hover
+          }
+          
+          svg {
+            color: #ffffff; // Màu icon trắng khi hover
+          }
+        }
+      }
+      
+      .navbarItem:hover h3 {
+        color: #f0f2f5; /* Màu chữ khi hover */
+      }
+      
+      .navbarItem:hover svg {
+        color: #f0f2f5; /* Màu icon khi hover */
+        transform: scale(1.05); /* Tùy chọn: làm icon hơi to lên khi hover */
+      }
+    }
+}
   .rounded-square-right {
     width: 68%;
     height: 80vh;

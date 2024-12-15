@@ -1,4 +1,4 @@
-import { EditOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
+import { EditOutlined, LogoutOutlined, PlusOutlined, UserOutlined } from '@ant-design/icons';
 import ListPage from '@components/common/layout/ListPage';
 import PageWrapper from '@components/common/layout/PageWrapper';
 import BaseTable from '@components/common/table/BaseTable';
@@ -10,7 +10,7 @@ import useTranslate from '@hooks/useTranslate';
 import { commonMessage } from '@locales/intl';
 import routes from '@routes';
 import { IconEdit, IconHome, IconStar } from '@tabler/icons-react';
-import { Avatar, Button, Card, Divider, Flex, Form, List, Rate, Space, Tag, Tooltip, Typography } from 'antd';
+import { Avatar, Button, Card, Col, Divider, Flex, Form, List, Rate, Row, Space, Tag, Tooltip, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -27,6 +27,8 @@ import { convertUtcToLocalTime } from '@utils';
 import useFetchAction from '@hooks/useFetchAction';
 import { accountActions } from '@store/actions';
 import { use } from 'react';
+import configPages from '@constants/menuConfig';
+import TextField from '@components/common/form/TextField';
 
 const message = defineMessages({
     objectName: 'Địa chỉ người dùng',
@@ -40,6 +42,7 @@ const PersonInfo = () => {
     const [ openAddressModal, handleAddressModal ] = useDisclosure(false);
     const [ openProfileModal, handleProfileModal ] = useDisclosure(false);
     const [ address, setAddress ] = useState(null);
+    const [ active, setActive ] = useState('info');
     const { pathname: pagePath } = useLocation();
     const [ form ] = Form.useForm();
     const queryParameters = new URLSearchParams(window.location.search);
@@ -56,9 +59,19 @@ const PersonInfo = () => {
         immediate: false,
         mappingData: (res) => res.data,
     });
+    const {
+        data: dataMyVoucher,
+        loading: loadingMyVoucher,
+        execute: executeMyVoucher,
+    } = useFetch(apiConfig.voucher.getMyVoucher, {
+        immediate: false,
+        mappingData: (res) => res.data,
+    });
     useEffect(() => {
-        if (content === 'review') {
+        if (content === 'my-review') {
             executeMyReview();
+        } else if (content === 'my-voucher') {
+            executeMyVoucher();
         }
     }, [ content ]);
 
@@ -149,14 +162,8 @@ const PersonInfo = () => {
         navigate(routes.ReviewPage.path + `?userId=${profile.id}`);
     };
 
-    const IconText = ({ icon, text }) => (
-        <Space>
-            {React.createElement(icon)}
-            {text}
-        </Space>
-    );
-
     const breadRoutes = [ { breadcrumbName: translate.formatMessage(message.titlePage) } ];
+    console.log(active);
 
     return (
         <Container className={styles.container}>
@@ -164,19 +171,23 @@ const PersonInfo = () => {
             <PageWrapper routes={breadRoutes}>
                 <div style={{ display: 'flex', justifyContent: 'center', margin: '30px 0px' }}>
                     <Space className={styles.roundedSquareLeft} direction="vertical">
-                        <Avatar
-                            size={200}
-                            src={
-                                profile?.account?.avatar ? (
-                                    `${AppConstants.contentRootUrl}${profile?.account?.avatar}`
-                                ) : (
-                                    <UserOutlined />
-                                )
-                            }
-                        />
-                        <Typography.Title style={{ fontSize: 35 }}>Người dùng</Typography.Title>
-                        <Typography.Title level={3}>{profile?.account?.username}</Typography.Title>
-                        <Space>
+                        <Flex align="center" justify="center" style={{ margin: '20px 0 10px' }} vertical>
+                            <Avatar
+                                size={200}
+                                src={
+                                    profile?.account?.avatar ? (
+                                        `${AppConstants.contentRootUrl}${profile?.account?.avatar}`
+                                    ) : (
+                                        <UserOutlined />
+                                    )
+                                }
+                            />
+                            <Typography.Title style={{ fontSize: 35 }}>Người dùng</Typography.Title>
+                            <Typography.Title level={3} style={{ margin: 0 }}>
+                                {profile?.account?.username}
+                            </Typography.Title>
+                        </Flex>
+                        {/* <Space>
                             <Tooltip placement="bottom" title="Sửa thông tin cá nhân">
                                 <IconEdit
                                     size={40}
@@ -201,27 +212,58 @@ const PersonInfo = () => {
                                     style={{ marginLeft: 20, fontSize: 40, color: '#282a36', cursor: 'pointer' }}
                                 />
                             </Tooltip>
-                        </Space>
+                        </Space> */}
+                        <div className={styles.navbarMain}>
+                            {configPages.map((item, index) => {
+                                return (
+                                    <Flex
+                                        align="center"
+                                        justify="center"
+                                        className={`${styles.navbarItem} ${active === item.key ? styles.active : ''}`}
+                                        key={item.key}
+                                        gap={10}
+                                        onClick={() => {
+                                            setActive(item.key);
+                                            setQueryParams({ content: item.key });
+                                        }}
+                                    >
+                                        {React.cloneElement(item.icon, {
+                                            style: {
+                                                fontSize: 30,
+                                                color: '#282a36',
+                                            },
+                                        })}
+
+                                        <Typography.Title level={3} style={{ marginBottom: 0 }}>
+                                            {item.title}
+                                        </Typography.Title>
+                                    </Flex>
+                                );
+                            })}
+                            <Flex
+                                align="center"
+                                justify="center"
+                                className={styles.navbarItem}
+                                key={'logout'}
+                                gap={10}
+                                // onClick={() => setActive('logout')}
+                                // className={`${styles.item} ${active === 'logout' ? styles.activeItem : ''}`}
+                            >
+                                <LogoutOutlined style={{ fontSize: 30 }} color="#282a36" />
+
+                                <Typography.Title level={3} style={{ marginBottom: 0 }}>
+                                    <FormattedMessage defaultMessage="Đăng xuất" />
+                                </Typography.Title>
+                            </Flex>
+                        </div>
                     </Space>
-                    {content == 'address' ? (
+                    {content == 'my-address' ? (
                         <Space className={styles.roundedSquareRight} direction="vertical">
                             <div className={styles.boxWithBorder}>
                                 <Divider orientation="left" style={{ fontSize: 25, marginBottom: '20px' }}>
                                     Thông tin địa chỉ
                                 </Divider>
                             </div>
-                            {/* <ListPage
-                                actionBar={
-                                    <Flex justify="end">
-                                        <Button type="primary" onClick={() => handleAddressModal.open()}>
-                                            <PlusOutlined /> Thêm mới
-                                        </Button>
-                                    </Flex>
-                                }
-                                style={{ backgroundColor: '#fcd8bc', borderRadius: '10px' }}
-                                baseTable={
-                                }
-                            /> */}
                             <Flex justify="end" style={{ width: '800px', position: 'absolute', top: 160, right: 160 }}>
                                 <Button type="primary" onClick={() => handleAddressModal.open()}>
                                     <PlusOutlined /> Thêm mới
@@ -236,82 +278,12 @@ const PersonInfo = () => {
                                 style={{ minWidth: 800 }}
                             />
                         </Space>
-                    ) : content == 'review' ? (
-                        <Space className={styles.roundedSquareRight} direction="vertical">
-                            <div className={styles.boxWithBorder}>
-                                <Divider orientation="left" style={{ fontSize: 25, marginBottom: '20px' }}>
-                                    Danh sách các đánh giá của người dùng
-                                </Divider>
-                            </div>
-                            <List
-                                loading={loadingMyReview}
-                                pagination={dataMyReview?.length > 0 && true}
-                                // className="demo-loadmore-list"
-                                itemLayout="horizontal"
-                                dataSource={dataMyReview || []}
-                                style={{ marginBottom: 10, border: '1px solide white', minWidth: 800 }}
-                                renderItem={(item) => (
-                                    <Card style={{ backgroundColor: '#eff0f1', marginTop: 10 }}>
-                                        <List.Item
-                                            itemLayout="vertical"
-                                            key={item?.id}
-                                            actions={[
-                                                <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-                                                <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
-                                                <IconText
-                                                    icon={MessageOutlined}
-                                                    text="2"
-                                                    key="list-vertical-message"
-                                                />,
-                                            ]}
-                                        >
-                                            <List.Item.Meta
-                                                avatar={<Avatar src={item?.image} size={100} alt="" />}
-                                                title={
-                                                    <a href={`/detail/${item.productId}`} style={{ fontSize: 25 }}>
-                                                        {item?.productName}
-                                                    </a>
-                                                }
-                                                description={
-                                                    <div
-                                                        style={{
-                                                            display: 'flex',
-                                                            justifyContent: 'center',
-                                                            flexDirection: 'column',
-                                                        }}
-                                                    >
-                                                        <div style={{ flex: '1', justifyContent: 'center' }}>
-                                                            <Rate disabled allowHalf value={item?.star} />
-                                                        </div>
-                                                        <div style={{ flex: '1', justifyContent: 'center' }}>
-                                                            Màu: {item.color}
-                                                        </div>
-                                                        <div style={{ flex: '1', justifyContent: 'center' }}>
-                                                            Ngày tạo: {''}
-                                                            <span>
-                                                                {convertUtcToLocalTime(
-                                                                    item?.createdDate,
-                                                                    DEFAULT_FORMAT,
-                                                                    DEFAULT_FORMAT,
-                                                                )}
-                                                            </span>
-                                                        </div>
-                                                        <div style={{ flex: '1', justifyContent: 'center' }}>
-                                                            <Typography.Paragraph
-                                                                ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
-                                                                style={{ fontSize: 18 }}
-                                                            >
-                                                                Nội dung: {item?.message}
-                                                            </Typography.Paragraph>
-                                                        </div>
-                                                    </div>
-                                                }
-                                            />
-                                        </List.Item>
-                                    </Card>
-                                )}
-                            />
-                        </Space>
+                    ) : content == 'my-review' ? (
+                        <MyReview loadingMyReview={loadingMyReview} dataMyReview={dataMyReview} />
+                    ) : content == 'my-voucher' ? (
+                        <MyVoucher loadingMyVoucher={loadingMyVoucher} dataMyVoucher={dataMyVoucher} />
+                    ) : content == 'change-password' ? (
+                        <ChangePassword />
                     ) : (
                         <Space className={styles.roundedSquareRight} direction="vertical">
                             <div className={styles.boxWithBorder}>
@@ -403,6 +375,248 @@ function DashboardCardStatus({ title, value, icon, icon1, number }) {
                 </Tag>
             </Space>
         </Card>
+    );
+}
+
+function MyVoucher({ loadingMyVoucher, dataMyVoucher }) {
+    const translate = useTranslate();
+    const IconText = ({ icon, text }) => (
+        <Space>
+            {React.createElement(icon)}
+            {text}
+        </Space>
+    );
+    return (
+        <Space className={styles.roundedSquareRight} direction="vertical">
+            <div className={styles.boxWithBorder}>
+                <Divider orientation="left" style={{ fontSize: 25, marginBottom: '20px' }}>
+                    Danh sách các voucher của người dùng
+                </Divider>
+            </div>
+            <List
+                loading={loadingMyVoucher}
+                pagination={dataMyVoucher?.length > 0 && true}
+                // className="demo-loadmore-list"
+                itemLayout="horizontal"
+                dataSource={dataMyVoucher || []}
+                style={{ marginBottom: 10, border: '1px solide white', minWidth: 800 }}
+                renderItem={(item) => (
+                    <Card style={{ backgroundColor: '#eff0f1', marginTop: 10 }}>
+                        <List.Item
+                            itemLayout="vertical"
+                            key={item?.id}
+                            actions={[
+                                <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+                                <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+                                <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+                            ]}
+                        >
+                            <List.Item.Meta
+                                avatar={<Avatar src={item?.image} size={100} alt="" />}
+                                title={
+                                    <a href={`/detail/${item.productId}`} style={{ fontSize: 25 }}>
+                                        {item?.productName}
+                                    </a>
+                                }
+                                description={
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            flexDirection: 'column',
+                                        }}
+                                    >
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                            <Rate disabled allowHalf value={item?.star} />
+                                        </div>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>Màu: {item.color}</div>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                            Ngày tạo: {''}
+                                            <span>
+                                                {convertUtcToLocalTime(
+                                                    item?.createdDate,
+                                                    DEFAULT_FORMAT,
+                                                    DEFAULT_FORMAT,
+                                                )}
+                                            </span>
+                                        </div>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                            <Typography.Paragraph
+                                                ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
+                                                style={{ fontSize: 18 }}
+                                            >
+                                                Nội dung: {item?.message}
+                                            </Typography.Paragraph>
+                                        </div>
+                                    </div>
+                                }
+                            />
+                        </List.Item>
+                    </Card>
+                )}
+            />
+        </Space>
+    );
+}
+
+function MyReview({ loadingMyReview, dataMyReview }) {
+    const translate = useTranslate();
+    const IconText = ({ icon, text }) => (
+        <Space>
+            {React.createElement(icon)}
+            {text}
+        </Space>
+    );
+    return (
+        <Space className={styles.roundedSquareRight} direction="vertical">
+            <div className={styles.boxWithBorder}>
+                <Divider orientation="left" style={{ fontSize: 25, marginBottom: '20px' }}>
+                    Danh sách các đánh giá của người dùng
+                </Divider>
+            </div>
+            <List
+                loading={loadingMyReview}
+                pagination={dataMyReview?.length > 0 && true}
+                // className="demo-loadmore-list"
+                itemLayout="horizontal"
+                dataSource={dataMyReview || []}
+                style={{ marginBottom: 10, border: '1px solide white', minWidth: 800 }}
+                renderItem={(item) => (
+                    <Card style={{ backgroundColor: '#eff0f1', marginTop: 10 }}>
+                        <List.Item
+                            itemLayout="vertical"
+                            key={item?.id}
+                            actions={[
+                                <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+                                <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+                                <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+                            ]}
+                        >
+                            <List.Item.Meta
+                                avatar={<Avatar src={item?.image} size={100} alt="" />}
+                                title={
+                                    <a href={`/detail/${item.productId}`} style={{ fontSize: 25 }}>
+                                        {item?.productName}
+                                    </a>
+                                }
+                                description={
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            flexDirection: 'column',
+                                        }}
+                                    >
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                            <Rate disabled allowHalf value={item?.star} />
+                                        </div>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>Màu: {item.color}</div>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                            Ngày tạo: {''}
+                                            <span>
+                                                {convertUtcToLocalTime(
+                                                    item?.createdDate,
+                                                    DEFAULT_FORMAT,
+                                                    DEFAULT_FORMAT,
+                                                )}
+                                            </span>
+                                        </div>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                            <Typography.Paragraph
+                                                ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
+                                                style={{ fontSize: 18 }}
+                                            >
+                                                Nội dung: {item?.message}
+                                            </Typography.Paragraph>
+                                        </div>
+                                    </div>
+                                }
+                            />
+                        </List.Item>
+                    </Card>
+                )}
+            />
+        </Space>
+    );
+}
+
+function ChangePassword() {
+    const translate = useTranslate();
+    const [ form ] = Form.useForm();
+    return (
+        <Space className={styles.roundedSquareRight} direction="vertical">
+            <div className={styles.boxWithBorder}>
+                <Divider orientation="left" style={{ fontSize: 25, marginBottom: '20px' }}>
+                    Đổi mật khẩu
+                </Divider>
+            </div>
+            <Form form={form} layout="horizontal" style={{ marginBottom: 10 }}>
+                <Row gutter={16} style={{ padding: '0 80px' }}>
+                    <Col span={24}>
+                        <TextField
+                            type="password"
+                            label={<FormattedMessage defaultMessage="Mật khẩu cũ" />}
+                            required
+                            name="oldPassword"
+                        />
+                    </Col>
+                    <Col span={24}>
+                        <TextField
+                            type="password"
+                            label={<FormattedMessage defaultMessage="Mật khẩu mới" />}
+                            name="password"
+                            rules={[
+                                {
+                                    validator: async () => {
+                                        const isTouched = form.isFieldTouched('newPassword');
+                                        if (isTouched) {
+                                            const value = form.getFieldValue('newPassword');
+                                            if (value.length < 6) {
+                                                throw new Error(
+                                                    translate.formatMessage(commonMessage.validatePassword),
+                                                );
+                                            }
+                                        }
+                                    },
+                                },
+                            ]}
+                        />
+                    </Col>
+                    <Col span={24}>
+                        <TextField
+                            type="password"
+                            label={translate.formatMessage(commonMessage.confirmPassword)}
+                            rules={[
+                                {
+                                    validator: async () => {
+                                        const password = form.getFieldValue('newPassword');
+                                        const confirmPassword = form.getFieldValue('confirmPassword');
+                                        if (password !== confirmPassword) {
+                                            throw new Error(translate.formatMessage(commonMessage.passwordNotMatch));
+                                        }
+                                    },
+                                },
+                            ]}
+                        />
+                    </Col>
+                    <Col span={24}>
+                        <Flex justify="flex-end">
+                            <Button
+                                size="large"
+                                key="ok"
+                                type="primary"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    // handleProfileModal();
+                                }}
+                            >
+                                Đổi mật khẩu
+                            </Button>
+                        </Flex>
+                    </Col>
+                </Row>
+            </Form>
+        </Space>
     );
 }
 

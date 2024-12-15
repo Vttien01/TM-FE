@@ -127,55 +127,6 @@ const ProfileModal = ({ open, onCancel, profile }) => {
                         <Col span={12}>
                             <TextField label={translate.formatMessage(commonMessage.phone)} name="phone" required />
                         </Col>
-                        <Col span={12}>
-                            <TextField
-                                type="password"
-                                label={<FormattedMessage defaultMessage="Mật khẩu cũ" />}
-                                required
-                                name="oldPassword"
-                            />
-                        </Col>
-                        <Col span={12}>
-                            <TextField
-                                type="password"
-                                label={<FormattedMessage defaultMessage="Mật khẩu mới" />}
-                                name="password"
-                                rules={[
-                                    {
-                                        validator: async () => {
-                                            const isTouched = form.isFieldTouched('newPassword');
-                                            if (isTouched) {
-                                                const value = form.getFieldValue('newPassword');
-                                                if (value.length < 6) {
-                                                    throw new Error(
-                                                        translate.formatMessage(commonMessage.validatePassword),
-                                                    );
-                                                }
-                                            }
-                                        },
-                                    },
-                                ]}
-                            />
-                        </Col>
-                        <Col span={12}>
-                            <TextField
-                                type="password"
-                                label={translate.formatMessage(commonMessage.confirmPassword)}
-                                rules={[
-                                    {
-                                        validator: async () => {
-                                            const password = form.getFieldValue('newPassword');
-                                            const confirmPassword = form.getFieldValue('confirmPassword');
-                                            if (password !== confirmPassword) {
-                                                throw new Error(
-                                                    translate.formatMessage(commonMessage.passwordNotMatch),
-                                                );
-                                            }
-                                        },
-                                    },
-                                ]}
-                            />
-                        </Col>
                         <Col span={24}>
                             <Flex width="100%" justify="flex-end" gap="middle">
                                 <Button key="cancel" onClick={onCancel} size="large">
