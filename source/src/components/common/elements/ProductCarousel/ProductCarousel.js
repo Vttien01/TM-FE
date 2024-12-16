@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import './ProductList.scss';
+import './ProductCarousel.scss';
 import Product from '../Product';
 import { Badge, Button, Card, Col, Row } from 'antd';
+import SlickCarousel from '../SlickCarousel';
 
-const ProductList = ({ products, executGetProductDetail, loadingProductDetail, style, isRealated = false }) => {
+const ProductCarousel = ({ products, executGetProductDetail, loadingProductDetail, style }) => {
     const [ visibleItems, setVisibleItems ] = useState(4);
 
     const onLoadMore = () => {
@@ -21,7 +22,20 @@ const ProductList = ({ products, executGetProductDetail, loadingProductDetail, s
                     // headStyle={{ background: '#1890ff', color: '#fff' }}
                 >
                     <Row gutter={[ 16, 16 ]} align={'start'}>
-                        {products?.length > 0
+                        <SlickCarousel gap={7} column={5} height="350px">
+                            {products?.map((item) => {
+                                // return <CardCategory key={item?.id} data={item} />;
+                                return (
+                                    <Product
+                                        key={item.id}
+                                        product={{ ...item }}
+                                        loadingProductDetail={loadingProductDetail}
+                                        executGetProductDetail={executGetProductDetail}
+                                    />
+                                );
+                            })}
+                        </SlickCarousel>
+                        {/* {products?.length > 0
                             ? products.slice(0, visibleItems).map((product, index) => (
                                 <Col xs={24} sm={12} md={8} lg={6} xl={4.8} key={index}>
                                     <Product
@@ -29,19 +43,18 @@ const ProductList = ({ products, executGetProductDetail, loadingProductDetail, s
                                         product={{ ...product }}
                                         loadingProductDetail={loadingProductDetail}
                                         executGetProductDetail={executGetProductDetail}
-                                        isRealated={isRealated}
                                     />
                                 </Col>
                             ))
-                            : null}
+                            : null} */}
                     </Row>
-                    <Row gutter={[ 16, 16 ]} align={'center'}>
+                    {/* <Row gutter={[ 16, 16 ]} align={'center'}>
                         {visibleItems < products.length && (
                             <div style={{ textAlign: 'center', marginTop: 16, marginBottom: 16 }}>
                                 <Button onClick={onLoadMore}>Xem thêm</Button>
                             </div>
                         )}
-                    </Row>
+                    </Row> */}
                 </Card>
             );
         },
@@ -60,4 +73,4 @@ const ProductList = ({ products, executGetProductDetail, loadingProductDetail, s
     );
 };
 
-export default ProductList;
+export default ProductCarousel;

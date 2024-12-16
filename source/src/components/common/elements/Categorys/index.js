@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './index.module.scss';
 import classNames from 'classnames';
-import Slider from 'react-slick';
 import arrow from '@assets/icons/arrow.svg';
 import { Link, useNavigate } from 'react-router-dom';
 import CardCategory from '../CardCategorys';
@@ -26,9 +25,6 @@ const CategoryItem = ({ data, renderLink, renderTitle, style }) => {
             },
         });
     };
-    return (
-        <div style={style} className={(classNames(styles.categoryDesktop), 'category-desktop')}>
-        </div>
-    );
+    return <div style={style} className={(classNames(styles.categoryDesktop), 'category-desktop')}></div>;
 };
 export default CategoryItem;

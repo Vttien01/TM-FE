@@ -18,6 +18,7 @@ import { showWarningMessage } from '@services/notifyService';
 import Container from '@components/common/elements/Container';
 import InputTextField from '@components/common/form/InputTextField';
 import RichTextRender from '@components/common/elements/RichTextRender';
+import ProductList from '@components/common/elements/ProductList/ProductList';
 
 const DetailPageDesktop = () => {
     const { id } = useParams();
@@ -40,6 +41,23 @@ const DetailPageDesktop = () => {
     const [ averageRating, setAverageRating ] = useState(0);
     const [ ratingPercentages, setRatingPercentages ] = useState([ 0, 0, 0, 0, 0 ]);
     const { data: product, execute: executGetAllproducts } = useFetch(apiConfig.product.getProductAutocomplete, {
+        immediate: false,
+        mappingData: ({ data }) => data,
+    });
+    const {
+        data: listProductRelated,
+        execute: executeGetListRelated,
+        loading: loadingGetListRelated,
+    } = useFetch(apiConfig.product.getListRelated, {
+        immediate: false,
+        mappingData: ({ data }) => data,
+    });
+
+    const {
+        data: productDetail,
+        loading: loadingProductDetail,
+        execute: executGetProductDetail,
+    } = useFetch(apiConfig.product.getProductAutocomplete, {
         immediate: false,
         mappingData: ({ data }) => data,
     });
@@ -92,6 +110,11 @@ const DetailPageDesktop = () => {
             },
         });
         executeStarReviewData({
+            pathParams: {
+                id,
+            },
+        });
+        executeGetListRelated({
             pathParams: {
                 id,
             },
@@ -547,6 +570,21 @@ const DetailPageDesktop = () => {
                             </div>
                         </Spin>
                     </Card>
+                    {listProductRelated && (
+                        <Card style={{ backgroundColor: '#ffffff', width: '95%', height: '95%', margin: '10px 0px' }}>
+                            <Spin spinning={isLoadingMore}>
+                                <Typography.Title level={2}>Sản phẩm liên quan</Typography.Title>
+                                <div className={styles.modalReview}>
+                                    <ProductList
+                                        products={listProductRelated}
+                                        executGetProductDetail={executGetProductDetail}
+                                        loadingProductDetail={loadingProductDetail}
+                                        isRealated={true}
+                                    />
+                                </div>
+                            </Spin>
+                        </Card>
+                    )}
                 </Flex>
             </PageWrapper>
         </Container>

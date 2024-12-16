@@ -4,7 +4,7 @@ import { formatMoney } from '@utils';
 import { Badge, Button, Card, Flex } from 'antd';
 import styles from './Product.module.scss';
 
-const Product = ({ product, loadingProductDetail, executGetProductDetail }) => {
+const Product = ({ product, loadingProductDetail, executGetProductDetail, isRealated }) => {
     function truncateText(text, maxLength) {
         return text && text.length > maxLength ? text.slice(0, maxLength).replace(/(\s+\S+)$/, '...') : text;
     }
@@ -61,21 +61,23 @@ const Product = ({ product, loadingProductDetail, executGetProductDetail }) => {
                                             </span>
                                             <span className={styles.newPrice}>Đã bán: {product.soldAmount}</span>
                                         </Flex>
-                                        <Button
-                                            align="center"
-                                            type="dashed"
-                                            size="small"
-                                            style={{ width: '100%', color: 'orange', padding: '16px 0' }}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                executGetProductDetail({
-                                                    pathParams: { id: product.id },
-                                                });
-                                            }}
-                                            loading={loadingProductDetail}
-                                        >
-                                            Thêm vào giỏ hàng
-                                        </Button>
+                                        {!isRealated && (
+                                            <Button
+                                                align="center"
+                                                type="dashed"
+                                                size="small"
+                                                style={{ width: '100%', color: 'orange', padding: '16px 0' }}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    executGetProductDetail({
+                                                        pathParams: { id: product.id },
+                                                    });
+                                                }}
+                                                loading={loadingProductDetail}
+                                            >
+                                                Thêm vào giỏ hàng
+                                            </Button>
+                                        )}
                                     </Flex>
                                 </>
                             }
