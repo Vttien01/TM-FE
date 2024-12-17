@@ -42,7 +42,7 @@ const CartInfo = ({
     const cart = useSelector((state) => state.cart.cart);
     const queryParameters = new URLSearchParams(window.location.search);
     const isBuyDirect = queryParameters.get('isBuyDirect');
-    const [ coupon, setCoupon ] = useState(null);
+    const [ itemCoupon, setItemCoupon ] = useState(null);
     const data = arrayBuyNow?.length > 0 ? arrayBuyNow : cart;
     const realTotalPay = data ? realTotal(data) : 0;
     const message = defineMessages({
@@ -72,14 +72,15 @@ const CartInfo = ({
                                         name="voucherId"
                                         allowClear={false}
                                         options={dataMyVoucher}
-                                        mappingOptions={(item) => ({
-                                            value: item.id,
-                                            label: item.title,
-                                            percent: item?.percent,
-                                        })}
+                                        // mappingOptions={(item) => ({
+                                        //     value: item.id,
+                                        //     label: item.title,
+                                        //     percent: item?.percent,
+                                        //     priceMax: item?.priceMax,
+                                        // })}
                                         style={{ height: '40px' }}
                                         onChange={(value, item) => {
-                                            setCoupon(item?.percent);
+                                            setItemCoupon(item);
                                         }}
                                     />
                                 </Col>
@@ -120,8 +121,10 @@ const CartInfo = ({
     }, [ dataMyVoucher ]);
 
     const CartInfo = useCallback(() => {
-        const totalPrice = coupon != null ? realTotalPay - (realTotalPay * coupon) / 100 : realTotalPay;
-        const voucherPrice = coupon != null ? (realTotalPay * coupon) / 100 : 0;
+        const checkVoucher = (realTotalPay * itemCoupon?.percent) / 100 < itemCoupon?.priceMax;
+        const voucherPrice =
+            itemCoupon != null ? (checkVoucher ? (realTotalPay * itemCoupon?.percent) / 100 : itemCoupon?.priceMax) : 0;
+        const totalPrice = itemCoupon != null ? realTotalPay - voucherPrice : realTotalPay;
         return (
             <div>
                 <Divider />
@@ -139,11 +142,13 @@ const CartInfo = ({
                         <span>{translate.formatMessage(message.price)}</span>
                         <span>{data && price(realTotalPay)}</span>
                     </Flex>
-                    {coupon != null && (
+                    {itemCoupon != null && (
                         <Flex justify="space-between">
                             <span>{translate.formatMessage(message.saleVoucher)}</span>
                             <div>
-                                <span className={styles.oldPrice}>-{coupon}%</span>
+                                <span className={styles.oldPrice}>
+                                    {checkVoucher ? `-${itemCoupon?.percent}%` : 'Giảm tối đa'}
+                                </span>
                                 <span>{price(voucherPrice)}</span>
                             </div>
                         </Flex>
@@ -157,7 +162,7 @@ const CartInfo = ({
                 </Flex>
             </div>
         );
-    }, [ data, coupon ]);
+    }, [ data, itemCoupon ]);
 
     return (
         <div style={{ display: 'flex', gap: 20, marginTop: 20 }}>

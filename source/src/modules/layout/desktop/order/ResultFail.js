@@ -11,10 +11,11 @@ import useAuth from '@hooks/useAuth';
 import useFetch from '@hooks/useFetch';
 import useTranslate from '@hooks/useTranslate';
 import routes from '@routes';
-import { Button, Flex, Form, Result, Steps, theme } from 'antd';
+import { Button, Flex, Form, Result, Spin, Steps, theme } from 'antd';
 import { defineMessage } from 'react-intl';
 import Container from '@components/common/elements/Container';
 import styles from './index.module.scss';
+import { showErrorMessage } from '@services/notifyService';
 
 const decription = defineMessage({
     first: 'Kiểm tra số lượng sản phẩm',
@@ -24,6 +25,27 @@ const decription = defineMessage({
 
 const ResultFail = () => {
     const { token } = theme.useToken();
+    const queryParameters = new URLSearchParams(window.location.search);
+    const orderId = queryParameters.get('orderId');
+    const {
+        data: dataFailPay,
+        execute: executeFailPay,
+        loading: loadingFailPay,
+    } = useFetch(apiConfig.transaction.cancelPay, {
+        immediate: false,
+    });
+    useEffect(() => {
+        if (orderId) {
+            executeFailPay({
+                params: {
+                    orderId,
+                },
+                onCompleted: () => {
+                    showErrorMessage('Cập nhật trạng thái thanh toán thất bại');
+                },
+            });
+        }
+    }, [ orderId ]);
     const steps = [
         {
             title: 'Đơn hàng',
@@ -39,16 +61,18 @@ const ResultFail = () => {
             title: 'Hoàn thành',
             status: 'finish',
             content: (
-                <Result
-                    status="warning"
-                    title="Thanh toán thất bại!"
-                    subTitle="Vui lòng kiểm tra thông tin đặt hàng."
-                    extra={[
-                        <Button type="primary" key="console">
-                            <a href="/">Quay về trang chủ</a>
-                        </Button>,
-                    ]}
-                ></Result>
+                <Spin spinning={loadingFailPay}>
+                    <Result
+                        status="warning"
+                        title="Thanh toán thất bại!"
+                        subTitle="Vui lòng kiểm tra thông tin đặt hàng."
+                        extra={[
+                            <Button type="primary" key="console">
+                                <a href="/">Quay về trang chủ</a>
+                            </Button>,
+                        ]}
+                    ></Result>
+                </Spin>
             ),
             decription: decription.third,
         },

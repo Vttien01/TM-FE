@@ -58,6 +58,7 @@ const OrderPage = () => {
                 label: item.title,
                 value: item.id,
                 percent: item.percent,
+                priceMax: item?.priceMax,
             }));
         },
     });

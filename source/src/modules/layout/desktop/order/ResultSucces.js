@@ -11,10 +11,11 @@ import useAuth from '@hooks/useAuth';
 import useFetch from '@hooks/useFetch';
 import useTranslate from '@hooks/useTranslate';
 import routes from '@routes';
-import { Button, Flex, Form, Result, Steps, Typography, theme } from 'antd';
+import { Button, Flex, Form, Result, Spin, Steps, Typography, theme } from 'antd';
 import { defineMessage } from 'react-intl';
 import Container from '@components/common/elements/Container';
 import styles from './index.module.scss';
+import { showSucsessMessage } from '@services/notifyService';
 
 const decription = defineMessage({
     first: 'Kiểm tra số lượng sản phẩm',
@@ -29,6 +30,27 @@ const ResultSuccess = () => {
     const payerId = queryParameters.get('PayerID');
     const paymentId = queryParameters.get('paymentId');
     const orderId = queryParameters.get('orderId');
+    const {
+        data: dataSuccessPay,
+        execute: executeSuccessPay,
+        loading: loadingSuccessPay,
+    } = useFetch(apiConfig.transaction.successPay, {
+        immediate: false,
+    });
+    useEffect(() => {
+        if (payerId && paymentId && orderId) {
+            executeSuccessPay({
+                params: {
+                    PayerID: payerId,
+                    paymentId,
+                    orderId,
+                },
+                onCompleted: () => {
+                    showSucsessMessage('Cập nhật trạng thái thanh toán thành công');
+                },
+            });
+        }
+    }, [ payerId, paymentId, orderId ]);
 
     const { token } = theme.useToken();
     const [ current, setCurrent ] = useState(2);
@@ -51,16 +73,18 @@ const ResultSuccess = () => {
             status: 'finish',
             // icon: <SmileOutlined />,
             content: (
-                <Result
-                    status="success"
-                    title="Đơn hàng của bạn đang được xử lý"
-                    subTitle="Vui lòng theo dõi email để biết quá trình giao hàng."
-                    extra={[
-                        <Button type="primary" key="console">
-                            <a href="/">Quay về trang chủ</a>
-                        </Button>,
-                    ]}
-                />
+                <Spin spinning={loadingSuccessPay}>
+                    <Result
+                        status="success"
+                        title="Đơn hàng của bạn đang được xử lý"
+                        subTitle="Vui lòng theo dõi email để biết quá trình giao hàng."
+                        extra={[
+                            <Button type="primary" key="console">
+                                <a href="/">Quay về trang chủ</a>
+                            </Button>,
+                        ]}
+                    />
+                </Spin>
             ),
             decription: decription.third,
         },
