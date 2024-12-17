@@ -140,16 +140,60 @@ const CartModal = ({ open, onCancel, check, product }) => {
         return parsedValue;
     };
     const QuantityComponent = ({ value, record }) => {
+        const decreaseQty = (record) => {
+            if (value == 0) {
+                const newArray = listProductVariant.map((item) => ({
+                    ...item,
+                    quantity: 0,
+                    variantId: item?.id,
+                    productName: nameProduct,
+                }));
+                setnewArray(newArray);
+                setCheckList(false);
+            } else {
+                const updatedList = listProductVariant.map((item) =>
+                    item.variantId === record.variantId ? { ...item, quantity: item.quantity - 1 } : item,
+                );
+                setnewArray((pre) =>
+                    pre.map((cart) => {
+                        if (record.id === cart.id) {
+                            cart.totalPriceSell = (cart.price - (cart.price * product?.saleOff ?? 0) / 100) * value;
+                            cart.quantity = value;
+                        }
+                        return cart;
+                    }),
+                );
+                setCheckList(true);
+            }
+            console.log('decreaseQty', value, record);
+            // setnewArray(updatedList);
+        };
+        const increaseQty = (record) => {
+            const updatedList = listProductVariant.map((item) =>
+                item.variantId === record.variantId ? { ...item, quantity: item.quantity + 1 } : item,
+            );
+            // setnewArray((pre) =>
+            //     pre.map((cart) => {
+            //         if (record.id === cart.id) {
+            //             cart.totalPriceSell = (cart.price - (cart.price * product?.saleOff ?? 0) / 100) * value;
+            //             cart.quantity = value;
+            //         }
+            //         return cart;
+            //     }),
+            // );
+            setnewArray(updatedList);
+            setCheckList(true);
+        };
         return (
             <Flex align="center" gap={10}>
-                <button type="button" className="qty-decrease flex align-center justify-center">
+                <button onClick={() => decreaseQty(record)}>
                     <i className="fas fa-minus"></i>
                     <IconMinus />
                 </button>
 
                 <div style={{ width: 'max-content', padding: '0 10px' }}>3</div>
 
-                <button type="button" className="qty-increase flex align-center justify-center">
+                <button onClick={() => increaseQty(record)}>
                     <i className="fas fa-plus"></i>
                     <IconPlus />
                 </button>

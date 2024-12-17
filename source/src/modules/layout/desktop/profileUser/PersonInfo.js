@@ -9,7 +9,7 @@ import useListBase from '@hooks/useListBase';
 import useTranslate from '@hooks/useTranslate';
 import { commonMessage } from '@locales/intl';
 import routes from '@routes';
-import { IconEdit, IconHome, IconStar } from '@tabler/icons-react';
+import { IconEdit, IconHome, IconReceiptTax, IconStar } from '@tabler/icons-react';
 import { Avatar, Button, Card, Col, Divider, Flex, Form, List, Rate, Row, Space, Tag, Tooltip, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
@@ -32,6 +32,8 @@ import TextField from '@components/common/form/TextField';
 import { showErrorMessage, showSucsessMessage } from '@services/notifyService';
 import { removeCacheToken } from '@services/userService';
 import { useDispatch } from 'react-redux';
+import { kindUseVoucherOptions } from '@constants/masterData';
+import dayjs from 'dayjs';
 
 const message = defineMessages({
     objectName: 'Địa chỉ người dùng',
@@ -52,6 +54,7 @@ const PersonInfo = () => {
     const [ form ] = Form.useForm();
     const queryParameters = new URLSearchParams(window.location.search);
     const content = queryParameters.get('content');
+    const stateValues = translate.formatKeys(accountStatusOptions, [ 'label' ]);
     const { deserializeParams, setQueryParams, params } = useQueryParams();
     const dispatch = useDispatch();
     const { execute: executeGetProfile } = useFetchAction(accountActions.getProfile, {
@@ -188,7 +191,7 @@ const PersonInfo = () => {
                                     profile?.account?.avatar ? (
                                         `${AppConstants.contentRootUrl}${profile?.account?.avatar}`
                                     ) : (
-                                        <UserOutlined />
+                                        <UserOutlined style={{ fontSize: 120 }} />
                                     )
                                 }
                             />
@@ -284,7 +287,11 @@ const PersonInfo = () => {
                                 <DashboardCard title={'Email'} value={`${profile?.account?.email}`} />
                             </Space>
                             <Space direction="horizontal">
-                                <DashboardCardStatus title={'Trạng thái hoạt động'} value={profile?.account?.status} />
+                                <DashboardCardStatus
+                                    title={'Trạng thái hoạt động'}
+                                    value={profile?.account?.status}
+                                    stateValues={stateValues}
+                                />
                                 <DashboardCard
                                     title={'Điểm cá nhân'}
                                     value={
@@ -292,6 +299,13 @@ const PersonInfo = () => {
                                             style={{ color: 'green', fontSize: 20, fontWeight: 600 }}
                                         >{`${profile?.point}đ`}</div>
                                     }
+                                />
+                            </Space>
+                            <Space direction="horizontal">
+                                <DashboardCardStatus
+                                    title={'Loại tài khoản'}
+                                    value={profile?.memberShip}
+                                    stateValues={kindUseVoucherOptions}
                                 />
                             </Space>
                             <Space direction="horizontal">
@@ -343,9 +357,8 @@ function DashboardCard({ title, value, icon, icon1, number, children }) {
     );
 }
 
-function DashboardCardStatus({ title, value, icon, icon1, number }) {
+function DashboardCardStatus({ title, value, stateValues }) {
     const translate = useTranslate();
-    const stateValues = translate.formatKeys(accountStatusOptions, [ 'label' ]);
     const state = stateValues.find((item) => item.value == value);
     return (
         <Card style={{ minWidth: 400, backgroundColor: '#e7e7e7' }}>
@@ -353,7 +366,7 @@ function DashboardCardStatus({ title, value, icon, icon1, number }) {
                 <Typography.Title level={5}>{title}</Typography.Title>
                 <Tag
                     color={state.color}
-                    style={{ width: 80, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    style={{ width: 'max-content', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 >
                     <div style={{ padding: '0 0px', fontSize: 14 }}>{state.label}</div>
                 </Tag>
@@ -384,60 +397,75 @@ function MyVoucher({ loadingMyVoucher, dataMyVoucher }) {
                 itemLayout="horizontal"
                 dataSource={dataMyVoucher || []}
                 style={{ marginBottom: 10, border: '1px solide white', minWidth: 800 }}
-                renderItem={(item) => (
-                    <Card style={{ backgroundColor: '#eff0f1', marginTop: 10 }}>
-                        <List.Item
-                            itemLayout="vertical"
-                            key={item?.id}
-                            actions={[
-                                <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-                                <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
-                                <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
-                            ]}
-                        >
-                            <List.Item.Meta
-                                avatar={<Avatar src={item?.image} size={100} alt="" />}
-                                title={
-                                    <a href={`/detail/${item.productId}`} style={{ fontSize: 25 }}>
-                                        {item?.productName}
-                                    </a>
-                                }
-                                description={
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            justifyContent: 'center',
-                                            flexDirection: 'column',
-                                        }}
-                                    >
-                                        <div style={{ flex: '1', justifyContent: 'center' }}>
-                                            <Rate disabled allowHalf value={item?.star} />
+                renderItem={(item) => {
+                    const date1 = dayjs(item.expired, DEFAULT_FORMAT); // Ngày hết hạn
+                    const date2 = dayjs();
+                    const daysDifference = date2.isBefore(date1) ? date1.diff(date2, 'day') : 0;
+                    return (
+                        <Card style={{ backgroundColor: '#eff0f1', marginTop: 10 }}>
+                            <List.Item itemLayout="vertical" key={item?.id}>
+                                <List.Item.Meta
+                                    style={{ padding: 0 }}
+                                    avatar={<IconReceiptTax size={140} />}
+                                    title={<div style={{ fontSize: 18 }}>{item?.title}</div>}
+                                    description={
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                flexDirection: 'column',
+                                            }}
+                                        >
+                                            <div style={{ flex: '1', justifyContent: 'center' }}>
+                                                Ngày tạo: {''}
+                                                <span>
+                                                    {convertUtcToLocalTime(
+                                                        item?.createdDate,
+                                                        DEFAULT_FORMAT,
+                                                        DEFAULT_FORMAT,
+                                                    )}
+                                                </span>
+                                            </div>
+                                            <div style={{ flex: '1', justifyContent: 'center' }}>
+                                                <Typography.Paragraph
+                                                    ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
+                                                    style={{
+                                                        fontSize: 18,
+                                                        fontFamily: 'SFPro-sans-serif',
+                                                        marginBottom: 0,
+                                                    }}
+                                                >
+                                                    Giảm giá: {item.percent}%
+                                                </Typography.Paragraph>
+                                                <Typography.Paragraph
+                                                    ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
+                                                    style={{
+                                                        fontSize: 18,
+                                                        fontFamily: 'SFPro-sans-serif',
+                                                        marginBottom: 0,
+                                                    }}
+                                                >
+                                                    Thời hạn còn lại:{' '}
+                                                    {daysDifference > 0 ? (
+                                                        <span>{daysDifference} ngày</span>
+                                                    ) : (
+                                                        <Tag color="red">Hết hạn</Tag>
+                                                    )}
+                                                </Typography.Paragraph>
+                                                <Typography.Paragraph
+                                                    ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
+                                                    style={{ fontSize: 18, fontFamily: 'SFPro-sans-serif' }}
+                                                >
+                                                    Nội dung: {item?.content}
+                                                </Typography.Paragraph>
+                                            </div>
                                         </div>
-                                        <div style={{ flex: '1', justifyContent: 'center' }}>Màu: {item.color}</div>
-                                        <div style={{ flex: '1', justifyContent: 'center' }}>
-                                            Ngày tạo: {''}
-                                            <span>
-                                                {convertUtcToLocalTime(
-                                                    item?.createdDate,
-                                                    DEFAULT_FORMAT,
-                                                    DEFAULT_FORMAT,
-                                                )}
-                                            </span>
-                                        </div>
-                                        <div style={{ flex: '1', justifyContent: 'center' }}>
-                                            <Typography.Paragraph
-                                                ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
-                                                style={{ fontSize: 18 }}
-                                            >
-                                                Nội dung: {item?.message}
-                                            </Typography.Paragraph>
-                                        </div>
-                                    </div>
-                                }
-                            />
-                        </List.Item>
-                    </Card>
-                )}
+                                    }
+                                />
+                            </List.Item>
+                        </Card>
+                    );
+                }}
             />
         </Space>
     );

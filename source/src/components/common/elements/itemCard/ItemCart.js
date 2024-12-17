@@ -35,18 +35,15 @@ const ItemCart = ({ data, checkSellCode, coupon }) => {
                         {/* <Flex>
                             <Rate value={data?.averageStar} disabled></Rate>
                         </Flex> */}
-                        <Flex align="end">
-                            <Typography.Title
-                                level={5}
-                                type="semi-bold"
-                                style={{ color: 'var(--primary-color)', lineHeight: 'normal' }}
-                            >
+                        <Flex align="end" gap={8}>
+                            <span style={{ color: 'var(--primary-color)', fontWeight: 700, fontSize: 18 }}>
                                 {data?.price == 0
                                     ? translate.formatMessage(commonMessage.free)
                                     : coupon
                                         ? price(paymentTotal - coupon > 0 ? paymentTotal - coupon : 0)
                                         : price(paymentTotal)}
-                            </Typography.Title>
+                            </span>
+                            <span style={{ color: 'var(--black-color)', lineHeight: 'normal' }}>x{data?.quantity}</span>
                         </Flex>
                     </Flex>
                 </Flex>

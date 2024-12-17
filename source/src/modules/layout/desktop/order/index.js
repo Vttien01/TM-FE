@@ -51,12 +51,23 @@ const OrderPage = () => {
             }));
         },
     });
+    const { data: dataMyVoucher, execute: executeGetMyVoucher } = useFetch(apiConfig.voucher.getMyVoucher, {
+        immediate: false,
+        mappingData: ({ data }) => {
+            return data.map((item) => ({
+                label: item.title,
+                value: item.id,
+                percent: item.percent,
+            }));
+        },
+    });
 
     useEffect(() => {
         if (receivedData) {
             setArrayBuyNow([ receivedData ]);
         }
         executeGetMyAddress();
+        executeGetMyVoucher();
     }, [ receivedData ]);
 
     const renderTitle = (title, item) => (
@@ -234,6 +245,7 @@ const OrderPage = () => {
                     loadingCreateOrderForUser={loadingCreateOrderForUser}
                     loadingCreateTransactionPaypal={loadingCreateTransactionPaypal}
                     loadingCreateTransactionVnpal={loadingCreateTransactionVnpal}
+                    dataMyVoucher={dataMyVoucher}
                 />
             ),
             decription: decription.first,

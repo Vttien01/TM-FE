@@ -24,7 +24,7 @@ const InputTextField = ({
                 className={className}
                 placeholder={placeholder}
                 size={size}
-                type={'textarea'}
+                type={type}
                 style={style}
                 defaultValue={value}
             />

@@ -368,7 +368,7 @@ export const grandBill = function (arr) {
 
 export const realTotal = function (arr) {
     return arr.reduce((sum, i) => {
-        return sum + i?.price;
+        return sum + i?.price * i?.quantity;
     }, 0);
 };
 

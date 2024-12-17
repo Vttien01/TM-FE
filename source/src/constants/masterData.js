@@ -76,3 +76,11 @@ export const userStateMessage = defineMessages({
     ACTIVE_USER: 'Kích hoạt',
     NO_ACTIVE_USER: 'Chưa kích hoạt',
 });
+
+export const kindUseVoucherOptions = [
+    { value: 0, label: 'Tài khoản mới', color: '#c8d2d6' },
+    { value: 1, label: 'Tài khoản bạc', color: '#7b858a' },
+    { value: 2, label: 'Tài khoản vàng', color: '#FFD700' },
+    { value: 3, label: 'Tài khoản kim cương', color: '#00C4FF' },
+    { value: 4, label: 'Tài khoản VIP', color: '#8B0000' },
+];

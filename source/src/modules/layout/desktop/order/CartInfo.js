@@ -32,6 +32,7 @@ const CartInfo = ({
     loadingCreateTransactionPaypal,
     loadingCreateTransactionVnpal,
     arrayBuyNow,
+    dataMyVoucher,
 }) => {
     const translate = useTranslate();
     const { memberShip } = useAuth();
@@ -41,7 +42,7 @@ const CartInfo = ({
     const isBuyDirect = queryParameters.get('isBuyDirect');
     const [ coupon, setCoupon ] = useState(null);
     const data = arrayBuyNow?.length > 0 ? arrayBuyNow : cart;
-    const realTotalPay = isBuyDirect ? course?.price : data ? realTotal(data) : 0;
+    const realTotalPay = data ? realTotal(data) : 0;
     const message = defineMessages({
         summaryCheckout: 'Tóm tắt đơn hàng',
         price: 'Giá gốc',
@@ -65,15 +66,16 @@ const CartInfo = ({
                         <Form form={form}>
                             <Row gutter={8} style={{ width: '100%', marginTop: 10 }}>
                                 <Col span={24}>
-                                    <AutoCompleteField
+                                    <SelectField
                                         name="voucherId"
-                                        apiConfig={apiConfig.voucher.getMyVoucher}
+                                        allowClear={false}
+                                        options={dataMyVoucher}
                                         mappingOptions={(item) => ({
                                             value: item.id,
                                             label: item.title,
                                             percent: item?.percent,
                                         })}
-                                        searchParams={(text) => ({ title: text, status: 1 })}
+                                        style={{ height: '40px' }}
                                         onChange={(value, item) => {
                                             setCoupon(item?.percent);
                                         }}
@@ -99,7 +101,7 @@ const CartInfo = ({
                                                         gap={4}
                                                         style={{ marginTop: 6 }}
                                                     >
-                                                        <Image src={item.icon} width={24} height={24} />
+                                                        <Image src={item.icon} width={24} height={24} preview={false} />
                                                         <span>{item.label}</span>
                                                     </Flex>
                                                 </Radio>
@@ -113,7 +115,7 @@ const CartInfo = ({
                 }
             </div>
         );
-    }, []);
+    }, [ dataMyVoucher ]);
 
     const CartInfo = useCallback(() => {
         const totalPrice = coupon != null ? realTotalPay - (realTotalPay * coupon) / 100 : realTotalPay;
@@ -130,7 +132,7 @@ const CartInfo = ({
                     {data ? data?.map((item, index) => <ItemCart key={index} data={item} />) : <SkeLeton numRow={8} />}
                 </div>
                 <Divider style={{ marginTop: 15 }} />
-                <Flex style={{ marginTop: 10 }} vertical>
+                <Flex style={{ marginTop: 10 }} vertical gap={8}>
                     <Flex justify="space-between">
                         <span>{translate.formatMessage(message.price)}</span>
                         <span>{data && price(realTotalPay)}</span>
