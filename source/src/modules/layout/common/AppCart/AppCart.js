@@ -147,7 +147,7 @@ const AppCart = () => {
         const [ quantity, setQuantity ] = useState(record.quantity);
         const [ triggerEffect, setTriggerEffect ] = useState(false);
         const { execute: executeUpdateCart } = useFetch({
-            ...apiConfig.cart.updateItemCart,
+            ...apiConfig.cart.update,
         });
         const increaseQty = () => {
             setQuantity((prevQty) => {
@@ -171,20 +171,34 @@ const AppCart = () => {
                 setIsInitialRender(false);
                 return;
             }
-            const updatedCart = {
-                cartDetailId: record.cartDetailId,
-                quantity: quantity,
-                totalPriceSell: record.price * quantity,
-            };
-            executeUpdateCart({
-                data: { ...updatedCart },
-                onCompleted: (respone) => {
-                    setCheck(!check);
-                },
-                onError: (error) => {
-                    console.log(error);
-                },
+            const updatedCart = cartItem.map((item) => {
+                if (item.variantId === record.variantId) {
+                    return {
+                        ...item,
+                        quantity: quantity,
+                        totalPriceSell: record.price * quantity,
+                    };
+                }
+                return item;
             });
+            if (profile) {
+                executeUpdateCart({
+                    data: {
+                        cartDetails: updatedCart,
+                    },
+                    onCompleted: (respone) => {
+                        dispatch(getCartItemList(updatedCart));
+                        setCartItem(updatedCart);
+                        setCheck(!check);
+                    },
+                    onError: (error) => {
+                        console.log(error);
+                    },
+                });
+            } else {
+                setCartItem(updatedCart);
+                localStorage.setItem('cart', JSON.stringify(updatedCart));
+            }
         }, [ triggerEffect ]);
 
         return (
@@ -402,6 +416,7 @@ const AppCart = () => {
                                 title: 'Số lượng',
                                 dataIndex: 'quantity',
                                 align: 'center',
+                                render: (value, record) => <QuantityComponent value={value} record={record} />,
                             },
                             {
                                 title: 'Tổng',
@@ -585,6 +600,7 @@ const AppCart = () => {
                         mappingOptions={(item) => ({ value: item.name, label: item.name })}
                         initialSearchParams={{ kind: 1 }}
                         searchParams={(text) => ({ name: text, kind: 1 })}
+                        required
                     />
                     <AutoCompleteField
                         label="Quận"
@@ -593,6 +609,7 @@ const AppCart = () => {
                         mappingOptions={(item) => ({ value: item.name, label: item.name })}
                         initialSearchParams={{ kind: 2 }}
                         searchParams={(text) => ({ name: text, kind: 2 })}
+                        required
                     />
                     <AutoCompleteField
                         label="Huyện"
@@ -601,6 +618,7 @@ const AppCart = () => {
                         mappingOptions={(item) => ({ value: item.name, label: item.name })}
                         initialSearchParams={{ kind: 3 }}
                         searchParams={(text) => ({ name: text, kind: 3 })}
+                        required
                     />
 
                     <SelectField
