@@ -93,7 +93,8 @@ const ListDetailsForm = ({ open, onCancel, data, form, isEditing, executeGetMyAd
         setCheckArray(false);
     }, [ checkList ]);
 
-    const handleFinish = (values) => {
+    const handleFinish = () => {
+        const values = form.getFieldsValue();
         if (isEditing) {
             executeUpdate({
                 data: { ...values, id: data.id },
@@ -130,10 +131,13 @@ const ListDetailsForm = ({ open, onCancel, data, form, isEditing, executeGetMyAd
             title={<FormattedMessage defaultMessage="Thêm địa chỉ nhận hàng" />}
             open={open}
             onCancel={onCancel}
-            onOk={() => form.submit()}
+            onOk={(e) => {
+                e.stopPropagation();
+                handleFinish();
+            }}
             width={700}
         >
-            <BaseForm onFinish={handleFinish} form={form} size="100%">
+            <BaseForm form={form} size="100%">
                 <Card style={{ width: 650 }}>
                     <Row gutter={24}>
                         <Col span={12}>

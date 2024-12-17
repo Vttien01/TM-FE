@@ -33,6 +33,8 @@ const CartInfo = ({
     loadingCreateTransactionVnpal,
     arrayBuyNow,
     dataMyVoucher,
+    handlerDetailsModal,
+    setItem1,
 }) => {
     const translate = useTranslate();
     const { memberShip } = useAuth();
@@ -257,8 +259,8 @@ const CartInfo = ({
                                                 type="text"
                                                 icon={<IconPlus size={10} />}
                                                 onClick={() => {
-                                                    // setItem1(null);
-                                                    // handlerDetailsModal.open();
+                                                    setItem1(null);
+                                                    handlerDetailsModal.open();
                                                 }}
                                             >
                                                 Thêm địa chỉ giao hàng

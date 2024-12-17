@@ -98,13 +98,7 @@ const ResultSuccess = () => {
     return (
         <Container className={styles.container}>
             <PageWrapper
-                routes={[
-                    {
-                        breadcrumbName: 'Trang chủ',
-                        path: generatePath(routes.homePage.path),
-                    },
-                    { breadcrumbName: 'Đặt hàng' },
-                ]}
+                routes={[ { breadcrumbName: 'Đặt hàng' } ]}
                 // title={title}
             >
                 <Flex justify="start" align="center" vertical style={{ margin: '20px', height: 'max-content' }}>

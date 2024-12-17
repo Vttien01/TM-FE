@@ -124,7 +124,7 @@ const OrderPage = () => {
     const { execute: executeCancelPay } = useFetch({
         ...apiConfig.transaction.cancelPay,
     });
-    const { execute: executeUpdateCart } = useFetch(apiConfig.cart.updateItemCart, { immediate: false });
+    const { execute: executeUpdateCart } = useFetch(apiConfig.cart.update, { immediate: false });
 
     function onConfirmOrder(values) {
         let array2 = [];
@@ -170,8 +170,8 @@ const OrderPage = () => {
                             urlSuccess: `${apiFrontend}my-order-success`,
                         },
                         onCompleted: (res) => {
-                            // window.location.href = res.data;
-                            window.open(res.data, '_blank');
+                            window.location.href = res.data;
+                            // window.open(res.data, '_blank');
                             setCurrent(1);
                             showSucsessMessage('Đơn hàng đang được xử lý!');
                         },
@@ -183,7 +183,7 @@ const OrderPage = () => {
                     });
                 } else if (values.paymentMethod === 2) {
                     createTransactionVnpal({
-                        data: {
+                        params: {
                             orderId: respone.data.orderId,
                             urlCancel: `${apiFrontend}my-order-fail`,
                             urlSuccess: `${apiFrontend}my-order-success`,
@@ -246,6 +246,8 @@ const OrderPage = () => {
                     loadingCreateTransactionPaypal={loadingCreateTransactionPaypal}
                     loadingCreateTransactionVnpal={loadingCreateTransactionVnpal}
                     dataMyVoucher={dataMyVoucher}
+                    handlerDetailsModal={handlerDetailsModal}
+                    setItem1={setItem1}
                 />
             ),
             decription: decription.first,

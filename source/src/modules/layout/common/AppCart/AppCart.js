@@ -17,8 +17,9 @@ import { defineMessage } from 'react-intl';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './AppCart.scss';
 import useShoppingCart from '@hooks/useShoppingCart';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getCacheAccessToken } from '@services/userService';
+import { getCartItemList } from '@store/actions/cart';
 const { Text } = Typography;
 
 const decription = defineMessage({
@@ -40,6 +41,7 @@ const AppCart = () => {
     const { removeItemCart } = useShoppingCart();
     const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
     const userAccessToken = getCacheAccessToken();
+    const dispatch = useDispatch();
 
     const { loading: loadingOrderForGuest, execute: createOrderForGuest } = useFetch(apiConfig.order.create, {
         immediate: false,
@@ -53,12 +55,17 @@ const AppCart = () => {
         ...apiConfig.transaction.create,
     });
 
+    const { execute: createTransactionVnpal } = useFetch(apiConfig.transaction.vnpay, {
+        immediate: false,
+    });
+
     const { execute: executeDeleteCart } = useFetch({
         ...apiConfig.cart.delete,
     });
 
     const removeFromCart = (productId) => {
         const updatedCart = cartItem.filter((item) => item.variantId !== productId);
+        dispatch(getCartItemList(updatedCart));
         localStorage.setItem('cart', JSON.stringify(updatedCart));
         setCheck(!check);
     };
@@ -81,6 +88,8 @@ const AppCart = () => {
         createOrderForGuest({
             data: { ...updatedValues },
             onCompleted: (respone) => {
+                dispatch(getCartItemList([]));
+                localStorage.removeItem('cart');
                 if (values.paymentMethod === 1) {
                     createTransaction({
                         data: {
@@ -90,7 +99,6 @@ const AppCart = () => {
                         },
                         onCompleted: (res) => {
                             window.location.href = res.data;
-                            localStorage.removeItem('cart');
                             showSucsessMessage('Đặt hàng thành công');
                         },
                         onError: () => {
@@ -99,6 +107,24 @@ const AppCart = () => {
                             // setTimeout(() => {
                             //     window.location.reload();
                             // }, 1800);
+                        },
+                    });
+                } else if (values.paymentMethod == 2) {
+                    createTransactionVnpal({
+                        params: {
+                            orderId: respone.data.orderId,
+                            urlCancel: `${apiFrontend}my-order-fail`,
+                            urlSuccess: `${apiFrontend}my-order-success`,
+                        },
+                        onCompleted: (res) => {
+                            // window.open(res.data, '_blank');
+                            window.location.href = res.data;
+                            // setCurrent(1);
+                            showSucsessMessage('Đơn hàng đang được xử lý!');
+                        },
+                        onError: () => {
+                            showErrorMessage('Thanh toán VNPAY thất bại');
+                            // setCurrent(1);
                         },
                     });
                 } else {
