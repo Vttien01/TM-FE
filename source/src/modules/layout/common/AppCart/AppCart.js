@@ -111,14 +111,13 @@ const AppCart = () => {
                     });
                 } else if (values.paymentMethod == 2) {
                     createTransactionVnpal({
-                        params: {
+                        data: {
                             orderId: respone.data.orderId,
                             urlCancel: `${apiFrontend}my-order-fail`,
                             urlSuccess: `${apiFrontend}my-order-success`,
                         },
                         onCompleted: (res) => {
-                            // window.open(res.data, '_blank');
-                            window.location.href = res.data;
+                            window.location.href = res.data.paymentUrl;
                             // setCurrent(1);
                             showSucsessMessage('Đơn hàng đang được xử lý!');
                         },

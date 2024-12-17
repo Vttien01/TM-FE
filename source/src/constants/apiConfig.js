@@ -790,8 +790,8 @@ const apiConfig = {
             isRequiredTenantId: true,
         },
         vnpay: {
-            baseURL: `${apiUrl}v1/transaction/vn-pay`,
-            method: 'GET',
+            baseURL: `${process.env.REACT_APP_API_VNPAY}v1/transaction/vn-pay`,
+            method: 'POST',
             headers: baseHeader,
             isRequiredTenantId: true,
         },

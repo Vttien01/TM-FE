@@ -183,15 +183,16 @@ const OrderPage = () => {
                     });
                 } else if (values.paymentMethod === 2) {
                     createTransactionVnpal({
-                        params: {
+                        data: {
                             orderId: respone.data.orderId,
                             urlCancel: `${apiFrontend}my-order-fail`,
                             urlSuccess: `${apiFrontend}my-order-success`,
                         },
                         onCompleted: (res) => {
-                            window.open(res.data, '_blank');
+                            window.location.href = res.data.paymentUrl;
+                            // window.open(res.data.paymentUrl, '_blank');
                             setCurrent(1);
-                            showSucsessMessage('Đơn hàng đang được xử lý!');
+                            showSucsessMessage('Thanh toán VNPAY thành công!');
                         },
                         onError: () => {
                             showErrorMessage('Thanh toán VNPAY thất bại');

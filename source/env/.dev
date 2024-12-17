@@ -1,6 +1,7 @@
 REACT_APP_API = https://apii.io.vn/
 REACT_APP_FRONTEND = https://tm-fe-peach.vercel.app/
 REACT_APP_API_MEDIA = https://org-media-template.developteam.net/
+REACT_APP_API_VNPAY = http://103.188.83.126:8787/
 REACT_APP_ENV = dev
 GENERATE_SOURCEMAP = false
 CI = false
