@@ -11,7 +11,7 @@ import routes from '@routes';
 import { showErrorMessage, showSucsessMessage } from '@services/notifyService';
 import { IconMinus, IconPlus, IconTrash } from '@tabler/icons-react';
 import { fetchCartItems, formatMoney } from '@utils';
-import { Badge, Button, Checkbox, Drawer, Flex, Form, Input, Table, Tag, Tooltip, Typography } from 'antd';
+import { Badge, Button, Checkbox, Drawer, Flex, Form, Input, Modal, Table, Tag, Tooltip, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { defineMessage } from 'react-intl';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -68,6 +68,54 @@ const AppCart = () => {
         dispatch(getCartItemList(updatedCart));
         localStorage.setItem('cart', JSON.stringify(updatedCart));
         setCheck(!check);
+    };
+
+    const showConfirmBuyOrder = (message, match, matchName) => {
+        Modal.confirm({
+            // title: match > 0 ? message : 'Sản phẩm hiện tại đã hết hàng, bạn cần thêm giỏ hàng khác?',
+            title: message,
+            footer: () => (
+                <Flex justify="end">
+                    <Button
+                        onClick={() => {
+                            Modal.destroyAll();
+                            navigate('/');
+                        }}
+                    >
+                        Quay về trang chủ
+                    </Button>
+                    {
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                Modal.destroyAll();
+                                console.log(cartItem, match, matchName);
+                                let updatedCartItem;
+                                if (Number(match) === 0) {
+                                    // Xóa sản phẩm nếu match === 0
+                                    updatedCartItem = cartItem.filter((item) => item.productName !== matchName);
+                                } else {
+                                    // Cập nhật quantity nếu match > 0
+                                    updatedCartItem = cartItem.map((item) => {
+                                        if (item.productName === matchName) {
+                                            return {
+                                                ...item,
+                                                quantity: Number(match),
+                                            };
+                                        }
+                                        return item;
+                                    });
+                                }
+                                setCartItem(updatedCartItem);
+                                localStorage.setItem('cart', JSON.stringify(updatedCartItem));
+                            }}
+                        >
+                            Xác nhận
+                        </Button>
+                    }
+                </Flex>
+            ),
+        });
     };
 
     function onConfirmOrder(values) {
@@ -135,8 +183,17 @@ const AppCart = () => {
                     // }, 1800);
                 }
             },
-            onError: () => {
-                showErrorMessage('Đặt hàng thất bại');
+            onError: (error) => {
+                setCheckoutDrawerOpen(false);
+                if (error.code === 'ERROR-PRODUCT-VARIANT-0001') {
+                    const regex = /Sản phẩm (.+?) hiện/;
+                    const matchName = error?.message.match(regex);
+                    // showErrorMessage(error.message);
+                    const match = error?.message.match(/hiện chỉ còn (\d+)/);
+                    showConfirmBuyOrder(error.message, match ? match[1] : '0', matchName ? matchName[1] : '');
+                } else {
+                    showErrorMessage('Đặt hàng thất bại');
+                }
             },
         });
         // message.success('Đặt hàng thành công');
