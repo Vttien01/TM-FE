@@ -10,7 +10,23 @@ import useTranslate from '@hooks/useTranslate';
 import { commonMessage } from '@locales/intl';
 import routes from '@routes';
 import { IconEdit, IconHome, IconReceiptTax, IconStar } from '@tabler/icons-react';
-import { Avatar, Button, Card, Col, Divider, Flex, Form, List, Rate, Row, Space, Tag, Tooltip, Typography } from 'antd';
+import {
+    Avatar,
+    Button,
+    Card,
+    Col,
+    Divider,
+    Empty,
+    Flex,
+    Form,
+    List,
+    Rate,
+    Row,
+    Space,
+    Tag,
+    Tooltip,
+    Typography,
+} from 'antd';
 import React, { useEffect, useState } from 'react';
 import { defineMessages, FormattedMessage } from 'react-intl';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -23,7 +39,7 @@ import ProfileModal from './ProfileModal';
 import useQueryParams from '@hooks/useQueryParams';
 import useFetch from '@hooks/useFetch';
 import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
-import { convertUtcToLocalTime } from '@utils';
+import { convertUtcToLocalTime, formatMoney, getImageUrl } from '@utils';
 import useFetchAction from '@hooks/useFetchAction';
 import { accountActions } from '@store/actions';
 import { use } from 'react';
@@ -34,6 +50,7 @@ import { removeCacheToken } from '@services/userService';
 import { useDispatch } from 'react-redux';
 import { kindUseVoucherOptions } from '@constants/masterData';
 import dayjs from 'dayjs';
+import product from '@assets/images/product.jpg';
 
 const message = defineMessages({
     objectName: 'Địa chỉ người dùng',
@@ -293,11 +310,19 @@ const PersonInfo = () => {
                                     stateValues={stateValues}
                                 />
                                 <DashboardCard
-                                    title={'Điểm cá nhân'}
+                                    title={'Tổng chi'}
                                     value={
-                                        <div
-                                            style={{ color: 'green', fontSize: 20, fontWeight: 600 }}
-                                        >{`${profile?.point}đ`}</div>
+                                        <div style={{ color: 'green', fontSize: 20, fontWeight: 600 }}>
+                                            {profile?.totalSpent
+                                                ? formatMoney(profile?.totalSpent, {
+                                                    groupSeparator: ',',
+                                                    decimalSeparator: '.',
+                                                    currentcy: 'đ',
+                                                    currentcyPosition: 'BACK',
+                                                    currentDecimal: '0',
+                                                })
+                                                : '0đ'}
+                                        </div>
                                     }
                                 />
                             </Space>
@@ -486,7 +511,80 @@ function MyReview({ loadingMyReview, dataMyReview }) {
                     Danh sách các đánh giá của người dùng
                 </Divider>
             </div>
-            <List
+            <div
+                style={{
+                    maxHeight: '650px',
+                    overflowY: 'auto',
+                    scrollbarWidth: 'none', // Dành cho Firefox
+                    msOverflowStyle: 'none', // Dành cho IE và Edge
+                }}
+            >
+                {dataMyReview?.length > 0 ? (
+                    dataMyReview.map((item) => {
+                        return (
+                            <Card
+                                style={{
+                                    backgroundColor: '#eff0f1',
+                                    marginTop: 10,
+                                    width: 1000,
+                                }}
+                                key={item?.id}
+                            >
+                                <Flex gap={8}>
+                                    <div>
+                                        <Avatar
+                                            src={item?.image ? getImageUrl(item?.image) : product}
+                                            size={100}
+                                            alt=""
+                                        />
+                                    </div>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            flexDirection: 'column',
+                                        }}
+                                    >
+                                        <Typography.Title level={2}>{item?.productName}</Typography.Title>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                            <Rate disabled allowHalf value={item?.star} />
+                                        </div>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>Màu: {item.color}</div>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                            Ngày tạo: {''}
+                                            <span>
+                                                {convertUtcToLocalTime(
+                                                    item?.createdDate,
+                                                    DEFAULT_FORMAT,
+                                                    DEFAULT_FORMAT,
+                                                )}
+                                            </span>
+                                        </div>
+                                        <div style={{ flex: '1', justifyContent: 'center' }}>
+                                            <Typography.Text
+                                                // ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
+                                                style={{ fontSize: 18 }}
+                                            >
+                                                Nội dung: {item?.message}
+                                            </Typography.Text>
+                                        </div>
+                                    </div>
+                                    <Flex gap={4}>
+                                        <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
+                                        <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
+                                        <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+                                    </Flex>
+                                </Flex>
+                            </Card>
+                        );
+                    })
+                ) : (
+                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                        <Empty description={'No Data'} />
+                    </div>
+                )}
+            </div>
+            {/* <List
                 loading={loadingMyReview}
                 pagination={dataMyReview?.length > 0 && true}
                 // className="demo-loadmore-list"
@@ -534,12 +632,12 @@ function MyReview({ loadingMyReview, dataMyReview }) {
                                             </span>
                                         </div>
                                         <div style={{ flex: '1', justifyContent: 'center' }}>
-                                            <Typography.Paragraph
-                                                ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
+                                            <Typography.Text
+                                                // ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
                                                 style={{ fontSize: 18 }}
                                             >
                                                 Nội dung: {item?.message}
-                                            </Typography.Paragraph>
+                                            </Typography.Text>
                                         </div>
                                     </div>
                                 }
@@ -547,7 +645,7 @@ function MyReview({ loadingMyReview, dataMyReview }) {
                         </List.Item>
                     </Card>
                 )}
-            />
+            /> */}
         </Space>
     );
 }

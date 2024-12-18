@@ -24,57 +24,9 @@ const AppRoutes = () => {
     const { isAuthenticated, loading: loadingProfile, profile } = useAuth();
     const translate = useTranslate();
     const dispatch = useDispatch();
-    // const { data: slideShow, execute: executeSlideshow } = useFetch(apiConfig.slideShow.getList, {
-    //     immediate: true,
-    //     mappingData: (res) => res.data.content,
-    //     params: {
-    //         status: 1,
-    //     },
-    // });
-
-    // useEffect(() => {
-    //     if (slideShow) {
-    //         dispatch(appActions.getSlideshow(slideShow));
-    //     }
-    // }, [ slideShow ]);
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             // Sử dụng Promise.all để chờ cho cả hai promise hoàn thành
-    //             await Promise.all([
-    //                 courseFreeExecute(),
-    //                 categoryCourseTopExecute(),
-    //                 categoryCourseNewExecute(),
-    //                 reviewDataExecute(),
-    //                 expertExecute(),
-    //                 newsDataExecute(),
-    //                 feStatisticExecute(),
-    //             ]);
-
-    //             // Sau khi cả hai promise đã hoàn thành, tiếp tục với các bước tiếp theo
-    //             dispatch(appActions.getHomePage({
-    //                 categoryCourseFree: categoryCourseFree,
-    //                 categoryCourseTop: categoryCourseTop,
-    //                 getFeStatistic: getFeStatistic,
-    //                 newsData: newsData,
-    //                 expertList: expertList,
-    //                 categoryCourseNew: categoryCourseNew,
-    //                 reviewData:reviewData,
-    //             }));
-    //         } catch (error) {
-    //             console.error('Error fetching data:', error);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [  ]);
 
     useEffect(() => {}, []);
-
-    const { cart } = useShoppingCart({ immediate: true });
     const renderRoute = (route) => {
-        // TODO: handle render component by site config
         const component = route.component || PageNotFound;
 
         return (
