@@ -43,6 +43,10 @@ const OrderPage = () => {
 
     const location = useLocation();
     const receivedData = location.state?.data;
+    const { data: cartItem, execute: executeGetCart } = useFetch(apiConfig.cart.getList, {
+        immediate: false,
+        mappingData: ({ data }) => data.cartDetailDtos,
+    });
     const { data: dataMyAddress, execute: executeGetMyAddress } = useFetch(apiConfig.address.getMyAddress, {
         immediate: false,
         mappingData: ({ data }) => {
@@ -69,6 +73,7 @@ const OrderPage = () => {
         if (receivedData) {
             setArrayBuyNow([ receivedData ]);
         }
+        executeGetCart();
         executeGetMyAddress();
         executeGetMyVoucher();
     }, [ receivedData ]);
@@ -100,10 +105,6 @@ const OrderPage = () => {
     const prev = () => {
         setCurrent(current - 1);
     };
-    const { data: cartItem } = useFetch(apiConfig.cart.getList, {
-        immediate: true,
-        mappingData: ({ data }) => data.cartDetailDtos,
-    });
     const { execute: deleteCartItem } = useFetch(apiConfig.cart.delete);
 
     const {
@@ -148,7 +149,16 @@ const OrderPage = () => {
                             type="primary"
                             onClick={() => {
                                 Modal.destroyAll();
-                                dispatch(getCartItemList(cartItem));
+                                executeGetCart({
+                                    onCompleted: ({ data }) => {
+                                        if (data.totalProduct > 0) {
+                                            dispatch(getCartItemList(data.cartDetailDtos));
+                                        } else {
+                                            dispatch(getCartItemList([]));
+                                            navigate('/');
+                                        }
+                                    },
+                                });
                             }}
                         >
                             Xác nhận

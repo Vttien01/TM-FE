@@ -668,7 +668,7 @@ const apiConfig = {
             headers: baseHeader,
             isRequiredTenantId: true,
         },
-        top10BestSellingt: {
+        top10BestSelling: {
             baseURL: `${apiUrl}v1/product/get-product-top10`,
             method: 'GET',
             headers: baseHeader,

@@ -105,17 +105,17 @@ const ListOrderModal = ({ open, detail, form, isEditing, orderId, state, orderDe
                         Tiến hành thanh toán
                     </Button>
                 ),
-                state == 3 && !opeBuyAgainModal && (
-                    <Button
-                        key="buyAgain"
-                        onClick={() => {
-                            handlersBuyAgainModal.open();
-                            setActive(4);
-                        }}
-                    >
-                        Mua lại
-                    </Button>
-                ),
+                // state == 3 && !opeBuyAgainModal && (
+                //     <Button
+                //         key="buyAgain"
+                //         onClick={() => {
+                //             handlersBuyAgainModal.open();
+                //             setActive(4);
+                //         }}
+                //     >
+                //         Mua lại
+                //     </Button>
+                // ),
             ]}
         >
             <Card>

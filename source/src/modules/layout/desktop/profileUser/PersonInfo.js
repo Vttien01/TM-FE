@@ -561,18 +561,18 @@ function MyReview({ loadingMyReview, dataMyReview }) {
                                             </span>
                                         </div>
                                         <div style={{ flex: '1', justifyContent: 'center' }}>
-                                            <Typography.Text
+                                            <span
                                                 // ellipsis={{ rows: 2, expandable: true, symbol: 'more' }}
                                                 style={{ fontSize: 18 }}
                                             >
                                                 Nội dung: {item?.message}
-                                            </Typography.Text>
+                                            </span>
                                         </div>
                                     </div>
                                     <Flex gap={4}>
-                                        <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />,
-                                        <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />,
-                                        <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />,
+                                        <IconText icon={StarOutlined} text="156" key="list-vertical-star-o" />
+                                        <IconText icon={LikeOutlined} text="156" key="list-vertical-like-o" />
+                                        <IconText icon={MessageOutlined} text="2" key="list-vertical-message" />
                                     </Flex>
                                 </Flex>
                             </Card>

@@ -86,10 +86,10 @@ function LandingPageDesktop({
     // }, [ params ]);
 
     const {
-        data: products,
+        data: top10BestSelling,
         loading: getCategorysLoading,
         execute: executeGetCategorys,
-    } = useFetch(apiConfig.product.top10BestSellingt, {
+    } = useFetch(apiConfig.product.top10BestSelling, {
         immediate: true,
     });
     const {
@@ -218,9 +218,9 @@ function LandingPageDesktop({
                                 <div className="title-md">
                                     <h3>Sản phẩm bán chạy</h3>
                                 </div>
-                                {products && (
+                                {top10BestSelling && (
                                     <ProductList
-                                        products={products?.data}
+                                        products={top10BestSelling?.data}
                                         executGetProductDetail={executGetProductDetail}
                                         loadingProductDetail={loadingProductDetail}
                                     />
@@ -238,7 +238,7 @@ function LandingPageDesktop({
                                 <div className="title-md">
                                     <h3>Điện thoại</h3>
                                 </div>
-                                {products && (
+                                {catProductsTwo && (
                                     <ProductList
                                         products={catProductsTwo}
                                         executGetProductDetail={executGetProductDetail}
@@ -258,7 +258,7 @@ function LandingPageDesktop({
                                 <div className="title-md">
                                     <h3>Laptop</h3>
                                 </div>
-                                {products && (
+                                {catProductsOne && (
                                     <ProductList
                                         products={catProductsOne}
                                         executGetProductDetail={executGetProductDetail}
