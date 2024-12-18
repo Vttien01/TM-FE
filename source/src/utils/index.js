@@ -10,6 +10,7 @@ import {
     LESSON_KIND_SECTION,
     notificationKind,
     apiUrl,
+    AppConstants,
 } from '@constants';
 import dayjs from 'dayjs';
 import { getObjectData } from './localStorage';
@@ -630,3 +631,11 @@ export const fetchCartItems = () => async (dispatch) => {
         // dispatch(setLoading(false));
     }
 };
+
+export function getImageUrl(image) {
+    const cloudinaryPrefix = 'http://res.cloudinary.com/';
+    if (image?.includes(cloudinaryPrefix)) {
+        return image; // Trả về image nếu chứa cloudinaryPrefix
+    }
+    return `${AppConstants.contentRootUrl}${image}`; // Gắn thêm tiền tố
+}

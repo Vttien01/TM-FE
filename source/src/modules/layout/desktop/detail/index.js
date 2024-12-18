@@ -9,7 +9,7 @@ import apiConfig from '@constants/apiConfig';
 import useDisclosure from '@hooks/useDisclosure';
 import useFetch from '@hooks/useFetch';
 import { IconMinus, IconPlus } from '@tabler/icons-react';
-import { convertUtcToLocalTime, formatMoney, price } from '@utils';
+import { convertUtcToLocalTime, formatMoney, getImageUrl, price } from '@utils';
 import { Button, Card, Col, Divider, Flex, Form, Image, Progress, Rate, Row, Space, Spin, Typography } from 'antd';
 import CartModal from './CartModal';
 import styles from './index.module.scss';
@@ -527,7 +527,9 @@ const DetailPageDesktop = () => {
                                                         <AvatarField
                                                             size="large"
                                                             icon={<UserOutlined />}
-                                                            src={item?.userDto?.accountAutoCompleteDto?.avatarPath}
+                                                            src={getImageUrl(
+                                                                item?.userDto?.accountAutoCompleteDto?.avatarPath,
+                                                            )}
                                                         />
                                                     </Col>
                                                     <Col span={17}>

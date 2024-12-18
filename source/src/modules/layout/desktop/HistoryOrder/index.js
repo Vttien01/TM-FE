@@ -181,8 +181,8 @@ function TableMyOrder() {
                 align: 'center',
                 with: 200,
                 render: (createdDate) => {
-                    const result = convertUtcToLocalTime(createdDate, DEFAULT_FORMAT, DATE_FORMAT_VALUE);
-                    return <div>{result}</div>;
+                    const result = convertUtcToLocalTime(createdDate, DEFAULT_FORMAT, DEFAULT_FORMAT);
+                    return <div>{createdDate}</div>;
                 },
             },
             {

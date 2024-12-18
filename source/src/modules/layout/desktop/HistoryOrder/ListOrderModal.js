@@ -5,7 +5,7 @@ import useDisclosure from '@hooks/useDisclosure';
 import useFetch from '@hooks/useFetch';
 import useTranslate from '@hooks/useTranslate';
 import { showErrorMessage, showSucsessMessage } from '@services/notifyService';
-import { formatMoney } from '@utils';
+import { formatMoney, getImageUrl } from '@utils';
 import { Avatar, Button, Card, Flex, List, Modal, Tooltip } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { FormattedMessage, defineMessage } from 'react-intl';
@@ -15,6 +15,7 @@ import ReviewListForm from './ReviewListForm';
 import CreateReviewForm from './CreateReviewForm';
 import { setData } from '@utils/localStorage';
 import BuyAgainModal from './BuyAgainModal';
+import product from '@assets/images/product.jpg';
 
 const messages = defineMessage({
     copyRight: '{brandName} - © Copyright {year}. All Rights Reserved',
@@ -153,7 +154,7 @@ const ListOrderModal = ({ open, detail, form, isEditing, orderId, state, orderDe
                                     <List.Item.Meta
                                         avatar={
                                             <Avatar
-                                                src={item?.image && `${AppConstants.contentRootUrl}${item?.image}`}
+                                                src={item?.image ? getImageUrl(item?.image) : product}
                                                 size={100}
                                                 alt=""
                                             />

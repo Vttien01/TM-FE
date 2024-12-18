@@ -4,7 +4,7 @@ import { DEFAULT_FORMAT } from '@constants';
 import useAuth from '@hooks/useAuth';
 import useDisclosure from '@hooks/useDisclosure';
 import useTranslate from '@hooks/useTranslate';
-import { convertUtcToLocalTime } from '@utils/index';
+import { convertUtcToLocalTime, getImageUrl } from '@utils/index';
 import { Button, Col, Modal, Progress, Rate, Row, Spin } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { defineMessages } from 'react-intl';
@@ -180,7 +180,7 @@ const ReviewListModal = ({ loading, starReviewData, open, onCancel, orderDetail,
                                         <AvatarField
                                             size="large"
                                             icon={<UserOutlined />}
-                                            src={item?.userDto?.accountAutoCompleteDto?.avatarPath}
+                                            src={getImageUrl(item?.userDto?.accountAutoCompleteDto?.avatarPath)}
                                         />
                                     </Col>
                                     <Col span={17}>
@@ -191,13 +191,7 @@ const ReviewListModal = ({ loading, starReviewData, open, onCancel, orderDetail,
                                             <span>{item.message}</span>
                                         </Row>
                                         <Row>
-                                            <span>
-                                                {convertUtcToLocalTime(
-                                                    item.createdDate,
-                                                    DEFAULT_FORMAT,
-                                                    DEFAULT_FORMAT,
-                                                )}
-                                            </span>
+                                            <span>{item.createdDate}</span>
                                         </Row>
                                     </Col>
                                     <Col span={5} style={{ textAlign: 'right' }}>

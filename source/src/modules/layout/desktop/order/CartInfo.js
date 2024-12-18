@@ -1,8 +1,8 @@
 import SkeLeton from '@components/common/elements/Skeleton';
 import Typo from '@components/common/elements/Typo';
-import { paymentMethods, paymentSelect, paymentSelectIcon, storageKeys } from '@constants';
+import { DEFAULT_FORMAT, paymentMethods, paymentSelect, paymentSelectIcon, storageKeys } from '@constants';
 import useTranslate from '@hooks/useTranslate';
-import { grandTotal, grandTotalCoupon, price, realTotal } from '@utils';
+import { convertUtcToLocalTime, formatMoney, grandTotal, grandTotalCoupon, price, realTotal } from '@utils';
 import { getData } from '@utils/localStorage';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defineMessages } from 'react-intl';
@@ -11,13 +11,13 @@ import styles from './cartInfo.module.scss';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
 // import wallet from '@assets/images/wallet.jpg';
-import { Button, Col, Divider, Flex, Form, Image, Input, Radio, Row, Space, Typography } from 'antd';
+import { Button, Card, Col, Divider, Flex, Form, Image, Input, List, Radio, Row, Space, Typography } from 'antd';
 import InputTextField from '@components/common/form/InputTextField';
 import ItemCart from '@components/common/elements/itemCard/ItemCart';
 import AutoCompleteField from '@components/common/form/AutoCompleteField';
 import apiConfig from '@constants/apiConfig';
 import SelectField from '@components/common/form/SelectField';
-import { IconEdit, IconMoneybag, IconPlus } from '@tabler/icons-react';
+import { IconEdit, IconMoneybag, IconPlus, IconReceiptTax } from '@tabler/icons-react';
 const message = defineMessages({
     cartInfo: 'Thông tin đơn hàng',
 });
@@ -64,6 +64,41 @@ const CartInfo = ({
                 {
                     <>
                         <Divider my={15} />
+                        {itemCoupon != null && (
+                            <Flex
+                                style={{ border: '1px solid #aca9a9', padding: 8, borderRadius: 8, marginBottom: 10 }}
+                            >
+                                <div>
+                                    <IconReceiptTax size={100} />
+                                </div>
+                                <Flex vertical>
+                                    <div style={{ flex: '1', justifyContent: 'center', fontWeight: 600, fontSize: 22 }}>
+                                        {itemCoupon?.title}
+                                    </div>
+                                    <div style={{ flex: '1', justifyContent: 'center' }}>
+                                        Ngày tạo: {''}
+                                        <span>
+                                            {convertUtcToLocalTime(
+                                                itemCoupon?.createdDate,
+                                                DEFAULT_FORMAT,
+                                                DEFAULT_FORMAT,
+                                            )}
+                                        </span>
+                                    </div>
+                                    <div style={{ flex: '1', justifyContent: 'center' }}>
+                                        Giảm {''}
+                                        <span>{itemCoupon.percent}%</span> tối đa {''}
+                                        {formatMoney(itemCoupon?.priceMax, {
+                                            groupSeparator: ',',
+                                            decimalSeparator: '.',
+                                            currentcy: 'đ',
+                                            currentcyPosition: 'BACK',
+                                            currentDecimal: '0',
+                                        })}
+                                    </div>
+                                </Flex>
+                            </Flex>
+                        )}
                         <span style={{ fontSize: 18 }}>Chọn voucher</span>
                         <Form form={form}>
                             <Row gutter={8} style={{ width: '100%', marginTop: 10 }}>
@@ -118,7 +153,7 @@ const CartInfo = ({
                 }
             </div>
         );
-    }, [ dataMyVoucher ]);
+    }, [ dataMyVoucher, itemCoupon ]);
 
     const CartInfo = useCallback(() => {
         const checkVoucher = (realTotalPay * itemCoupon?.percent) / 100 < itemCoupon?.priceMax;

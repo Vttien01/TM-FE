@@ -7,7 +7,7 @@ import styles from './ItemCart.module.scss';
 import { AppConstants } from '@constants';
 import { commonMessage } from '@constants/intl';
 import useTranslate from '@hooks/useTranslate';
-import { price, timeConvert } from '@utils';
+import { getImageUrl, price, timeConvert } from '@utils';
 import { useNavigate } from 'react-router-dom';
 import { Flex, Image, Rate, Typography } from 'antd';
 const ItemCart = ({ data, checkSellCode, coupon }) => {
@@ -20,7 +20,7 @@ const ItemCart = ({ data, checkSellCode, coupon }) => {
         <div className={styles.item}>
             <Flex className={styles.content}>
                 <Image
-                    src={data?.image ? AppConstants.contentRootUrl + data?.image : product}
+                    src={data?.image ? getImageUrl(data?.image) : product}
                     alt="Relevant Image"
                     radius="md"
                     style={{ width: 100, height: 100 }}

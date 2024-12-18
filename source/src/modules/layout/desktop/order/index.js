@@ -1,6 +1,6 @@
 /* eslint-disable indent */
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { generatePath, useLocation, useNavigate } from 'react-router-dom';
 import styles from './index.module.scss';
 import PageWrapper from '@components/common/layout/PageWrapper';
@@ -14,7 +14,7 @@ import routes from '@routes';
 import { showErrorMessage, showSucsessMessage } from '@services/notifyService';
 import { IconEdit, IconPlus } from '@tabler/icons-react';
 import { formatMoney } from '@utils';
-import { Button, Divider, Flex, Form, Input, Result, Space, Steps, Table, Tag, Typography, theme } from 'antd';
+import { Button, Divider, Flex, Form, Input, Modal, Result, Space, Steps, Table, Tag, Typography, theme } from 'antd';
 import { defineMessage } from 'react-intl';
 import ListDetailsForm from './ListDetailsForm';
 import Container from '@components/common/elements/Container';
@@ -39,6 +39,7 @@ const OrderPage = () => {
     const translate = useTranslate();
     const [ item1, setItem1 ] = useState(null);
     const [ arrayBuyNow, setArrayBuyNow ] = useState([]);
+    const cart = useSelector((state) => state.cart.cart);
 
     const location = useLocation();
     const receivedData = location.state?.data;
@@ -55,6 +56,7 @@ const OrderPage = () => {
         immediate: false,
         mappingData: ({ data }) => {
             return data.map((item) => ({
+                ...item,
                 label: item.title,
                 value: item.id,
                 percent: item.percent,
@@ -102,6 +104,7 @@ const OrderPage = () => {
         immediate: true,
         mappingData: ({ data }) => data.cartDetailDtos,
     });
+    const { execute: deleteCartItem } = useFetch(apiConfig.cart.delete);
 
     const {
         data: order,
@@ -126,6 +129,35 @@ const OrderPage = () => {
         ...apiConfig.transaction.cancelPay,
     });
     const { execute: executeUpdateCart } = useFetch(apiConfig.cart.update, { immediate: false });
+    const showConfirmBuyOrder = (message, match) => {
+        Modal.confirm({
+            // title: match > 0 ? message : 'Sản phẩm hiện tại đã hết hàng, bạn cần thêm giỏ hàng khác?',
+            title: message,
+            footer: () => (
+                <Flex justify="end">
+                    <Button
+                        onClick={() => {
+                            Modal.destroyAll();
+                            navigate('/');
+                        }}
+                    >
+                        Quay về trang chủ
+                    </Button>
+                    {
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                Modal.destroyAll();
+                                dispatch(getCartItemList(cartItem));
+                            }}
+                        >
+                            Xác nhận
+                        </Button>
+                    }
+                </Flex>
+            ),
+        });
+    };
 
     function onConfirmOrder(values) {
         let array2 = [];
@@ -139,7 +171,7 @@ const OrderPage = () => {
                 quantity: item.quantity,
             }));
         } else {
-            array2 = cartItem.map((item) => ({
+            array2 = cart.map((item) => ({
                 color: item.color,
                 price: item.price,
                 productName: item.productName,
@@ -207,13 +239,19 @@ const OrderPage = () => {
                 } else {
                     setCurrent(1);
                     showSucsessMessage('Đặt hàng thành công');
-                    setTimeout(() => {
-                        navigate(routes.HistoryOrder.path);
-                    }, 4000);
+                    // setTimeout(() => {
+                    //     navigate(routes.HistoryOrder.path);
+                    // }, 4000);
                 }
             },
             onError: (error) => {
-                showErrorMessage('Đặt hàng thất bại');
+                if (error.code === 'ERROR-PRODUCT-VARIANT-0001') {
+                    // showErrorMessage(error.message);
+                    const match = error?.message.match(/hiện chỉ còn (\d+)/);
+                    showConfirmBuyOrder(error.message, match ? match[1] : '0');
+                } else {
+                    showErrorMessage('Đặt hàng thất bại');
+                }
             },
         });
     }
@@ -262,7 +300,7 @@ const OrderPage = () => {
                     title="Đơn hàng của bạn đang được xử lý!"
                     subTitle="Vui lòng theo dõi email để biết quá trình giao hàng."
                     extra={[
-                        <Button type="primary" key="console">
+                        <Button type="primary" key="home">
                             <a href="/">Quay về trang chủ</a>
                         </Button>,
                         <Button key="buy">
