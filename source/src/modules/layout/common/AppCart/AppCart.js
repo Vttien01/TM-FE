@@ -455,6 +455,7 @@ const AppCart = () => {
                                 dataIndex: 'price',
                                 name: 'price',
                                 align: 'center',
+                                width: 'max-content',
                                 render: (value) => {
                                     return (
                                         <span>

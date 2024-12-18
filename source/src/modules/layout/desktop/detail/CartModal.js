@@ -257,6 +257,7 @@ const CartModal = ({ open, onCancel, check, product }) => {
                             dataIndex: 'price',
                             name: 'price',
                             width: 'max-content',
+                            align: 'right',
                             render: (value) => {
                                 return (
                                     <span>
